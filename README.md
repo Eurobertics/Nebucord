@@ -29,6 +29,27 @@ Of course not fully funished is it still able to do the most important things. T
     - Many error checking
     - Way more better logging and debugging options
 
+Install
+-------
+
+By composer:
+```
+user@linux:~# composer require eurobertics/nebucord
+```
+
+By GIT:
+Simple clone this repository and use the native autoloader file in ./src Directory.
+
+---
+**Note:**
+If you use the library without composer, you just can include
+the native autoloader:
+
+```php
+include "src/nebucord_autoloader.php";
+```
+---
+
 Example usage - WinSock API
 ---------------------------
 
@@ -38,7 +59,9 @@ Usage websocket API, minimalistic example:
 
 ```php
 <?php
-include "./nebucord_autloader.php";
+include "vendor/autoload.php";
+
+use Nebucord\Nebucord;
 
 $nebucord = new Nebucord(['token' => 'your_bot_token']);
 $nebucord->bootstrap()->run();
@@ -51,7 +74,9 @@ A more complex example:
 
 ```php
 <?php
-include "./nebucord_autloader.php";
+include "vendor/autoload.php";
+
+use Nebucord\Nebucord;
 
 class MessageInterceptorClass {
     public function onMessageReceive($evt) {
@@ -88,7 +113,9 @@ Basic usage for sending a message:
  
  ```php
 <?php
-include "./nebucord_autloader.php";
+include "vendor/autoload.php";
+
+use Nebucord\NebucordREST;
 
 $nebucordREST = new NebucordREST(['token' => 'your_bot_token']);
 $message_model = $nebucordREST->channel->createMessage(123123123123 /* channel id */, "message");
@@ -102,7 +129,9 @@ Basic usage for sending a message:
  
  ```php
 <?php
-include "./nebucord_autloader.php";
+include "vendor/autoload.php";
+
+use Nebucord\NebucordREST;
 
 $nebucordREST = new NebucordREST(['token' => 'your_bot_token']);
 $channels = $nebucordREST->guild->getGuildChannels(123123123123123 /* guild id*/);

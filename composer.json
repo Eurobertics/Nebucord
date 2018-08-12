@@ -1,0 +1,20 @@
+{
+  "name": "eurobertics/nebucord",
+  "description": "A full featured Discord WebSocket and REST API.",
+  "type": "library",
+  "require": {
+    "php": ">=7.0"
+  },
+  "autoload": {
+    "psr-4" : {
+      "Nebucord\\" : "/src"
+    }
+  },
+  "license":      "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name":  "Bernd Robertz",
+      "email": "brobertz.net@gmail.com"
+    }
+  ]
+}
