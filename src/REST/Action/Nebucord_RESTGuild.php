@@ -137,4 +137,14 @@ class Nebucord_RESTGuild extends Nebucord_RESTAction {
         }
         return $res_ar;
     }
+
+    public function getGuild($guildid) {
+        $oGetGuildRequest = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GET_GUILD);
+        $oGetGuildRequest->guildid = $guildid;
+        $this->_httpclient->setParams($oGetGuildRequest);
+        $res = $this->_httpclient->execute();
+        $oGuildModel = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_GUILD);
+        $oGuildModel->populate($res);
+        return $oGuildModel;
+    }
 }

@@ -45,6 +45,7 @@ class Nebucord_Model_Factory {
             Nebucord_Status::GWEVT_READY => "Nebucord\Models\Nebucord_Model_GWReady",
             Nebucord_Status::GWEVT_GUILD_CREATE => "Nebucord\Models\Nebucord_Model_Guild",
             Nebucord_Status::GWEVT_MESSAGE_CREATE => "Nebucord\Models\Nebucord_Model_Message",
+            Nebucord_Status::GWEVT_GUILD_MEMBER_ADD => "Nebucord\Models\Nebucord_Model_GWGuildMemberAdd"
         ),
         Nebucord_Status::OP_HEARTBEAT => "Nebucord\Models\Nebucord_Model_OPHeartbeat",
         Nebucord_Status::OP_IDENTIFY => "Nebucord\Models\Nebucord_Model_OPIdentify",
@@ -62,7 +63,9 @@ class Nebucord_Model_Factory {
         Nebucord_Status::REQ_USER_CREATE_DM => "Nebucord\Models\Nebucord_Model_RESTCreateDM",
         Nebucord_Status::REQ_CHANNEL_ALL_MESSAGES => "Nebucord\Models\Nebucord_Model_RESTGetChannelMessages",
         Nebucord_Status::REQ_GUILD_GET_EMOJI => "Nebucord\Models\Nebucord_Model_RESTGetGuildEmoji",
-        Nebucord_Status::REQ_GUILD_GET_ALL_EMOJIS => "Nebucord\Models\Nebucord_Model_RESTListGuildEmojis"
+        Nebucord_Status::REQ_GUILD_GET_ALL_EMOJIS => "Nebucord\Models\Nebucord_Model_RESTListGuildEmojis",
+        Nebucord_Status::REQ_GET_USER => "Nebucord\Models\Nebucord_Model_RESTGetUser",
+        Nebucord_Status::REQ_GET_GUILD => "Nebucord\Models\Nebucord_Model_RESTGetGuild"
 	);
 
     /** @var array A table with available models data structues returned to a user callback for processing. */

@@ -27,6 +27,7 @@ namespace Nebucord\REST\Action;
 
 use Nebucord\Base\Nebucord_Status;
 use Nebucord\Factories\Nebucord_Model_Factory;
+use Nebucord\Models\Nebucord_Model;
 use Nebucord\REST\Base\Nebucord_RESTAction;
 
 /**
@@ -73,8 +74,26 @@ class Nebucord_RESTUser extends Nebucord_RESTAction {
         $oReqChannelModel->recipient_id = $recipientid;
         $this->_httpclient->setParams($oReqChannelModel);
         $res = $this->_httpclient->execute();
-        $oReqChannelModel = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_CHANNEL);
-        $oReqChannelModel->populate($res);
-        return $oReqChannelModel;
+        $oChannelModel = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_CHANNEL);
+        $oChannelModel->populate($res);
+        return $oChannelModel;
+    }
+
+    /**
+     * Returns user data.
+     *
+     * Get information about the given user id (snowflake id).
+     *
+     * @param integer $userid The user id to fetch information for.
+     * @return Nebucord_Model The model representation of the fetched user.
+     */
+    public function getUser($userid) {
+        $oReqUserModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GET_USER);
+        $oReqUserModel->userid = $userid;
+        $this->_httpclient->setParams($oReqUserModel);
+        $res = $this->_httpclient->execute();
+        $oUserModel = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_USER);
+        $oUserModel->populate($res);
+        return $oUserModel;
     }
 }

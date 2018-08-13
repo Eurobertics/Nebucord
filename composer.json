@@ -3,7 +3,8 @@
   "description": "A full featured Discord WebSocket and REST API.",
   "type": "library",
   "require": {
-    "php": "^7.0"
+    "php": "^7.0",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-4" : {
