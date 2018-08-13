@@ -1,6 +1,10 @@
 Nebucord - Discord WebSocket and REST API
 =========================================
 
+
+[![GitHub Release](https://img.shields.io/github/release/eurobertics/nebucord.svg?colorB=brightgreen)](https://github.com/eurobertics/nebucord)
+[![GitHub license](https://img.shields.io/github/license/eurobertics/nebucord.svg)](https://github.com/Eurobertics/Nebucord/blob/master/LICENSE)
+
 This another implementation of the Discord API. It implements an HTTP WebSocket client
 as well as a REST API.  
 Of course not fully funished is it still able to do the most important things. This includes:
