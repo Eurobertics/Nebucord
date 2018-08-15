@@ -32,7 +32,8 @@ Of course not fully funished is it still able to do the most important things. T
     - Automatically reconnecting
     - Many error checking
     - Way more better logging and debugging options
-    - Some WinSocket frame OP codes for message control
+    - Some WebSocket frame OP codes for message control
+    - OAuth 2.0 client implementation
 
 Install
 -------
