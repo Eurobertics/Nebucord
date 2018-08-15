@@ -230,7 +230,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                     $oHeartbeat = Nebucord_Model_Factory::create(Nebucord_Status::OP_HEARTBEAT);
                     $oHeartbeat->d = $currentsequence;
                     \Nebucord\Logging\Nebucord_Logger::info("Sending heartbeat...");
-                    //$sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oHeartbeat->toArray()));
+                    $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oHeartbeat->toArray()));
                     if($sendbytes == -1) {
                         \Nebucord\Logging\Nebucord_Logger::error("Can't write heartbeat message to gateway, exiting...", "nebucord.log");
                         $this->_runstate = Nebucord_Status::NC_EXIT;
