@@ -181,7 +181,8 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
     private function doHeartbeatACK() {
         //$this->_outevent = Nebucord_Model_Factory::create(Nebucord_Status::OP_HEARTBEAT_ACK);
         \Nebucord\Logging\Nebucord_Logger::info("Receiving heartbeat ACK.");
-        $this->_outevent = null;
+        $this->_outevent = Nebucord_Model_Factory::create(Nebucord_Status::OP_HEARTBEAT_ACK);
+        $this->_outevent->populate(['op' => Nebucord_Status::OP_HEARTBEAT_ACK]);
     }
 
     /**

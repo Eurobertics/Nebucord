@@ -154,6 +154,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
         $timer = new Nebucord_Timer(1000);
 
         $timer->startTimer();
+        $timer->startTimer(1);
         while($this->_runstate) {
             $message = $this->_wscon->soReadAll();
             if($message == -1) {
@@ -191,7 +192,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
 
                 $this->_actctrl->setInternalAction($oInEvent);
                 $oOutEvent = $this->_actctrl->getInternalActionEvent();
-                if($oOutEvent) {
+                if($oOutEvent && $oOutEvent->op != Nebucord_Status::OP_HEARTBEAT_ACK) {
                     if(get_class($oOutEvent) == "Nebucord\Models\Nebucord_Model_RESTMessage") {
                         $rest = new NebucordREST(['token' => $this->_params['token']]);
                         
@@ -221,7 +222,14 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                             unset($readyconfirmmsg);
                         }
                     }
+                } elseif($oOutEvent && $oOutEvent->op == Nebucord_Status::OP_HEARTBEAT_ACK) {
+                    $timer->reStartTimer(1);
                 }
+            }
+
+            if($timer->getTime(1) > ($intervaltime * 1.5)) {
+                \Nebucord\Logging\Nebucord_Logger::error("Did not receive any heartbeat response from gateway. Connection broken? Extiting...", "nebucord.log");
+                $this->setRuntimeState(Nebucord_Status::NC_EXIT);
             }
 
             if($intervaltime > 0) {
