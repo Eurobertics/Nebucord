@@ -32,6 +32,8 @@ use Nebucord\Events\Nebucord_EventTable;
 use Nebucord\Factories\Nebucord_Model_Factory;
 use Nebucord\Http\Nebucord_WebSocket;
 use Nebucord\Models\Nebucord_Model_GWReady;
+use Nebucord\Models\Nebucord_Model_GWResumed;
+use Nebucord\Models\Nebucord_Model_OPResume;
 use Nebucord\NebucordREST;
 
 /**
@@ -74,6 +76,9 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
     /** @var string $_botusername The user name of the bot. */
     private $_botusername;
 
+    /** @var integer $_reconnect_tries The current tries for reconnecting. */
+    private $_reconnect_tries;
+
     /**
      * Nebucord_RuntimeController constructor.
      *
@@ -90,6 +95,8 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
         $this->_evttbl = $evttbl;
         $this->_acttbl = $acttbl;
         $this->_params = $params;
+
+        $this->_reconnect_tries = 0;
     }
 
     /**
@@ -99,6 +106,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
      */
     public function __destruct() {
         parent::__destruct();
+        $this->_reconnect_tries = 0;
     }
 
     /**
@@ -111,6 +119,9 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
     public function setRuntimeState($runtimestate) {
         if(is_int($runtimestate)) {
             $this->_runstate = $runtimestate;
+        }
+        if($runtimestate == Nebucord_Status::NC_RECONNECT) {
+            $this->resume();
         }
     }
 
@@ -143,6 +154,25 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
     }
 
     /**
+     * Resume broken connection.
+     *
+     * If a connection breaks, this method is called to reconnect and try initiate listen status for missed events.
+     */
+    private function resume() {
+        if($this->_reconnect_tries > Nebucord_Status::MAX_RECONNECT_TRIES) {
+            $this->setRuntimeState(Nebucord_Status::NC_EXIT);
+            \Nebucord\Logging\Nebucord_Logger::infoImportant("Max reconnection tries reached, giving up and exiting...");
+            return;
+        }
+        $this->_reconnect_tries++;
+        sleep(2);
+        \Nebucord\Logging\Nebucord_Logger::infoImportant("Try to reconnect...");
+        if(!$this->_wscon->reconnect()) {
+            $this->resume();
+        }
+    }
+
+    /**
      * The Nebucord man loop
      *
      * After setting everything up, Nebucord goes into the runstate of the main loop, where it's listening for
@@ -159,12 +189,12 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
             $message = $this->_wscon->soReadAll();
             if($message == -1) {
                 \Nebucord\Logging\Nebucord_Logger::error("Error reading event from gateway, exiting...", "nebucord.log");
-                $this->_runstate = Nebucord_Status::NC_EXIT;
+                $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
                 break;
             }
             if($message == -2) {
                 \Nebucord\Logging\Nebucord_Logger::error("Gateway closes connection, exiting...", "nebucord.log");
-                $this->_runstate = Nebucord_Status::NC_EXIT;
+                $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
                 break;
             }
 
@@ -172,9 +202,10 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                 $this->_evtctrl->readEvent($message);
                 $oInEvent = $this->_evtctrl->dispatchEventLocal();
                 if(isset($oInEvent->heartbeat_interval)) { $intervaltime = $oInEvent->heartbeat_interval; }
-                if(isset($oInEvent->s)) { $currentsequence = $oInEvent->s; }
+                if(isset($oInEvent->s) && $this->_runstate == Nebucord_Status::NC_RUN) { $currentsequence = $oInEvent->s; $this->_actctrl->setSequence($oInEvent->s); }
                 if($oInEvent instanceof Nebucord_Model_GWReady) {
                     $this->_session_id = $oInEvent->session_id;
+                    $this->_actctrl->setSession($oInEvent->session_id);
                     $this->_botuserid = $oInEvent->user['id'];
                     $this->_botusername = $oInEvent->user['username'];
                     $this->_actctrl->setBotId($this->_botuserid);
@@ -190,7 +221,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                     unset($readyconfirmmsg);
                 }
 
-                $this->_actctrl->setInternalAction($oInEvent);
+                $this->_actctrl->setInternalAction($oInEvent, $this->_runstate);
                 $oOutEvent = $this->_actctrl->getInternalActionEvent();
                 if($oOutEvent && $oOutEvent->op != Nebucord_Status::OP_HEARTBEAT_ACK) {
                     if(get_class($oOutEvent) == "Nebucord\Models\Nebucord_Model_RESTMessage") {
@@ -203,10 +234,11 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                         }
                         unset($rest);
                     } else {
-                        $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oOutEvent->toArray()));
+                        if($oOutEvent instanceof Nebucord_Model_GWResumed) { $this->_runstate = Nebucord_Status::NC_RUN; $timer->reStartTimer(); $timer->reStartTimer(1); $this->_reconnect_tries = 0; }
+                        else { $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oOutEvent->toArray())); }
                         if($sendbytes == -1) {
                             \Nebucord\Logging\Nebucord_Logger::error("Can't write event to gateway, exiting...", "nebucord.log");
-                            $this->_runstate = Nebucord_Status::NC_EXIT;
+                            $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
                             break;
                         }
                         if ($oOutEvent->status == "offline") {
@@ -227,12 +259,12 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                 }
             }
 
-            if($timer->getTime(1) > ($intervaltime * 1.5)) {
-                \Nebucord\Logging\Nebucord_Logger::error("Did not receive any heartbeat response from gateway. Connection broken? Extiting...", "nebucord.log");
-                $this->setRuntimeState(Nebucord_Status::NC_EXIT);
+            if($timer->getTime(1) > ($intervaltime * 1.5) && $this->_runstate == Nebucord_Status::NC_RUN) {
+                \Nebucord\Logging\Nebucord_Logger::error("Did not receive any heartbeat response from gateway. Connection broken? Try to reconnect...", "nebucord.log");
+                $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
             }
 
-            if($intervaltime > 0) {
+            if($intervaltime > 0 && $this->_runstate == Nebucord_Status::NC_RUN) {
                 if($timer->getTime() > $intervaltime) {
                     $timer->reStartTimer();
                     $oHeartbeat = Nebucord_Model_Factory::create(Nebucord_Status::OP_HEARTBEAT);

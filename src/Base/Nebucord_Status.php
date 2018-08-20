@@ -117,10 +117,13 @@ class Nebucord_Status {
 
     const NC_RUN = 1;
     const NC_EXIT = 0;
+    const NC_RECONNECT = 2;
+
+    const MAX_RECONNECT_TRIES = 3;
 
     const CLIENTBROWSER = 'NebucordWS API';
     const CLIENTHOST = 'nebucordws.nebulatien.org';
-    const VERSION = '0.6.3';
+    const VERSION = '0.7.0';
 
     /**
      * Returns the OS.

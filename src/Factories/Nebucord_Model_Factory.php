@@ -45,11 +45,13 @@ class Nebucord_Model_Factory {
             Nebucord_Status::GWEVT_READY => "Nebucord\Models\Nebucord_Model_GWReady",
             Nebucord_Status::GWEVT_GUILD_CREATE => "Nebucord\Models\Nebucord_Model_Guild",
             Nebucord_Status::GWEVT_MESSAGE_CREATE => "Nebucord\Models\Nebucord_Model_Message",
-            Nebucord_Status::GWEVT_GUILD_MEMBER_ADD => "Nebucord\Models\Nebucord_Model_GWGuildMemberAdd"
+            Nebucord_Status::GWEVT_GUILD_MEMBER_ADD => "Nebucord\Models\Nebucord_Model_GWGuildMemberAdd",
+            Nebucord_Status::GWEVT_RESUMED => "Nebucord\Models\Nebucord_Model_GWResumed"
         ),
         Nebucord_Status::OP_HEARTBEAT => "Nebucord\Models\Nebucord_Model_OPHeartbeat",
         Nebucord_Status::OP_IDENTIFY => "Nebucord\Models\Nebucord_Model_OPIdentify",
         Nebucord_Status::OP_STATUS_UPDATE => "Nebucord\Models\Nebucord_Model_OPStatusUpdate",
+        Nebucord_Status::OP_RESUME => "Nebucord\Models\Nebucord_Model_OPResume",
         Nebucord_Status::OP_HELLO => "Nebucord\Models\Nebucord_Model_OPHello",
         Nebucord_Status::OP_HEARTBEAT_ACK => "Nebucord\Models\Nebucord_Model_OPHeartbeatACK"
     );

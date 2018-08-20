@@ -60,6 +60,15 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
     /** @var array An array of user (snowflakes) wich can control the bot and the actions wich are set up here. */
     private $_ctrlusr;
 
+    /** @var integer The current state in wich the API is currently. */
+    private $_state;
+
+    /** @var integer The current connection sequence. */
+    private $_sequence;
+
+    /** @var string $_session The current session for the connection.*/
+    private $_sessionid;
+
     /**
      * Nebucord_ActionController constructor.
      *
@@ -74,6 +83,11 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
         $this->_outevent = null;
         $this->_acttbl = $acttbl;
         $this->_token = null;
+        $this->_botuserid = 0;
+        $this->_ctrlusr = array();
+        $this->_state = Nebucord_Status::NC_RUN;
+        $this->_sequence = 0;
+        $this->_sessionid = null;
 
         if(count($params) > 0) {
             foreach($params as $key => $val) {
@@ -96,6 +110,11 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
         $this->_outevent = null;
         $this->_acttbl = null;
         $this->_token = null;
+        $this->_botuserid = 0;
+        $this->_ctrlusr = array();
+        $this->_state = Nebucord_Status::NC_EXIT;
+        $this->_sequence = 0;
+        $this->_sessionid = null;
     }
 
     /**
@@ -111,15 +130,39 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
     }
 
     /**
+     * Sets current session.
+     *
+     * Sets the current session id for the actual connection with the gateway.
+     *
+     * @param strng $sessionid The current session id.
+     */
+    public function setSession($sessionid) {
+        $this->_sessionid = $sessionid;
+    }
+
+    /**
+     * Sets the current sequence.
+     *
+     * Sets the current connections sequence from the gateway.
+     *
+     * @param integer $sequence The acutal sequence.
+     */
+    public function setSequence($sequence) {
+        $this->_sequence = $sequence;
+    }
+
+    /**
      * Sets internal action to be executed.
      *
      * Sets the action wich should be fired based on the incoming event from the gateway.
      * After that, it executes the selection of an action.
      *
      * @param object|Nebucord_Model $event The event model to determine the actions.
+     * @param integer $state The current state in wich the API is currently.
      */
-    public function setInternalAction(Nebucord_Model $event) {
+    public function setInternalAction(Nebucord_Model $event, $state = 1) {
         $this->_inevent = $event;
+        $this->_state = $state;
         $this->selectInternalAction();
     }
 
@@ -157,6 +200,7 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
      */
     private function doDispatch() {
         switch($this->_inevent->t) {
+            case Nebucord_Status::GWEVT_RESUMED: $this->onResume(); break;
             case Nebucord_Status::GWEVT_MESSAGE_CREATE: $this->onCreateMessageCommand(); break;
             default: $this->_inevent = null; $this->_outevent = null; break;
         }
@@ -168,8 +212,18 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
      * This internal action authenticates and identifies a bot to the Discord Gateway.
      */
     private function doIdentify() {
-        $this->_outevent = Nebucord_Model_Factory::create(Nebucord_Status::OP_IDENTIFY);
-        $this->_outevent->populate(['op' => Nebucord_Status::OP_IDENTIFY, 'd' => ['token' => $this->_token, 'properties' => ['$os' => Nebucord_Status::getOS(), '$browser' => Nebucord_Status::getBrowser(), '$device' => Nebucord_Status::getDevice()], 'compress' => false, 'presence' => ['since' => null, 'game' => null, 'status' => 'online', 'afk' => false]]]);
+        if($this->_state == Nebucord_Status::NC_RECONNECT) {
+            $this->_outevent = Nebucord_Model_Factory::create(Nebucord_Status::OP_RESUME);
+            $this->_outevent->populate(['op' => Nebucord_Status::OP_RESUME, 'd' => ['token' => $this->_token, 'session_id' => $this->_sessionid, 'seq' => $this->_sequence]]);
+        } else {
+            $this->_outevent = Nebucord_Model_Factory::create(Nebucord_Status::OP_IDENTIFY);
+            $this->_outevent->populate(['op' => Nebucord_Status::OP_IDENTIFY, 'd' => ['token' => $this->_token, 'properties' => ['$os' => Nebucord_Status::getOS(), '$browser' => Nebucord_Status::getBrowser(), '$device' => Nebucord_Status::getDevice()], 'compress' => false, 'presence' => ['since' => null, 'game' => null, 'status' => 'online', 'afk' => false]]]);
+        }
+    }
+
+    private function onResume() {
+        $this->_outevent = $this->_inevent;
+        \Nebucord\Logging\Nebucord_Logger::infoImportant("All missing events received, reconnect completed.");
     }
 
     /**

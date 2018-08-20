@@ -165,4 +165,13 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
         \Nebucord\Logging\Nebucord_Logger::infoImportant("WebSocket connection established.", "nebucord.log");
         return true;
     }
+
+    public function reconnect() {
+        fclose($this->_socket);
+        if($this->connect()) {
+            \Nebucord\Logging\Nebucord_Logger::info("Trying to get missing events, sending resume request...");
+            return true;
+        }
+        return false;
+    }
 }
