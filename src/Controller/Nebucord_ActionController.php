@@ -134,7 +134,7 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
      *
      * Sets the current session id for the actual connection with the gateway.
      *
-     * @param strng $sessionid The current session id.
+     * @param string $sessionid The current session id.
      */
     public function setSession($sessionid) {
         $this->_sessionid = $sessionid;
@@ -246,8 +246,8 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
      * The methods are described in the Nebucord_ActionTable class and can be overwritten.
      */
     private function onCreateMessageCommand() {
+        $msg = $this->_inevent->content;
         if($this->authControlUser()) {
-            $msg = $this->_inevent->content;
             if($this->checkBotID($msg)) {
                 if (strpos($msg, Nebucord_IActionTable::SHUTDOWN) !== false) {
                     \Nebucord\Logging\Nebucord_Logger::warn("Shutdown command received: " . $msg, "nebucord.log");
@@ -273,6 +273,11 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
                     $this->_outevent->channelid = $this->_inevent->channel_id;
                 }
             }
+        }
+        if (strpos($msg, Nebucord_IActionTable::DOVERSION) !== false) {
+            \Nebucord\Logging\Nebucord_Logger::info("Do version command received: " . $msg, "nebucord.log");
+            $this->_outevent = $this->_acttbl->doVersion($msg);
+            $this->_outevent->channelid = $this->_inevent->channel_id;
         }
     }
 

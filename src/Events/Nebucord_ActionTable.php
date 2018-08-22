@@ -127,7 +127,7 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
     public function getHelp($command) {
         if($command == self::GETHELP) {
             $message = array("title" => "Available Bot commands",
-                "description" => "The following commands are currently available:
+                "description" => "The following commands are currently available\n*needs the bot snowflake after command (!command botid parameters)*:
     ",
                 "fields" => array(
                     array(
@@ -159,6 +159,12 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
                         "name" => "!say",
                         "value" => "Repeats what a user say:\n
             ```!say message```",
+                        "inline" => false
+                    ),
+                    array(
+                        "name" => "!version",
+                        "value" => "Detailed bot and machine status:\n
+            ```!version```",
                         "inline" => false
                     )
                 )
@@ -216,6 +222,53 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
         if($command == self::DOSTATUS) {
             $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_CREATE_MESSAGE);
             $oMessageCreate->content = "Bot is up and running.";
+            return $oMessageCreate;
+        }
+        return null;
+    }
+
+    /**
+     * The doVersion method.
+     *
+     * @see Nebucord_IActionTable::doVersion()
+     *
+     * @param string $command The command wich invokes this method.
+     * @return \Nebucord\Interfaces\Nebucord_IModelREST The model returned on this method.
+     */
+    public function doVersion($command) {
+        if($command == self::DOVERSION) {
+            $message = array("title" => "Bot version",
+                "description" => "The requested bot is running with:",
+                "fields" => array(
+                    array(
+                        "name" => "API",
+                        "value" => Nebucord_Status::CLIENTBROWSER,
+                        "inline" => false
+                    ),
+                    array(
+                        "name" => "Version",
+                        "value" => Nebucord_Status::VERSION,
+                        "inline" => false
+                    ),
+                    array(
+                        "name" => "Client host",
+                        "value" => Nebucord_Status::CLIENTHOST,
+                        "inline" => false
+                    ),
+                    array(
+                        "name" => "OS",
+                        "value" => Nebucord_Status::getOS(),
+                        "inline" => false
+                    ),
+                    array(
+                        "name" => "Device",
+                        "value" => Nebucord_Status::getDevice(),
+                        "inline" => false
+                    )
+                )
+            );
+            $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_CREATE_MESSAGE);
+            $oMessageCreate->populate(['content' => null, 'embed' => $message]);
             return $oMessageCreate;
         }
         return null;

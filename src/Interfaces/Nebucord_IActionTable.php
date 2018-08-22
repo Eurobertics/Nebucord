@@ -52,6 +52,9 @@ interface Nebucord_IActionTable {
     /** @var string The const for requesting status. */
     const DOSTATUS = "!status";
 
+    /** @var string This is a public command, it shows the bot status. */
+    const DOVERSION = "!version";
+
     /**
      * Stops Nebucord and sets runtime to exit.
      *
@@ -111,4 +114,15 @@ interface Nebucord_IActionTable {
      * @return Nebucord_Model|null The model returned to the runtime controller to execute the action by the ActionController.
      */
     public function doStatus($command);
+
+    /**
+     * Returns bot version.
+     *
+     * Returns the current running version of the API.
+     * This command is public.
+     *
+     * @param string $command The command on wich this action shoud fire (default: !status).
+     * @return Nebucord_Model|null The model returned to the runtime controller to execute the action by the ActionController.
+     */
+    public function doVersion($command);
 }
