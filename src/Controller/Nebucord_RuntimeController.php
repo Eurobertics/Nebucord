@@ -33,7 +33,6 @@ use Nebucord\Factories\Nebucord_Model_Factory;
 use Nebucord\Http\Nebucord_WebSocket;
 use Nebucord\Models\Nebucord_Model_GWReady;
 use Nebucord\Models\Nebucord_Model_GWResumed;
-use Nebucord\Models\Nebucord_Model_OPResume;
 use Nebucord\NebucordREST;
 
 /**
@@ -117,9 +116,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
      * @param integer $runtimestate The new runtime state.
      */
     public function setRuntimeState($runtimestate) {
-        if(is_int($runtimestate)) {
-            $this->_runstate = $runtimestate;
-        }
+        $this->_runstate = $runtimestate;
         if($runtimestate == Nebucord_Status::NC_RECONNECT) {
             $this->resume();
         }
@@ -185,7 +182,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
 
         $timer->startTimer();
         $timer->startTimer(1);
-        while($this->_runstate) {
+        while($this->_runstate > 0) {
             $message = $this->_wscon->soReadAll();
             if($message == -1) {
                 \Nebucord\Logging\Nebucord_Logger::error("Error reading event from gateway, exiting...", "nebucord.log");
@@ -234,7 +231,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                         }
                         unset($rest);
                     } else {
-                        if($oOutEvent instanceof Nebucord_Model_GWResumed) { $this->_runstate = Nebucord_Status::NC_RUN; $timer->reStartTimer(); $timer->reStartTimer(1); $this->_reconnect_tries = 0; }
+                        if($oOutEvent instanceof Nebucord_Model_GWResumed) { $this->setRuntimeState(Nebucord_Status::NC_RUN); $timer->reStartTimer(); $timer->reStartTimer(1); $this->_reconnect_tries = 0; }
                         else { $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oOutEvent->toArray())); }
                         if($sendbytes == -1) {
                             \Nebucord\Logging\Nebucord_Logger::error("Can't write event to gateway, exiting...", "nebucord.log");
@@ -273,7 +270,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                     $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oHeartbeat->toArray()));
                     if($sendbytes == -1) {
                         \Nebucord\Logging\Nebucord_Logger::error("Can't write heartbeat message to gateway, exiting...", "nebucord.log");
-                        $this->_runstate = Nebucord_Status::NC_EXIT;
+                        $this->setRuntimeState(Nebucord_Status::NC_EXIT);
                         break;
                     }
                 }
