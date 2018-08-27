@@ -276,7 +276,7 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
         $sendbytes = 0;
         while($sendbytes != $length) {
             $bytes = fwrite($this->_socket, $encdata, $length);
-            if($bytes === false) {
+            if($bytes === false || $bytes == 0) {
                 $sendbytes = -1;
                 break;
             }
