@@ -161,11 +161,11 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
             \Nebucord\Logging\Nebucord_Logger::infoImportant("Max reconnection tries reached, giving up and exiting...");
             return;
         }
-        $this->_reconnect_tries++;
-        sleep(2);
+        sleep(5);
         \Nebucord\Logging\Nebucord_Logger::infoImportant("Try to reconnect...");
         if(!$this->_wscon->reconnect()) {
             $this->resume();
+            $this->_reconnect_tries++;
         }
     }
 
