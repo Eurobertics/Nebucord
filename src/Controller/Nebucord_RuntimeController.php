@@ -156,9 +156,10 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
      * If a connection breaks, this method is called to reconnect and try initiate listen status for missed events.
      */
     private function resume() {
+        \Nebucord\Logging\Nebucord_Logger::warn("Reconnect with try ".$this->_reconnect_tries." of ".Nebucord_Status::MAX_RECONNECT_TRIES."...");
         if($this->_reconnect_tries > Nebucord_Status::MAX_RECONNECT_TRIES) {
-            $this->setRuntimeState(Nebucord_Status::NC_EXIT);
             \Nebucord\Logging\Nebucord_Logger::infoImportant("Max reconnection tries reached, giving up and exiting...");
+            $this->setRuntimeState(Nebucord_Status::NC_EXIT);
             return;
         }
         sleep(5);
@@ -182,7 +183,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
 
         $timer->startTimer();
         $timer->startTimer(1);
-        while($this->_runstate > 0) {
+        while($this->_runstate > Nebucord_Status::NC_EXIT) {
             $message = $this->_wscon->soReadAll();
             if($message == -1) {
                 \Nebucord\Logging\Nebucord_Logger::error("Error reading event from gateway, exiting...", "nebucord.log");
@@ -270,7 +271,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                     $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oHeartbeat->toArray()));
                     if($sendbytes == -1) {
                         \Nebucord\Logging\Nebucord_Logger::error("Can't write heartbeat message to gateway, exiting...", "nebucord.log");
-                        $this->setRuntimeState(Nebucord_Status::NC_EXIT);
+                        $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
                         break;
                     }
                 }

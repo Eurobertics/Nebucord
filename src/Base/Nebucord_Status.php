@@ -123,7 +123,7 @@ class Nebucord_Status {
 
     const CLIENTBROWSER = 'NebucordWS API';
     const CLIENTHOST = 'nebucordws.nebulatien.org';
-    const VERSION = '0.7.4';
+    const VERSION = '0.7.6';
 
     /**
      * Returns the OS.
