@@ -76,7 +76,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
     private $_botusername;
 
     /** @var integer $_reconnect_tries The current tries for reconnecting. */
-    private $_reconnect_tries;
+    private $_reconnect_tries = 1;
 
     /**
      * Nebucord_RuntimeController constructor.
@@ -157,7 +157,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
      */
     private function resume() {
         \Nebucord\Logging\Nebucord_Logger::warn("Reconnect with try ".$this->_reconnect_tries." of ".Nebucord_Status::MAX_RECONNECT_TRIES."...");
-        if($this->_reconnect_tries > Nebucord_Status::MAX_RECONNECT_TRIES) {
+        if($this->_reconnect_tries >= Nebucord_Status::MAX_RECONNECT_TRIES) {
             \Nebucord\Logging\Nebucord_Logger::infoImportant("Max reconnection tries reached, giving up and exiting...");
             $this->setRuntimeState(Nebucord_Status::NC_EXIT);
             return;
@@ -188,12 +188,12 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
             if($message == -1) {
                 \Nebucord\Logging\Nebucord_Logger::error("Error reading event from gateway, exiting...", "nebucord.log");
                 $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
-                break;
+                //break;
             }
             if($message == -2) {
                 \Nebucord\Logging\Nebucord_Logger::error("Gateway closes connection, exiting...", "nebucord.log");
                 $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
-                break;
+                //break;
             }
 
             if(strlen($message) > 0) {
@@ -272,7 +272,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                     if($sendbytes == -1) {
                         \Nebucord\Logging\Nebucord_Logger::error("Can't write heartbeat message to gateway, exiting...", "nebucord.log");
                         $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
-                        break;
+                        //break;
                     }
                 }
             }
