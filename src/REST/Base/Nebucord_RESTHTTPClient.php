@@ -156,7 +156,7 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
         $res = null;
         $res_ar = explode("\r\n\r\n", $response);
         if(strpos($res_ar[0], "200 OK") !== false) {
-            $r = substr($res_ar[1], strpos($res_ar[1], "[") -1, -3);
+            $r = trim(substr($res_ar[1], 4, -3));
             $res = json_decode(preg_replace('/[[:cntrl:]]/', '', $r), true);
         }
         return $res;
