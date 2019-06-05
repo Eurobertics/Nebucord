@@ -3,7 +3,7 @@ Nebucord - Discord WebSocket and REST API
 
 
 [![GitHub Release](https://img.shields.io/github/release/eurobertics/nebucord.svg?colorB=brightgreen&label=latest-stable)](https://github.com/eurobertics/nebucord)
-[![GitHub Development](https://img.shields.io/badge/dev--master-v0.7.8-red.svg)](https://github.com/eurobertics/nebucord)
+[![GitHub Development](https://img.shields.io/badge/dev--master-v0.7.9-red.svg)](https://github.com/eurobertics/nebucord)
 [![Github commits (since latest release)](https://img.shields.io/github/commits-since/Eurobertics/nebucord/latest.svg)](https://github.com/Eurobertics/Nebucord)
 [![GitHub license](https://img.shields.io/github/license/eurobertics/nebucord.svg)](https://github.com/Eurobertics/Nebucord/blob/master/LICENSE)
 
@@ -31,10 +31,8 @@ Of course not fully funished is it still able to do the most important things. T
     - Some models for events
     - Some models and methods for interacting with REST
     - Some gateway events
-    - Automatically reconnecting
     - Many error checking
     - Way more better logging and debugging options
-    - Some WebSocket frame OP codes for message control
     - OAuth 2.0 client implementation
 
 Install
