@@ -154,12 +154,10 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
      */
     protected function parseResponse($response) {
         $res = null;
-        $res_ar = explode("\r\n", $response);
+        $res_ar = explode("\r\n\r\n", $response);
         if(strpos($res_ar[0], "200 OK") !== false) {
-            for($i = count($res_ar) - 1; $i > 0; --$i) {
-                $res = json_decode($res_ar[$i], true);
-                if($res != null) { break; }
-            }
+            $r = substr($res_ar[1], strpos($res_ar[1], "[") -1, -3);
+            $res = json_decode(preg_replace('/[[:cntrl:]]/', '', $r), true);
         }
         return $res;
     }
