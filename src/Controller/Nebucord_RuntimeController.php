@@ -78,6 +78,9 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
     /** @var integer $_reconnect_tries The current tries for reconnecting. */
     private $_reconnect_tries = 1;
 
+    /** @var NebucordREST $_rest Nebucord REST api object. */
+    private $_rest;
+
     /**
      * Nebucord_RuntimeController constructor.
      *
@@ -147,6 +150,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
         $this->_evtctrl = new Nebucord_EventController($this->_evttbl);
         $this->_actctrl = new Nebucord_ActionController($this->_acttbl, $this->_params);
         \Nebucord\Logging\Nebucord_Logger::info("Nebucord set up, entering main loop...", "nebucord.log");
+        $this->_rest = new NebucordREST(['token' => $this->_params['token']]);
         $this->mainLoop();
     }
 
@@ -202,35 +206,14 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                 if(isset($oInEvent->heartbeat_interval)) { $intervaltime = $oInEvent->heartbeat_interval; }
                 if(isset($oInEvent->s) && $this->_runstate == Nebucord_Status::NC_RUN) { $currentsequence = $oInEvent->s; $this->_actctrl->setSequence($oInEvent->s); }
                 if($oInEvent instanceof Nebucord_Model_GWReady) {
-                    $this->_session_id = $oInEvent->session_id;
-                    $this->_actctrl->setSession($oInEvent->session_id);
-                    $this->_botuserid = $oInEvent->user['id'];
-                    $this->_botusername = $oInEvent->user['username'];
-                    $this->_actctrl->setBotId($this->_botuserid);
-
-                    $rest = new NebucordREST(['token' => $this->_params['token']]);
-                    $readyconfirmmsg = array("title" => Nebucord_Status::CLIENTBROWSER." (v. ".Nebucord_Status::VERSION.")", "description" => "Bot details:", "fields" => array(array("name" => "Bot name", "value" => $this->_botusername, "inline" => false), array("name" => "Bot Snowflake ID", "value" => $this->_botuserid, "inline" => false)));
-                    for($i = 0; $i < count($this->_params['ctrlusr']); $i++) {
-                        $dmch = $rest->user->createDM($this->_params['ctrlusr'][$i]);
-                        $rest->channel->createMessage($dmch->id, "Bot is ready and online.", $readyconfirmmsg);
-                    }
-                    unset($dmch);
-                    unset($rest);
-                    unset($readyconfirmmsg);
+                    $this->botStartup($oInEvent);
                 }
 
                 $this->_actctrl->setInternalAction($oInEvent, $this->_runstate);
                 $oOutEvent = $this->_actctrl->getInternalActionEvent();
                 if($oOutEvent && $oOutEvent->op != Nebucord_Status::OP_HEARTBEAT_ACK) {
                     if(get_class($oOutEvent) == "Nebucord\Models\Nebucord_Model_RESTMessage") {
-                        $rest = new NebucordREST(['token' => $this->_params['token']]);
-                        
-                        if($oOutEvent->embed != null) {
-                            $rest->channel->createMessageObject($oOutEvent);
-                        } else {
-                            $rest->channel->createMessageObject($oOutEvent);
-                        }
-                        unset($rest);
+                        $this->botMessage($oOutEvent);
                     } else {
                         if($oOutEvent instanceof Nebucord_Model_GWResumed) { $this->setRuntimeState(Nebucord_Status::NC_RUN); $timer->reStartTimer(); $timer->reStartTimer(1); $this->_reconnect_tries = 0; }
                         else { $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oOutEvent->toArray())); }
@@ -241,15 +224,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                         }
                         if ($oOutEvent->status == "offline") {
                             $this->setRuntimeState(Nebucord_Status::NC_EXIT);
-                            $rest = new NebucordREST(['token' => $this->_params['token']]);
-                            $shutdownmsg = array("title" => Nebucord_Status::CLIENTBROWSER." (v. ".Nebucord_Status::VERSION.")", "description" => "Bot details:", "fields" => array(array("name" => "Bot name", "value" => $this->_botusername, "inline" => false), array("name" => "Bot Snowflake ID", "value" => $this->_botuserid, "inline" => false)));
-                            for($i = 0; $i < count($this->_params['ctrlusr']); $i++) {
-                                $dmch = $rest->user->createDM($this->_params['ctrlusr'][$i]);
-                                $rest->channel->createMessage($dmch->id, "Bot ending process and exits, shutdown scheduled.", $shutdownmsg);
-                            }
-                            unset($dmch);
-                            unset($rest);
-                            unset($readyconfirmmsg);
+                            $this->botShutdown();
                         }
                     }
                 } elseif($oOutEvent && $oOutEvent->op == Nebucord_Status::OP_HEARTBEAT_ACK) {
@@ -277,5 +252,54 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                 }
             }
         }
+    }
+
+    /**
+     * Starts the bot
+     *
+     * Get inital parameters from gateway and sends a short startup message to the bot admins.
+     *
+     * @param Nebucord_Model_GWReady $evt The returned GatewayReady event with initial parameters.
+     */
+    private function botStartup(Nebucord_Model_GWReady $evt) {
+        $this->_session_id = $evt->session_id;
+        $this->_actctrl->setSession($evt->session_id);
+        $this->_botuserid = $evt->user['id'];
+        $this->_botusername = $evt->user['username'];
+        $this->_actctrl->setBotId($this->_botuserid);
+
+        $readyconfirmmsg = array("title" => Nebucord_Status::CLIENTBROWSER." (v. ".Nebucord_Status::VERSION.")", "description" => "Bot details:", "fields" => array(array("name" => "Bot name", "value" => $this->_botusername, "inline" => false), array("name" => "Bot Snowflake ID", "value" => $this->_botuserid, "inline" => false)));
+        for($i = 0; $i < count($this->_params['ctrlusr']); $i++) {
+            $dmch = $this->_rest->user->createDM($this->_params['ctrlusr'][$i]);
+            $this->_rest->channel->createMessage($dmch->id, "Bot is ready and online.", $readyconfirmmsg);
+        }
+        unset($dmch);
+        unset($readyconfirmmsg);
+    }
+
+    /**
+     * Shuts the bot down
+     *
+     * Sends a shutdown notification to the bot admins.
+     */
+    private function botShutdown() {
+        $shutdownmsg = array("title" => Nebucord_Status::CLIENTBROWSER." (v. ".Nebucord_Status::VERSION.")", "description" => "Bot details:", "fields" => array(array("name" => "Bot name", "value" => $this->_botusername, "inline" => false), array("name" => "Bot Snowflake ID", "value" => $this->_botuserid, "inline" => false)));
+        for($i = 0; $i < count($this->_params['ctrlusr']); $i++) {
+            $dmch = $this->_rest->user->createDM($this->_params['ctrlusr'][$i]);
+            $this->_rest->channel->createMessage($dmch->id, "Bot ending process and exits, shutdown scheduled.", $shutdownmsg);
+        }
+        unset($dmch);
+        unset($shutdownmsg);
+    }
+
+    /**
+     * Sends a message from bot
+     *
+     * Sends a message from the bot.
+     *
+     * @param \Nebucord\Models\Nebucord_Model $evt The message object.
+     */
+    private function botMessage(\Nebucord\Models\Nebucord_Model $evt) {
+        $this->_rest->channel->createMessageObject($evt);
     }
 }
