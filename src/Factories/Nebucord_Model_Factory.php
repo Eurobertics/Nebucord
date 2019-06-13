@@ -45,9 +45,14 @@ class Nebucord_Model_Factory {
             Nebucord_Status::GWEVT_READY => "Nebucord\Models\Nebucord_Model_GWReady",
             Nebucord_Status::GWEVT_GUILD_CREATE => "Nebucord\Models\Nebucord_Model_Guild",
             Nebucord_Status::GWEVT_MESSAGE_CREATE => "Nebucord\Models\Nebucord_Model_Message",
+            Nebucord_Status::GWEVT_MESSAGE_UPDATE => "Nebucord\Models\Nebucord_Model_Message",
+            Nebucord_Status::GWEVT_MESSAGE_DELETE => "Nebucord\Models\Nebucord_Model_GWMessageDelete",
             Nebucord_Status::GWEVT_GUILD_MEMBER_ADD => "Nebucord\Models\Nebucord_Model_GWGuildMemberAdd",
             Nebucord_Status::GWEVT_RESUMED => "Nebucord\Models\Nebucord_Model_GWResumed",
-            Nebucord_Status::GWEVT_PRESENCE_UPDATE => "Nebucord\Models\Nebucord_Model_GWPresenceUpdate"
+            Nebucord_Status::GWEVT_PRESENCE_UPDATE => "Nebucord\Models\Nebucord_Model_GWPresenceUpdate",
+            Nebucord_Status::GWEVT_CHANNEL_CREATE => "Nebucord\Models\Nebucord_Model_Channel",
+            Nebucord_Status::GWEVT_CHANNEL_UPDATE => "Nebucord\Models\Nebucord_Model_Channel",
+            Nebucord_Status::GWEVT_CHANNEL_DELETE => "Nebucord\Models\Nebucord_Model_Channel"
         ),
         Nebucord_Status::OP_HEARTBEAT => "Nebucord\Models\Nebucord_Model_OPHeartbeat",
         Nebucord_Status::OP_IDENTIFY => "Nebucord\Models\Nebucord_Model_OPIdentify",
