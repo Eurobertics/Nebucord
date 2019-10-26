@@ -24,6 +24,8 @@
 
 namespace Nebucord\Base;
 
+use mysql_xdevapi\Exception;
+
 /**
  * Class Nebucord_NetBase
  *
@@ -34,8 +36,12 @@ namespace Nebucord\Base;
  */
 class Nebucord_NetBase {
 
+    /** @var string $_httpapiuri HTTP URI to get Discords websocket url. */
+    private $_httpapiuri = "https://discordapp.com/api/gateway";
+
     /** @var string $_gatewayhost The host of the Discord gateway. */
-    protected $_gatewayhost = "gateway.discord.gg";
+    protected $_gatewayhost = null;
+    //protected $_gatewayhost = "gateway.discord.gg";
 
     /** @var string $_remoteapiversion The current API version of the Discord API endpoint. */
     protected $_remoteapiversion = "6";
@@ -71,6 +77,12 @@ class Nebucord_NetBase {
     protected function __construct($transfercompression = false) {
         if(!is_bool($transfercompression)) { $this->_transfercompression = false; }
         else { $this->_transfercompression = $transfercompression; }
+
+        $wsuri = json_decode(file_get_contents($this->_httpapiuri), true);
+        $this->_gatewayhost = substr($wsuri['url'], 6);
+        if($this->_gatewayhost == null || empty($this->_gatewayhost)) {
+            throw new Exception("Error getting Discord websocket API URI!");
+        }
 
         $this->_fullgatewayhost = "ssl://".$this->_gatewayhost.":443";
         $this->_gatewaypath = "/gateway/?v=".$this->_remoteapiversion."&encoding=json&compress=".$this->_transfercompression;
