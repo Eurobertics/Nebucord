@@ -3,13 +3,13 @@ Nebucord - Discord WebSocket and REST API
 
 
 [![GitHub Release](https://img.shields.io/github/release/eurobertics/nebucord.svg?colorB=brightgreen&label=latest-stable)](https://github.com/eurobertics/nebucord)
-[![GitHub Development](https://img.shields.io/badge/dev--master-v0.8.1-red.svg)](https://github.com/eurobertics/nebucord)
+[![GitHub Development](https://img.shields.io/badge/dev--master-v0.8.2-red.svg)](https://github.com/eurobertics/nebucord)
 [![Github commits (since latest release)](https://img.shields.io/github/commits-since/Eurobertics/nebucord/latest.svg)](https://github.com/Eurobertics/Nebucord)
 [![GitHub license](https://img.shields.io/github/license/eurobertics/nebucord.svg)](https://github.com/Eurobertics/Nebucord/blob/master/LICENSE)
 
 This another implementation of the Discord API. It implements an HTTP WebSocket client
 as well as a REST API.  
-Of course not fully funished is it still able to do the most important things. This includes:
+Of course not fully finished is it still able to do the most important things. This includes:
 
 - Nebucord WebSocket API
     - Setup bot and run bot(s)
@@ -56,10 +56,10 @@ include "src/nebucord_autoloader.php";
 ```
 ---
 
-Example usage - WinSock API
+Example usage - WebSocket API
 ---------------------------
 
-The WinSock API is designed to run as a PHP CLI program.
+The WebSocket API is designed to run as a PHP CLI program.
 
 Usage websocket API, minimalistic example:
 
