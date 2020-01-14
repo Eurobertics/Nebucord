@@ -69,10 +69,14 @@ include "vendor/autoload.php";
 
 use Nebucord\Nebucord;
 
-$nebucord = new Nebucord(['token' => 'your_bot_token']);
+$nebucord = new Nebucord(['token' => 'your_bot_token', 'ctrlusr' => ['controluser-snowflake1', 'controluser-snowflake2']]);
 $nebucord->bootstrap()->run();
 
 ```
+
+**'your_bot_token':** The auth token of your bot (from the Discord Dev-Portal)
+
+**'controluser-snowflake':** The snowflake of Discord user(s) who can issue control commands such like 'shutdown' to the bot.
 
 Of course this only starts the bot and this one sits there and does nothing.
 
@@ -96,7 +100,7 @@ class MessageInterceptorClass {
 $nebucordEventTable = \Nebucord\Events\Nebucord_EventTable::create();
 $nebucordEventTable->addEvent(new MessageInterceptorClass, "onMessageReceive", \Nebucord\Base\Nebucord_Status::GWEVT_MESSAGE_CREATE);
 
-$nebucord = new Nebucord(['token' => 'your_bot_token']);
+$nebucord = new Nebucord(['token' => 'your_bot_token', 'ctrlusr' => ['controluser-snowflake1', 'controluser-snowflake2']]);
 $nebucord->bootstrap()
     ->setEventTable($nebucordEventTable)
     ->run();
