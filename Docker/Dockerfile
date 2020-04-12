@@ -24,7 +24,7 @@ RUN php -r "unlink('composer-setup.php');"
 RUN mkdir -p /opt/nebucord && cd /opt/nebucord && composer require eurobertics/nebucord
 RUN mkdir -p /var/nebucord && mkdir -p /var/nebucord_entry
 VOLUME /var/nebucord
-COPY ./nebucord_entrypoint.php /var/nebucord_entry
+COPY nebucord_entrypoint.php /var/nebucord_entry
 WORKDIR /var/nebucord
 
 ENTRYPOINT ["php", "-f", "/var/nebucord_entry/nebucord_entrypoint.php"]
