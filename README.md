@@ -45,6 +45,11 @@ By composer:
 user@linux:~# composer require eurobertics/nebucord
 ```
 
+By Docker (more information can be found on [Nebucord Docker Hub](https://hub.docker.com/repository/docker/eurobertics/nebucord):
+```
+docker pull eurobertics/nebucord:latest
+```
+
 By GIT:
 Simple clone this repository and use the native autoloader file in ./src Directory.
 
