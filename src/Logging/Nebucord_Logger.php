@@ -79,7 +79,7 @@ class Nebucord_Logger {
     const LOGFILE_SIZE = 8192;
 
     /** @var string LOGFILE_PATH Path for logfiles. */
-    const LOGFILE_PATH = "/var/log/apache2/";
+    const LOGFILE_PATH = "/var/log/";
 
     /**
      * Logs an info as static method.
