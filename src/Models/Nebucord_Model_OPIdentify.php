@@ -39,6 +39,7 @@ class Nebucord_Model_OPIdentify extends Nebucord_Model {
     protected $_properties;
     protected $_compress = false;
     protected $_presence;
+    protected $_intents;
 
     /**
      * Nebucord_Model_OPIdentify constructor.

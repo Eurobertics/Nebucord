@@ -217,7 +217,7 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
             $this->_outevent->populate(['op' => Nebucord_Status::OP_RESUME, 'd' => ['token' => $this->_token, 'session_id' => $this->_sessionid, 'seq' => $this->_sequence]]);
         } else {
             $this->_outevent = Nebucord_Model_Factory::create(Nebucord_Status::OP_IDENTIFY);
-            $this->_outevent->populate(['op' => Nebucord_Status::OP_IDENTIFY, 'd' => ['token' => $this->_token, 'properties' => ['$os' => Nebucord_Status::getOS(), '$browser' => Nebucord_Status::getBrowser(), '$device' => Nebucord_Status::getDevice()], 'compress' => false, 'presence' => ['since' => null, 'game' => null, 'status' => 'online', 'afk' => false]]]);
+            $this->_outevent->populate(['op' => Nebucord_Status::OP_IDENTIFY, 'd' => ['token' => $this->_token, 'properties' => ['$os' => Nebucord_Status::getOS(), '$browser' => Nebucord_Status::getBrowser(), '$device' => Nebucord_Status::getDevice()], 'compress' => false, 'presence' => ['since' => null, 'game' => null, 'status' => 'online', 'afk' => false], 'intents' => 32767]]);
         }
     }
 
