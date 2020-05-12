@@ -150,10 +150,10 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
      * @see Nebucord_RESTBase_Abstract::parseResponse()
      *
      * @param string $response
-     * @return array|null
+     * @return array
      */
     protected function parseResponse($response) {
-        $res = null;
+        $res = [];
         $res_ar = explode("\r\n\r\n", $response);
         if(strpos($res_ar[0], "200 OK") !== false) {
             $r = trim(substr($res_ar[1], 4, -3));
@@ -167,7 +167,7 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
      *
      * @see Nebucord_RESTBase_Abstract::execute()
      *
-     * @return array|null
+     * @return array
      */
     public function execute() {
         $this->connect();
@@ -175,6 +175,6 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
         if($bytes > 0) {
             return $this->receive();
         }
-        return null;
+        return [];
     }
 }
