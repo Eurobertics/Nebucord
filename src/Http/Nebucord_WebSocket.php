@@ -46,7 +46,7 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
      * @return Nebucord_WebSocket|object The created websocket instance.
      */
     public static function getInstance() {
-        \Nebucord\Logging\Nebucord_Logger::info("Starting HTTP client...", "nebucord.log");
+        \Nebucord\Logging\Nebucord_Logger::info("Starting HTTP client...");
         if(self::$_instance === null) {
             self::$_instance = new self;
         }
@@ -189,7 +189,11 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
 
         $wsopcode = ord($bytes[0]) & 0x0f;
         $firstByte = "0x".sprintf('%02.x', ord($bytes[0]));
-        if($firstByte != "0x81") { return $bytes; }
+        if($firstByte != "0x81") {
+            $code = unpack('n', substr($bytes, 2, 4))[1];
+            $message = substr($bytes, 4);
+            return $code." ".$message;
+        }
         $secondByte = sprintf('%08b', ord($bytes[1]));
         $masked = ($secondByte[0]=='1') ? true : false;
         $length = ($masked===true) ? ord($bytes[1]) & 127 : ord($bytes[1]);
@@ -236,7 +240,7 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
      * After decoding the first buffer chunk, the payload length from the gateway is known though the frame header
      * of the message. So this method reads all the data for the given length of the payload.
      *
-     * @return string|integer The decoded byte string in JSON format, -1 on failure or -2 on gateway closes connection.
+     * @return array First key: the decoded byte string in JSON format, second key: 0 on no error, -1 on failure or -2 on gateway closes connection.
      */
     public function soReadAll() {
         $pl_len = 0;
@@ -244,21 +248,21 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
         $rectext = $buf = "";
         $wsopcode = 0;
         $buf = fread($this->_socket, self::$BUFFERSIZE);
-        if($buf === false) { return -1; }
+        if($buf === false) { return [-1]; }
         if(strlen($buf) > 0) {
             $buf = $this->wsDecode($buf, $pl_len, $wsopcode);
-            if($wsopcode == 8) { return -2; }
+            if($wsopcode == 8) { return [-2, $buf]; }
             $pl_len -= strlen($buf);
             $rectext .= $buf;
             while($pl_len > 0) {
                 if($pl_len < self::$BUFFERSIZE) { $ps_len = $pl_len; }
                 $buf = fread($this->_socket, $ps_len);
-                if($buf === false) { return -1; }
+                if($buf === false) { return [-1]; }
                 $pl_len -= strlen($buf);
                 $rectext .= $buf;
             }
         }
-        return $rectext;
+        return [0, $rectext];
     }
 
     /**
@@ -272,6 +276,7 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
      */
     public function soWriteAll($data) {
         $encdata = $this->wsEncode($data);
+        if(!$encdata) { return -1; }
         $length = strlen($encdata);
         $sendbytes = 0;
         while($sendbytes != $length) {

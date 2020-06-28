@@ -250,32 +250,32 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
         if($this->authControlUser()) {
             if($this->checkBotID($msg)) {
                 if (strpos($msg, Nebucord_IActionTable::SHUTDOWN) !== false) {
-                    \Nebucord\Logging\Nebucord_Logger::warn("Shutdown command received: " . $msg, "nebucord.log");
+                    \Nebucord\Logging\Nebucord_Logger::warn("Shutdown command received: " . $msg);
                     $this->_outevent = $this->_acttbl->doShutdown($msg);
                 } else if (strpos($msg, Nebucord_IActionTable::SETSTATUS) !== false) {
-                    \Nebucord\Logging\Nebucord_Logger::info("Setstatus command received: " . $msg, "nebucord.log");
+                    \Nebucord\Logging\Nebucord_Logger::info("Setstatus command received: " . $msg);
                     $this->_outevent = $this->_acttbl->setStatus($msg);
                 } else if (strpos($msg, Nebucord_IActionTable::GETHELP) !== false) {
-                    \Nebucord\Logging\Nebucord_Logger::info("Help command received: " . $msg, "nebucord.log");
+                    \Nebucord\Logging\Nebucord_Logger::info("Help command received: " . $msg);
                     $this->_outevent = $this->_acttbl->getHelp($msg);
                     $this->_outevent->channelid = $this->_inevent->channel_id;
                 } else if (strpos($msg, Nebucord_IActionTable::DOECHO) !== false) {
-                    \Nebucord\Logging\Nebucord_Logger::info("Echo test command received: " . $msg, "nebucord.log");
+                    \Nebucord\Logging\Nebucord_Logger::info("Echo test command received: " . $msg);
                     $this->_outevent = $this->_acttbl->doEcho($msg);
                     $this->_outevent->channelid = $this->_inevent->channel_id;
                 } else if (strpos($msg, Nebucord_IActionTable::DOSAY) !== false) {
-                    \Nebucord\Logging\Nebucord_Logger::info("Do say command received: " . $msg, "nebucord.log");
+                    \Nebucord\Logging\Nebucord_Logger::info("Do say command received: " . $msg);
                     $this->_outevent = $this->_acttbl->doSay($msg);
                     $this->_outevent->channelid = $this->_inevent->channel_id;
                 } else if (strpos($msg, Nebucord_IActionTable::DOSTATUS) !== false) {
-                    \Nebucord\Logging\Nebucord_Logger::info("Get status command received: " . $msg, "nebucord.log");
+                    \Nebucord\Logging\Nebucord_Logger::info("Get status command received: " . $msg);
                     $this->_outevent = $this->_acttbl->doStatus($msg);
                     $this->_outevent->channelid = $this->_inevent->channel_id;
                 }
             }
         }
         if (strpos($msg, Nebucord_IActionTable::DOVERSION) !== false) {
-            \Nebucord\Logging\Nebucord_Logger::info("Do version command received: " . $msg, "nebucord.log");
+            \Nebucord\Logging\Nebucord_Logger::info("Do version command received: " . $msg);
             $this->_outevent = $this->_acttbl->doVersion($msg);
             $this->_outevent->channelid = $this->_inevent->channel_id;
         }

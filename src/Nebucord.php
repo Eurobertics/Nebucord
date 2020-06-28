@@ -62,7 +62,7 @@ class Nebucord {
      * @param array $params User given parameter such as controll user or bot token.
      */
     public function __construct(array $params = array()) {
-        Logging\Nebucord_Logger::infoImportant("Starting Nebucord v. ".Base\Nebucord_Status::VERSION." on ".Base\Nebucord_Status::CLIENTHOST, "nebucord.log");
+        Logging\Nebucord_Logger::infoImportant("Starting Nebucord v. ".Base\Nebucord_Status::VERSION." on ".Base\Nebucord_Status::CLIENTHOST);
         $this->_evttbl = null;
         $this->_evttbl = null;
         $this->_params = $params;
@@ -80,7 +80,7 @@ class Nebucord {
         $this->_evttbl = null;
         $this->_evttbl = null;
         $this->_params = array();
-        Logging\Nebucord_Logger::infoImportant("Nebucord successfuly exited.", "nebucord.log");
+        Logging\Nebucord_Logger::infoImportant("Nebucord successfuly exited.");
     }
 
     /**
@@ -121,7 +121,7 @@ class Nebucord {
      */
     public function setEventTable(Events\Nebucord_EventTable $eventtable) {
         $this->_evttbl = $eventtable;
-        Logging\Nebucord_Logger::info("Eventtable set...", "nebucord.log");
+        Logging\Nebucord_Logger::info("Eventtable set...");
         return $this;
     }
 
@@ -138,7 +138,7 @@ class Nebucord {
         if($actiontable instanceof Interfaces\Nebucord_IActionTable) {
             $this->_acttbl = $actiontable;
         }
-        Logging\Nebucord_Logger::info("Actiontable set...", "nebucord.log");
+        Logging\Nebucord_Logger::info("Actiontable set...");
         return $this;
     }
 
@@ -163,11 +163,11 @@ class Nebucord {
     private function prepare() {
         if($this->_evttbl == null) {
             $this->_evttbl = Events\Nebucord_EventTable::create();
-            Logging\Nebucord_Logger::info("No eventable set, using default one...", "nebucord.log");
+            Logging\Nebucord_Logger::info("No eventable set, using default one...");
         }
         if($this->_acttbl == null) {
             $this->_acttbl = new Events\Nebucord_ActionTable();
-            Logging\Nebucord_Logger::info("No actiontable set, using default one...", "nebucord.log");
+            Logging\Nebucord_Logger::info("No actiontable set, using default one...");
         }
         $this->_runtimecontroller = new Nebucord_RuntimeController($this->_wscon, $this->_evttbl, $this->_acttbl, $this->_params);
     }
@@ -181,7 +181,7 @@ class Nebucord {
         Nebucord_WebSocket::destroyInstance($this->_wscon);
         Events\Nebucord_EventTable::delete($this->_evttbl);
         unset($this->_runtimecontroller);
-        Logging\Nebucord_Logger::info("Everything cleaned up...", "nebucord.log");
+        Logging\Nebucord_Logger::info("Everything cleaned up...");
     }
 
     /**

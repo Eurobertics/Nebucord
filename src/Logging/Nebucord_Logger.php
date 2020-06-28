@@ -92,7 +92,7 @@ class Nebucord_Logger {
      */
     public static function info($message, $logfilename = null) {
         $instance = new Nebucord_Logger($logfilename);
-        $instance->logInfo($message, true);
+        $instance->logInfo($message);
         unset($instance);
     }
 
@@ -107,7 +107,7 @@ class Nebucord_Logger {
      */
     public static function infoImportant($message, $logfilename = null) {
         $instance = new Nebucord_Logger($logfilename);
-        $instance->logInfoImportant($message, true);
+        $instance->logInfoImportant($message);
         unset($instance);
     }
 
@@ -122,7 +122,7 @@ class Nebucord_Logger {
      */
     public static function warn($message, $logfilename = null) {
         $instance = new Nebucord_Logger($logfilename);
-        $instance->logWarn($message, true);
+        $instance->logWarn($message);
         unset($instance);
     }
 
@@ -137,7 +137,7 @@ class Nebucord_Logger {
      */
     public static function error($message, $logfilename = null) {
         $instance = new Nebucord_Logger($logfilename);
-        $instance->logError($message, true);
+        $instance->logError($message);
         unset($instance);
     }
 

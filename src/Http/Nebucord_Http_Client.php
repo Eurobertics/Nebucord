@@ -60,7 +60,7 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
             fclose($this->_socket);
         }
         $this->_socket = 0;
-        \Nebucord\Logging\Nebucord_Logger::info("Socket closed...", "nebucord.log");
+        \Nebucord\Logging\Nebucord_Logger::info("Socket closed...");
     }
 
     /**
@@ -104,7 +104,7 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
      * @return bool On success true, otherwise false.
      */
     private function sendHeader() {
-        \Nebucord\Logging\Nebucord_Logger::info("Connecting to Discord WebSocket gateway...", "nebucord.log");
+        \Nebucord\Logging\Nebucord_Logger::info("Connecting to Discord WebSocket gateway...");
         $retheader = "";
         $header = $this->createWSHeader();
         $timer = new Nebucord_Timer();
@@ -159,10 +159,10 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
      */
     public function connect() {
         if(!$this->sendHeader()) {
-            \Nebucord\Logging\Nebucord_Logger::error("Connection can't established, HTTP response wrong, exiting...", "nebucord.log");
+            \Nebucord\Logging\Nebucord_Logger::error("Connection can't established, HTTP response wrong, exiting...");
             return false;
         }
-        \Nebucord\Logging\Nebucord_Logger::infoImportant("WebSocket connection established.", "nebucord.log");
+        \Nebucord\Logging\Nebucord_Logger::infoImportant("WebSocket connection established.");
         return true;
     }
 

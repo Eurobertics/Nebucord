@@ -105,14 +105,14 @@ class Nebucord_EventController extends Nebucord_Controller_Abstract {
      * The Model is choosen by the OP code and possible gateway event.
      */
     private function buildEventData() {
-        $this->_lastopcode = $this->_eventmessage['op'];
+        $this->_lastopcode = (isset($this->_eventmessage['op'])) ? $this->_eventmessage['op'] : null;
         $this->_lastsequence = null;
         $this->_lastevent = null;
-        $this->_lastmessage = $this->_eventmessage['d'];
+        $this->_lastmessage = (isset($this->_eventmessage['d'])) ? $this->_eventmessage['d'] : null;;
         if($this->_lastopcode == Nebucord_Status::OP_DISPATCH) {
             $this->_lastevent = $this->_eventmessage['t'];
             $this->_lastsequence = $this->_eventmessage['s'];
-            \Nebucord\Logging\Nebucord_Logger::info("Event received: ".$this->_lastevent." - Sequence: ".$this->_lastsequence, "nebucord.log");
+            \Nebucord\Logging\Nebucord_Logger::info("Event received: ".$this->_lastevent." - Sequence: ".$this->_lastsequence);
         }
 
         $this->_model = Nebucord_Model_Factory::create($this->_lastopcode, $this->_lastevent);

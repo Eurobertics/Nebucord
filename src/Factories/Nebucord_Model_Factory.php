@@ -102,13 +102,13 @@ class Nebucord_Model_Factory {
     public static function create($opcode = null, $gwevent = null) {
         if ($opcode == 0 && $gwevent != null) {
             if(!isset(self::$_modelclasstable[$opcode][$gwevent])) {
-                \Nebucord\Logging\Nebucord_Logger::warn("Creating default model, no appropriate model for event found.", "nebucord.log");
+                \Nebucord\Logging\Nebucord_Logger::warn("Creating default model, no appropriate model for event found.");
                 return new Nebucord_Model($opcode, $gwevent);
             }
             return new self::$_modelclasstable[$opcode][$gwevent]($opcode, $gwevent);
         } else {
             if(!isset(self::$_modelclasstable[$opcode])) {
-                \Nebucord\Logging\Nebucord_Logger::warn("Creating default model, no appropriate model for event found.", "nebucord.log");
+                \Nebucord\Logging\Nebucord_Logger::warn("Creating default model, no appropriate model for event found.");
                 return new Nebucord_Model($opcode);
             }
            return new self::$_modelclasstable[$opcode]($opcode);
