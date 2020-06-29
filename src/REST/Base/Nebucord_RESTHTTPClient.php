@@ -59,6 +59,16 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
         }
     }
 
+    private function checkRateLimit($httpheader)
+    {
+        if(!isset($httpheader['x-ratelimit-limit']) && !isset($httpheader['x-ratelimit-remaining'])) {
+            return;
+        }
+        if($httpheader['x-ratelimit-limit'] <= ($httpheader['x-ratelimit-remaining'] - 1)) {
+            throw new \Exception("ERROR: Ratelimit exceeded!");
+        }
+    }
+
     /**
      * Sets REST request model for send.
      *
@@ -155,10 +165,18 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
     protected function parseResponse($response) {
         $res = [];
         $res_ar = explode("\r\n\r\n", $response);
+        $splitheader = $splitheader = explode("\r\n", $res_ar[0]);
+        $header_ar['Response'] = $splitheader[0];
+        for($i = 1; $i < count($splitheader); $i++) {
+            if($splitheader[0] == "" && $splitheader[1] == "") { continue; }
+            $splitheaderrow = explode(":", $splitheader[$i]);
+            $header_ar[trim($splitheaderrow[0])] = (isset($splitheaderrow[1])) ? trim($splitheaderrow[1]) : '';
+        }
         if(strpos($res_ar[0], "200 OK") !== false) {
             $r = trim(substr($res_ar[1], 4, -3));
             $res = json_decode(preg_replace('/[[:cntrl:]]/', '', $r), true);
         }
+        $this->checkRateLimit($header_ar);
         return $res;
     }
 
