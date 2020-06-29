@@ -24,6 +24,9 @@
 
 namespace Nebucord\Http;
 
+use Nebucord\Base\Nebucord_Status;
+use Nebucord\Base\Nebucord_Timer;
+
 /**
  * Class Nebucord_WebSocket
  *
@@ -37,6 +40,12 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
 
     /** @var object $_instance The websocket instance. */
     private static $_instance;
+
+    /** @var int $requestcount The amount of request within the RATELIMIT_TIMEFRAME (resets after RATELIMIT_TIMEFRAME timed out). */
+    private $requestcount = 0;
+
+    /** @var Nebucord_Timer $ratelimit_timer The timer wich is used to determine rate limit. */
+    private $ratelimit_timer;
 
     /**
      * Creates an websocket instance.
@@ -73,6 +82,8 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
      */
     protected function __construct() {
         parent::__construct();
+        $this->ratelimit_timer = new Nebucord_Timer();
+        $this->ratelimit_timer->startTimer();
     }
 
     /**
@@ -275,6 +286,14 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
      * @return integer The length which was send or -1 on error.
      */
     public function soWriteAll($data) {
+        if($this->ratelimit_timer->getTime() > Nebucord_Status::RATELIMIT_TIMEFRAME) {
+            $this->ratelimit_timer->reStartTimer();
+            $this->requestcount = 0;
+        }
+        if($this->requestcount >= Nebucord_Status::RATELIMIT_MAXREQUEST) {
+            \Nebucord\Logging\Nebucord_Logger::warn("Request dropped due to rate limit!");
+            return 0;
+        }
         $encdata = $this->wsEncode($data);
         if(!$encdata) { return -1; }
         $length = strlen($encdata);
@@ -287,6 +306,7 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
             }
             $sendbytes += $bytes;
         }
+        $this->requestcount++;
         return $sendbytes;
     }
 }

@@ -121,6 +121,9 @@ class Nebucord_Status {
 
     const MAX_RECONNECT_TRIES = 3;
 
+    const RATELIMIT_MAXREQUEST = 120;
+    const RATELIMIT_TIMEFRAME = 60;
+
     const CLIENTBROWSER = 'NebucordWS API';
     const CLIENTHOST = 'nebucordws.nebulatien.org';
     const VERSION = '0.8.5';

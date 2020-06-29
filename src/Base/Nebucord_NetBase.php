@@ -24,8 +24,6 @@
 
 namespace Nebucord\Base;
 
-use mysql_xdevapi\Exception;
-
 /**
  * Class Nebucord_NetBase
  *
@@ -81,7 +79,7 @@ class Nebucord_NetBase {
         $wsuri = json_decode(file_get_contents($this->_httpapiuri), true);
         $this->_gatewayhost = substr($wsuri['url'], 6);
         if($this->_gatewayhost == null || empty($this->_gatewayhost)) {
-            throw new Exception("Error getting Discord websocket API URI!");
+            throw new \Exception("Error getting Discord websocket API URI!");
         }
 
         $this->_fullgatewayhost = "ssl://".$this->_gatewayhost.":443";
