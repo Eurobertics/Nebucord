@@ -198,7 +198,12 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
             if($message[0] == -2) {
                 \Nebucord\Logging\Nebucord_Logger::error("Gateway respond with error: ".$message[1]);
                 \Nebucord\Logging\Nebucord_Logger::error("Gateway closes connection, exiting...");
-                $this->setRuntimeState(Nebucord_Status::NC_EXIT);
+                if(substr($message[1], 0, 4) == "1001") {
+                    \Nebucord\Logging\Nebucord_Logger::warn("Websocket code 1001 received, reconnecting...");
+                    $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
+                } else {
+                    $this->setRuntimeState(Nebucord_Status::NC_EXIT);
+                }
                 continue;
                 //break;
             }
