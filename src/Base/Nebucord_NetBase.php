@@ -35,7 +35,7 @@ namespace Nebucord\Base;
 class Nebucord_NetBase {
 
     /** @var string $_httpapiuri HTTP URI to get Discords websocket url. */
-    private $_httpapiuri = "https://discordapp.com/api/gateway";
+    private $_httpapiuri = "https://discord.com/api/gateway";
 
     /** @var string $_gatewayhost The host of the Discord gateway. */
     protected $_gatewayhost = null;
