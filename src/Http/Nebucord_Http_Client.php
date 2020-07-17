@@ -109,6 +109,9 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
         $header = $this->createWSHeader();
         $timer = new Nebucord_Timer();
         $socket = stream_socket_client($this->_fullgatewayhost);
+        if(!$socket) {
+            return -1;
+        }
         stream_set_blocking($socket, false);
         fwrite($socket, $header, strlen($header));
         $timer->startTimer();
