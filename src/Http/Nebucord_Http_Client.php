@@ -116,6 +116,9 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
         fwrite($socket, $header, strlen($header));
         $timer->startTimer();
         while($timer->getTime() < 10000) {
+            if(!$socket) {
+                return -1;
+            }
             $timer->reStartTimer();
             $retheader .= fread($socket, 2048);
             if(strlen($retheader) > 0) { break; }
