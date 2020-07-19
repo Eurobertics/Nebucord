@@ -63,8 +63,6 @@ class Nebucord {
      */
     public function __construct(array $params = array()) {
         Logging\Nebucord_Logger::infoImportant("Starting Nebucord v. ".Base\Nebucord_Status::VERSION." on ".Base\Nebucord_Status::CLIENTHOST);
-        $this->_evttbl = null;
-        $this->_evttbl = null;
         $this->_params = $params;
     }
 
@@ -78,7 +76,7 @@ class Nebucord {
         $this->_wscon = null;
         $this->_runtimecontroller = null;
         $this->_evttbl = null;
-        $this->_evttbl = null;
+        $this->_acttbl = null;
         $this->_params = array();
         Logging\Nebucord_Logger::infoImportant("Nebucord successfuly exited.");
     }
@@ -100,7 +98,7 @@ class Nebucord {
     /**
      * Sets user params.
      *
-     * If not given by constructor, the externals user can throw in the parameters here as well.
+     * If not given by constructor, the user can throw in the parameters here as well.
      *
      * @param array $params The user given parameters such as constroll user or bot token.
      * @return Nebucord Returns itself (Nebucord).
