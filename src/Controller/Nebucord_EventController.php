@@ -92,10 +92,15 @@ class Nebucord_EventController extends Nebucord_Controller_Abstract {
      * to a local var. After that, the event model will be build by buildEventData().
      *
      * @param string $eventmessage A JSON message string from the Discord gateway.
+     * @return bool If message could not decoded which result in NULL, returns false, true on success.
      */
     public function readEvent($eventmessage) {
         $this->_eventmessage = $this->parseJSON($eventmessage);
+        if(is_null($this->_eventmessage)) {
+            return false;
+        }
         $this->buildEventData();
+        return true;
     }
 
     /**
@@ -108,7 +113,7 @@ class Nebucord_EventController extends Nebucord_Controller_Abstract {
         $this->_lastopcode = (isset($this->_eventmessage['op'])) ? $this->_eventmessage['op'] : null;
         $this->_lastsequence = null;
         $this->_lastevent = null;
-        $this->_lastmessage = (isset($this->_eventmessage['d'])) ? $this->_eventmessage['d'] : null;;
+        $this->_lastmessage = (isset($this->_eventmessage['d'])) ? $this->_eventmessage['d'] : null;
         if($this->_lastopcode == Nebucord_Status::OP_DISPATCH) {
             $this->_lastevent = $this->_eventmessage['t'];
             $this->_lastsequence = $this->_eventmessage['s'];

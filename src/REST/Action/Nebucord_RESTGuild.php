@@ -27,6 +27,7 @@ namespace Nebucord\REST\Action;
 use Nebucord\Base\Nebucord_Status;
 use Nebucord\Factories\Nebucord_Model_Factory;
 use Nebucord\Models\Nebucord_Model_Channel;
+use Nebucord\Models\Nebucord_Model_Guild;
 use Nebucord\Models\Nebucord_Model_GuildMember;
 use Nebucord\Models\Nebucord_Model_Role;
 use Nebucord\REST\Base\Nebucord_RESTAction;
@@ -138,13 +139,105 @@ class Nebucord_RESTGuild extends Nebucord_RESTAction {
         return $res_ar;
     }
 
+    /**
+     * Gets guild data and details
+     *
+     * Gets all data from a guild.
+     *
+     * @param integer $guildid The guild id to query.
+     * @return Nebucord_Model_Guild The guild model with it's data.
+     */
     public function getGuild($guildid) {
         $oGetGuildRequest = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GET_GUILD);
         $oGetGuildRequest->guildid = $guildid;
         $this->_httpclient->setParams($oGetGuildRequest);
         $res = $this->_httpclient->execute();
+        /** @var Nebucord_Model_Guild $oGuildModel */
         $oGuildModel = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_GUILD);
         $oGuildModel->populate($res);
         return $oGuildModel;
+    }
+
+    /**
+     *
+     * Updates a guild member.
+     *
+     * Sets new data to a guild member.
+     * Returns an empty response. So no return is given.
+     *
+     * @param integer $guildid The guild id to look for the member.
+     * @param integer $userid The user (id) to modify.
+     * @param null|string $newnick New nickname or null if not to be updated.
+     * @param null|array $roles An array of new role ids or null if not to be updated.
+     * @param null|bool $mute User set to (un)mute if in a voice channel or null if not to be updated.
+     * @param null|bool $deaf User set to (un)deafened if in a voice channel or null if not to be updated.
+     * @param null $channelid Channel id to move user in or null if not to be moved.
+     */
+    public function modifyGuildMember($guildid, $userid, $newnick = null, $roles = null, $mute = null, $deaf = null, $channelid = null) {
+        $oModifyGuildUser = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GUILD_MODIFY_MEMBER);
+        $oModifyGuildUser->guildid = $guildid;
+        $oModifyGuildUser->userid = $userid;
+        $oModifyGuildUser->nick = $newnick;
+        $oModifyGuildUser->roles = $roles;
+        $oModifyGuildUser->mute = $mute;
+        $oModifyGuildUser->deaf = $deaf;
+        $oModifyGuildUser->channel_id = $channelid;
+        $this->_httpclient->setParams($oModifyGuildUser);
+        $this->_httpclient->execute();
+    }
+
+    /**
+     *
+     * Updates the current user nick (@me).
+     *
+     * Sets a new name for the current guild user nick name.
+     *
+     * @param integer $guildid The guild id to look for the member.
+     * @param null|string $newnick New nickname for @me user.
+     */
+    public function modifyCurrentNickname($guildid, $newnick) {
+        $oModifyGuildUserNick = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GUILD_MODIFY_CURRENT_NICK);
+        $oModifyGuildUserNick->guildid = $guildid;
+        $oModifyGuildUserNick->nick = $newnick;
+        $this->_httpclient->setParams($oModifyGuildUserNick);
+        $this->_httpclient->execute();
+    }
+
+    /**
+     *
+     * Adds a role to user.
+     *
+     * Adds a role to the user within a guild.
+     *
+     * @param integer $guildid The guild id to look for the member.
+     * @param integer $userid The user (id) to add the role.
+     * @param integer $roleid The role id to be added.
+     */
+    public function addMemberRole($guildid, $userid, $roleid) {
+        $oAddGuildUserRole = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GUILD_ADD_MEMBER_ROLE);
+        $oAddGuildUserRole->guildid = $guildid;
+        $oAddGuildUserRole->userid = $userid;
+        $oAddGuildUserRole->roleid = $roleid;
+        $this->_httpclient->setParams($oAddGuildUserRole);
+        $this->_httpclient->execute();
+    }
+
+    /**
+     *
+     * Removes a role to user.
+     *
+     * Removes a role to the user within a guild.
+     *
+     * @param integer $guildid The guild id to look for the member.
+     * @param integer $userid The user (id) to remnove the role.
+     * @param integer $roleid The role id to be removed.
+     */
+    public function removeMemberRole($guildid, $userid, $roleid) {
+        $oRemoveGuildUserRole = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GUILD_REMOVE_MEMBER_ROLE);
+        $oRemoveGuildUserRole->guildid = $guildid;
+        $oRemoveGuildUserRole->userid = $userid;
+        $oRemoveGuildUserRole->roleid = $roleid;
+        $this->_httpclient->setParams($oRemoveGuildUserRole);
+        $this->_httpclient->execute();
     }
 }

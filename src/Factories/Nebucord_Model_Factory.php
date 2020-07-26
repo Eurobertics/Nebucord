@@ -73,7 +73,11 @@ class Nebucord_Model_Factory {
         Nebucord_Status::REQ_GUILD_GET_EMOJI => "Nebucord\Models\Nebucord_Model_RESTGetGuildEmoji",
         Nebucord_Status::REQ_GUILD_GET_ALL_EMOJIS => "Nebucord\Models\Nebucord_Model_RESTListGuildEmojis",
         Nebucord_Status::REQ_GET_USER => "Nebucord\Models\Nebucord_Model_RESTGetUser",
-        Nebucord_Status::REQ_GET_GUILD => "Nebucord\Models\Nebucord_Model_RESTGetGuild"
+        Nebucord_Status::REQ_GET_GUILD => "Nebucord\Models\Nebucord_Model_RESTGetGuild",
+        Nebucord_Status::REQ_GUILD_MODIFY_MEMBER => "Nebucord\Models\Nebucord_Model_RESTModifyGuildMember",
+        Nebucord_Status::REQ_GUILD_MODIFY_CURRENT_NICK => "Nebucord\Models\Nebucord_Model_RESTGuildModifyGuildMember",
+        Nebucord_Status::REQ_GUILD_ADD_MEMBER_ROLE => "Nebucord\Models\Nebucord_Model_RESTGuildAddMemberRole",
+        Nebucord_Status::REQ_GUILD_REMOVE_MEMBER_ROLE => "Nebucord\Models\Nebucord_Model_RESTGuildRemoveMemberRole",
 	);
 
     /** @var array A table with available models data structues returned to a user callback for processing. */

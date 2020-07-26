@@ -100,6 +100,10 @@ class Nebucord_Status {
     const REQ_GUILD_GET_ALL_EMOJIS = "GET_GUILD_ALL_EMOJIS";
     const REQ_GET_USER = "REQ_GET_USER";
     const REQ_GET_GUILD = 'REQ_GET_GUILD';
+    const REQ_GUILD_MODIFY_MEMBER = 'REQ_GUILD_MODIFY_MEMBER';
+    const REQ_GUILD_MODIFY_CURRENT_NICK = 'REQ_GUILD_MODIFY_CURRENT_NICK';
+    const REQ_GUILD_ADD_MEMBER_ROLE = 'REQ_GUILD_ADD_MEMBER_ROLE';
+    const REQ_GUILD_REMOVE_MEMBER_ROLE = 'REQ_GUILD_REMOVE_MEMBER_ROLE';
 
     const MODEL_MESSAGE = 'MODEL_MESSAGE';
     const MODEL_GUILD = 'MODEL_GUILD';
@@ -126,7 +130,7 @@ class Nebucord_Status {
 
     const CLIENTBROWSER = 'NebucordWS API';
     const CLIENTHOST = 'nebucordws.nebulatien.org';
-    const VERSION = '0.9.3.1';
+    const VERSION = '0.9.4';
 
     /**
      * Returns the OS.
