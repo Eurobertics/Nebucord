@@ -233,7 +233,7 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
             }
             elseif ($length===127) {
                 $decodeddata = substr($bytes, 10);
-                $pll_tmp = unpack("n", substr($bytes, 2, 8));
+                $pll_tmp = unpack("J", substr($bytes, 2, 8));
                 $payloadlen = $pll_tmp[1];
             }
             else {
