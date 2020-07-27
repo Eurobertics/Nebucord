@@ -91,7 +91,8 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
      */
     protected function buildRequest() {
         $this->_header['Endpoint'] = "/api/v".$this->_apiver.$this->_param_endpoint;
-        if($this->_param_requesttype == "POST") {
+        $sendrequest_types_ar = array('POST', 'PUT', 'PATCH');
+        if(in_array($this->_param_requesttype, $sendrequest_types_ar)) {
             $this->_header['Headerparams'] += $this->_addition_header_post;
             $this->_header['Headerparams']['Content-Length:'] = $this->_param_contentlength;
             $this->_header['Payload'] = $this->_param_json_payload;
