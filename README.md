@@ -80,6 +80,9 @@ By Docker (more information can be found on [Nebucord Docker Hub](https://hub.do
 ```
 docker pull eurobertics/nebucord:latest
 ```
+ ***Note:** Configuration file setup (.ini file(s))is currently not possible for
+Docker. This will be address with fix soon. (Class parameter configurations are
+still possible.)*
 
 By GIT:
 Simple clone this repository and use the native autoloader file in ./src Directory.
