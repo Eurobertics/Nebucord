@@ -4,7 +4,8 @@
   "type": "library",
   "require": {
     "php": "^7.0",
-    "ext-json": "*"
+    "ext-json": "*",
+    "eurobertics/connfetti-ini": "*"
   },
   "autoload": {
     "psr-4" : {

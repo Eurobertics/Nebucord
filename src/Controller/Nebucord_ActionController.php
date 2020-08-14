@@ -60,6 +60,9 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
     /** @var array An array of user (snowflakes) wich can control the bot and the actions wich are set up here. */
     private $_ctrlusr;
 
+    /** @var integer $_intents The bitmask of the intents to observe */
+    private $_intents;
+
     /** @var integer The current state in wich the API is currently. */
     private $_state;
 
@@ -85,6 +88,7 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
         $this->_token = null;
         $this->_botuserid = 0;
         $this->_ctrlusr = array();
+        $this->_intents = null;
         $this->_state = Nebucord_Status::NC_RUN;
         $this->_sequence = 0;
         $this->_sessionid = null;
@@ -112,6 +116,7 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
         $this->_token = null;
         $this->_botuserid = 0;
         $this->_ctrlusr = array();
+        $this->_intents = null;
         $this->_state = Nebucord_Status::NC_EXIT;
         $this->_sequence = 0;
         $this->_sessionid = null;
@@ -217,7 +222,7 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
             $this->_outevent->populate(['op' => Nebucord_Status::OP_RESUME, 'd' => ['token' => $this->_token, 'session_id' => $this->_sessionid, 'seq' => $this->_sequence]]);
         } else {
             $this->_outevent = Nebucord_Model_Factory::create(Nebucord_Status::OP_IDENTIFY);
-            $this->_outevent->populate(['op' => Nebucord_Status::OP_IDENTIFY, 'd' => ['token' => $this->_token, 'properties' => ['$os' => Nebucord_Status::getOS(), '$browser' => Nebucord_Status::getBrowser(), '$device' => Nebucord_Status::getDevice()], 'compress' => false, 'presence' => ['since' => null, 'game' => null, 'status' => 'online', 'afk' => false], 'intents' => 32767]]);
+            $this->_outevent->populate(['op' => Nebucord_Status::OP_IDENTIFY, 'd' => ['token' => $this->_token, 'properties' => ['$os' => Nebucord_Status::getOS(), '$browser' => Nebucord_Status::getBrowser(), '$device' => Nebucord_Status::getDevice()], 'compress' => false, 'presence' => ['since' => null, 'game' => null, 'status' => 'online', 'afk' => false], 'intents' => $this->_intents]]);
         }
     }
 

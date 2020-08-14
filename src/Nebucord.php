@@ -25,6 +25,7 @@
 namespace Nebucord;
 
 use Nebucord\Base\Nebucord_Configloader;
+use Nebucord\Base\Nebucord_Status;
 use Nebucord\Http\Nebucord_WebSocket;
 use Nebucord\Controller\Nebucord_RuntimeController;
 
@@ -53,6 +54,9 @@ class Nebucord {
 
     /** @var array $_params User given params by the constructor. */
     private $_params = array();
+
+    /** @var bool $_bootstrappingdone Indicates if bootstrap is properly done. */
+    private $_bootstrappingdone = false;
 
     /**
      * Nebucord constructor.
@@ -90,8 +94,18 @@ class Nebucord {
      * @return Nebucord Returns itself (Nebucord).
      */
     public function bootstrap() {
-        $this->_config = new Nebucord_Configloader();
+        if(count($this->_params) == 0) {
+            $this->_config = new Nebucord_Configloader();
+            $this->_params = $this->_config->returnParams();
+        }
+        if(empty($this->_params['intents'])) {
+            $this->_params['params'] = Nebucord_Status::INTENTS_DEFAULT_BITMASK;
+        }
+        if(empty($this->_params['wsretries'])) {
+            $this->_params['wsretries'] = Nebucord_Status::MAX_RECONNECT_TRIES;
+        }
         $this->_wscon = Nebucord_WebSocket::getInstance();
+        $this->_bootstrappingdone = true;
         return $this;
     }
 
@@ -148,6 +162,10 @@ class Nebucord {
      * is also called.
      */
     public function run() {
+        if(!$this->_bootstrappingdone) {
+            Logging\Nebucord_Logger::error("Bootstrapping not done, aborting! (did you forget to call Nebucord::bootstrap()?)");
+            return;
+        }
         $this->prepare();
         $this->_runtimecontroller->start();
         $this->cleanup();

@@ -119,6 +119,24 @@ class Nebucord_Status {
     const CHANNEL_TYPE_GROUP_DM = 3;
     const CHANNEL_TYPE_GUILD_CATEGORY = 4;
 
+    const INTENT_GUILD = 1 << 0;
+    const INTENT_GUILD_MEMBERS = 1 << 1;
+    const INTENT_GUILD_BANS = 1 << 2;
+    const INTENT_GUILD_EMOJIS = 1 << 3;
+    const INTENT_GUILD_INTEGRATIONS = 1 << 4;
+    const INTENT_GUILD_WEBHOOKS = 1 << 5;
+    const INTENT_GUILD_INVITES = 1 << 6;
+    const INTENT_GUILD_VOICE_STATES = 1 << 7;
+    const INTENT_GUILD_PRESENCES = 1 << 8;
+    const INTENT_GUILD_MESSAGES = 1 << 9;
+    const INTENT_GUILD_MESSAGE_REACTIONS = 1 << 10;
+    const INTENT_GUILD_MESSAGE_TYPING = 1 << 11;
+    const INTENT_DIRECT_MESSAGES = 1 << 12;
+    const INTENT_DIRECT_MESSAGE_REACTIONS = 1 << 13;
+    const INTENT_DIRECT_MESSAGE_TYPING = 1 << 14;
+
+    const INTENTS_DEFAULT_BITMASK = 32509;
+
     const NC_RUN = 1;
     const NC_EXIT = 0;
     const NC_RECONNECT = 2;

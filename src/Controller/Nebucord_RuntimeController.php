@@ -160,8 +160,8 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
      * If a connection breaks, this method is called to reconnect and try initiate listen status for missed events.
      */
     private function resume() {
-        \Nebucord\Logging\Nebucord_Logger::warn("Reconnect with try ".$this->_reconnect_tries." of ".Nebucord_Status::MAX_RECONNECT_TRIES."...");
-        if($this->_reconnect_tries >= Nebucord_Status::MAX_RECONNECT_TRIES) {
+        \Nebucord\Logging\Nebucord_Logger::warn("Reconnect with try ".$this->_reconnect_tries." of ".$this->_params['wsretries']."...");
+        if($this->_reconnect_tries >= $this->_params['wsretries']) {
             \Nebucord\Logging\Nebucord_Logger::infoImportant("Max reconnection tries reached, giving up and exiting...");
             $this->setRuntimeState(Nebucord_Status::NC_EXIT);
             return;

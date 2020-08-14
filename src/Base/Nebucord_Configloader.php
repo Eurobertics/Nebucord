@@ -24,29 +24,95 @@
 
 namespace Nebucord\Base;
 
+use Connfetti\INI\Config\Config;
+
 /**
  * Class Nebucord_Configloader
  *
- * Currently unused class for configurations. This should be loading configuration vars
- * from an extern ini file, without modifying the sources itself.
+ * It utilizes the Connfetti-INI library wich parses an INI file and
+ * stores it contents in a stdClass.
+ * More about the Connfetti-INI lib here: https://github.com/Eurobertics/Connfetti-INI
  *
+ * @package Connfetti\INI\Config\Config
  * @package Nebucord\Base
  */
 class Nebucord_Configloader {
 
+    /** @var Config $cfg Connfetti-INI config object */
+    private $cfg;
+
     /**
      * Nebucord_Configloader constructor.
      *
-     * Currently unused construtctor.
+     * Sets up the Config object.
      */
-    public function __construct() {
+    public function __construct(string $configfile = 'nebucord.ini', string $configpath = './') {
+        $this->cfg = new Config($configfile, $configpath);
     }
 
     /**
-     * Nebucord_Configloader desstructor.
+     * Nebucord_Configloader destructor.
      *
-     * Currently unused destrcutor.
+     * Nullifies the Config object.
      */
     public function __destruct() {
+        $this->cfg = null;
+    }
+
+    /**
+     * Returns the user ACL.
+     *
+     * Returns the user snowflakes which can control the bot.
+     *
+     * @return array An one dimensional array of user snowflakes.
+     */
+    private function getControlUsers()
+    {
+        $acl = $this->cfg->acl;
+        if(strpos($acl, ',') === false) {
+            return [$acl];
+        }
+        $users_ex = explode(',', $this->cfg->acl);
+        $returnacl = array();
+        for($i = 0; $i < count($users_ex); $i++) {
+            $returnacl[] = $users_ex[$i];
+        }
+        return $returnacl;
+    }
+
+    /**
+     * Returns the intents bitmask.
+     *
+     * Returns the bitmask of the intents which needs to be observed.
+     *
+     * @return int The bitmask of the observed intents.
+     */
+    private function getIntentsBitmask()
+    {
+        $oIntents = $this->cfg->intents;
+        $bitmask = 0;
+        foreach($oIntents as $intent => $state) {
+            if($state === 'true') {
+                $bitmask += constant('Nebucord\Base\Nebucord_Status::INTENT_' . $intent);
+            }
+        }
+        return $bitmask;
+    }
+
+    /**
+     * Build and gets the bot config parameters.
+     *
+     * Builds the bot config parameters from the .ini file and returns
+     * it as an array for the $_params propertie of Nebucord class.
+     *
+     * @return array The config parameter as an key=>value array.
+     */
+    public function returnParams()
+    {
+        $params['token'] = $this->cfg->bottoken;
+        $params['ctrlusr'] = $this->getControlUsers();
+        $params['wsretries'] = $this->cfg->websocket->retries;
+        $params['intents'] = $this->getIntentsBitmask();
+        return $params;
     }
 }
