@@ -3,7 +3,7 @@ Nebucord - Discord WebSocket and REST API
 
 
 [![GitHub Release](https://img.shields.io/github/release/eurobertics/nebucord.svg?colorB=brightgreen&label=latest-stable)](https://github.com/eurobertics/nebucord)
-[![GitHub Development](https://img.shields.io/badge/dev--master-v0.9.4-red.svg)](https://github.com/eurobertics/nebucord)
+[![GitHub Development](https://img.shields.io/badge/dev--master-v0.9.5-red.svg)](https://github.com/eurobertics/nebucord)
 [![Github commits (since latest release)](https://img.shields.io/github/commits-since/Eurobertics/nebucord/latest.svg)](https://github.com/Eurobertics/Nebucord)
 [![GitHub license](https://img.shields.io/github/license/eurobertics/nebucord.svg)](https://github.com/Eurobertics/Nebucord/blob/master/LICENSE)
 
@@ -20,6 +20,8 @@ Of course not fully finished is it still able to do the most important things. T
     - Callback classes to intercept Discord gateway events
     - Changing default internal command behaviours
     - Setting user id's for bot controlling
+    - Configurable by parameter or by .ini file
+    - Customable gateway intents
     
 - Nebucord REST API
     - Model oriented interface on data receiving
@@ -36,6 +38,22 @@ Of course not fully finished is it still able to do the most important things. T
     - Many error checking
     - Way more better logging and debugging options
     - OAuth 2.0 client implementation
+
+Default and available parameters
+--------------------------------
+
+| Parameter                  | Config name | INI config name   | Default value                   |
+|----------------------------|-------------|-------------------|---------------------------------|
+| Bot token                  | token       | bottoken          | (string)*empty*                 |
+| ACL user snowflakes        | ctrluser    | acl               | (array)[]                       |
+| WS connection retries      | wsretries   | websocket.retries | (integer)3                      |
+| Default GW intent bitmask* | intents     | intents.*         | (integer)32509 / (boolean)true* |
+
+**\*Note:**  
+The intent bitmask defaults to be everything is true except `GUILD_MEMBERS` and `GUILD_PRESENCES`.
+These two options has to be manual set to `true` and they have to be activated in the Bot
+preferences on the Discord application management webpage.
+The bitmask is `32767` if everything set to true or for config as parameter.
 
 Install
 -------
