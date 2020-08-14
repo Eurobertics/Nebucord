@@ -55,6 +55,19 @@ These two options has to be manual set to `true` and they have to be activated i
 preferences on the Discord application management webpage.
 The bitmask is `32767` if everything set to true or for config as parameter.
 
+Requirements
+------------
+
+Additional Composer packages are required in order to run Nebucord.  
+Of course these can also be installed without Composer, but you have
+to include the SPL autoloader of the packages as well.
+
+*The recommended way is to use Composer.*
+
+**Package informations:**
+- [Connfetti-IO on Github](https://github.com/Eurobertics/Connfetti-IO)
+- [Connfetti-INI on Github](https://github.com/Eurobertics/Connfetti-INI)
+
 Install
 -------
 
