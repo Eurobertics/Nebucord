@@ -34,7 +34,25 @@ $nebucord = new Nebucord(['token' => 'your_bot_token', 'ctrlusr' => ['controluse
 $nebucord->bootstrap()->run();
 ```
 
-More example can be found on the ```GitHub project page```.
+More example can be found on the ```GitHub project page```.  
+This includes an example Nebucord start file here: [Github Nebucord Docker example startup file](https://github.com/Eurobertics/Nebucord/blob/master/Docker/nebucord_example.php)
+
+#### Configuration INI file setup (as of v0.9.5.2)
+
+To use configuration INI files, you have to make the configuration file (`nebucord.ini` i. e.) visible for the Nebucord Docker image.  
+This is done by placing the .ini file within the Nebucord main class instance. The you have to set the .ini file path in the Nebucord bootstrapper
+to the working directory of Docker instance. In simple example is as follows:
+
+```php
+<?php
+include "/opt/nebucord/vendor/autoload.php";
+
+use Nebucord\Nebucord;
+
+$nebucord = new Nebucord();
+$nebucord->bootstrap('nebucord.ini', '/var/nebucord/')->run();
+```
+
 
 #### Howto use this image
 
