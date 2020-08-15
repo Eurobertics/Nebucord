@@ -85,7 +85,7 @@ user@linux:~# composer require eurobertics/nebucord
 ---
 **By Docker (more information can be found on [Nebucord Docker Hub](https://hub.docker.com/repository/docker/eurobertics/nebucord)):**
 ```
-docker pull eurobertics/nebucord:latest
+user@linux:~# docker pull eurobertics/nebucord:latest
 ```
 
 **Note:**  
@@ -94,8 +94,12 @@ directory for your Docker instance and set the path to the path of the docker wo
 You can find more information about this on the [Nebucord Docker Hub Page](https://hub.docker.com/repository/docker/eurobertics/nebucord).
 
 ---
-**By GIT:**
+**By GIT:**  
 Simple clone this repository and use the native autoloader file in ./src Directory.
+
+```
+user@linux:~# git clone https://github.com/Eurobertics/Nebucord.git
+```
 
 **Note:**
 If you use the library without composer, you just can include
