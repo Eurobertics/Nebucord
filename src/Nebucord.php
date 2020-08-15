@@ -93,9 +93,9 @@ class Nebucord {
      *
      * @return Nebucord Returns itself (Nebucord).
      */
-    public function bootstrap() {
+    public function bootstrap(string $configfile = 'nebucord.ini', string $configpath = './') {
         if(count($this->_params) == 0) {
-            $this->_config = new Nebucord_Configloader();
+            $this->_config = new Nebucord_Configloader($configfile, $configpath);
             $this->_params = $this->_config->returnParams();
         }
         if(empty($this->_params['intents'])) {

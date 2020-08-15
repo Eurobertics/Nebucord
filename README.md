@@ -3,13 +3,17 @@ Nebucord - Discord WebSocket and REST API
 
 
 [![GitHub Release](https://img.shields.io/github/release/eurobertics/nebucord.svg?colorB=brightgreen&label=latest-stable)](https://github.com/eurobertics/nebucord)
-[![GitHub Development](https://img.shields.io/badge/dev--master-v0.9.5.1-red.svg)](https://github.com/eurobertics/nebucord)
+[![GitHub Development](https://img.shields.io/badge/dev--master-v0.9.5.2-red.svg)](https://github.com/eurobertics/nebucord)
 [![Github commits (since latest release)](https://img.shields.io/github/commits-since/Eurobertics/nebucord/latest.svg)](https://github.com/Eurobertics/Nebucord)
 [![GitHub license](https://img.shields.io/github/license/eurobertics/nebucord.svg)](https://github.com/Eurobertics/Nebucord/blob/master/LICENSE)
 
-This another implementation of the Discord API. It implements an HTTP WebSocket client
+This is another implementation of the Discord API. It implements an HTTP WebSocket client
 as well as a REST API.  
 An actual in use sample can be found on our Discord server: [Nebulatien](https://discord.gg/fVHmDD3) ![Discord](https://img.shields.io/discord/429204025678757899)  
+
+*If you need help or have questions, don't hestiate to contact Me. Best done if you join the above mentioned
+Discord server or (if you found something) create an issue in Github. Also pull request for fixes of course are
+welcome.*
 
 Of course not fully finished is it still able to do the most important things. This includes:
 
@@ -55,6 +59,9 @@ These two options has to be manual set to `true` and they have to be activated i
 preferences on the Discord application management webpage.
 The bitmask is `32767` if everything set to true or for config as parameter.
 
+**Note:**  
+Configuration by parameter has priority to configuration by .ini file.
+
 Requirements
 ------------
 
@@ -71,23 +78,25 @@ to include the SPL autoloader of the packages as well.
 Install
 -------
 
-By composer:
+**By composer:**
 ```
 user@linux:~# composer require eurobertics/nebucord
 ```
-
-By Docker (more information can be found on [Nebucord Docker Hub](https://hub.docker.com/repository/docker/eurobertics/nebucord):
+---
+**By Docker (more information can be found on [Nebucord Docker Hub](https://hub.docker.com/repository/docker/eurobertics/nebucord)):**
 ```
 docker pull eurobertics/nebucord:latest
 ```
- ***Note:** Configuration file setup (.ini file(s))is currently not possible for
-Docker. This will be address with fix soon. (Class parameter configurations are
-still possible.)*
 
-By GIT:
-Simple clone this repository and use the native autoloader file in ./src Directory.
+**Note:**  
+If you want use .ini configuration, you have to put your .ini File (`nebucord.ini` i. e.) in the mounted
+directory for your Docker instance and set the path to the path of the docker working directory.
+You can find more information about this on the [Nebucord Docker Hub Page](https://hub.docker.com/repository/docker/eurobertics/nebucord).
 
 ---
+**By GIT:**
+Simple clone this repository and use the native autoloader file in ./src Directory.
+
 **Note:**
 If you use the library without composer, you just can include
 the native autoloader:
