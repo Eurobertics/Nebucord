@@ -37,7 +37,9 @@ class Nebucord_Model_Message extends Nebucord_Model {
 
     protected $_id;
     protected $_channel_id;
+    protected $_guild_id;
     protected $_author;
+    protected $_member;
     protected $_content;
     protected $_timestamp;
     protected $_edited_timestamp;
@@ -45,6 +47,7 @@ class Nebucord_Model_Message extends Nebucord_Model {
     protected $_mention_everyone;
     protected $_mentions;
     protected $_mention_roles;
+    protected $_mention_channels;
     protected $_attachements;
     protected $_embeds;
     protected $_reactions;
@@ -54,6 +57,8 @@ class Nebucord_Model_Message extends Nebucord_Model {
     protected $_type;
     protected $_activity;
     protected $_application;
+    protected $_message_reference;
+    protected $_flags;
 
     /**
      * Nebucord_Model_Message constructor.

@@ -27,25 +27,24 @@ namespace Nebucord\Models;
 use Nebucord\Interfaces\Nebucord_IModelREST;
 
 /**
- * Class Nebucord_Model_RESTGuildRemoveMemberRole
+ * Class Nebucord_Model_RESTModifyCurrentUserNick
  *
- * A model for removing a guild member role request to a gateway.
+ * A model for updating current member nickname on a guildrequest to a gateway.
  *
  * For more information regarding the properties of this model @see https://discordapp.com/developers/docs/intro
  *
  * @package Nebucord\Models
  */
-class Nebucord_Model_RESTGuildRemoveMemberRole extends Nebucord_Model implements Nebucord_IModelREST {
+class Nebucord_Model_RESTModifyCurrentUserNick extends Nebucord_Model implements Nebucord_IModelREST {
 
     /** @var string $_requesttype The request type needed by this model. */
-    private $_requesttype = "DELETE";
+    private $_requesttype = "PATCH";
 
     protected $_guildid;
-    protected $_userid;
-    protected $_roleid;
+    protected $_nick;
 
     /**
-     * Nebucord_Model_RESTGuildRemoveMemberRole constructor.
+     * Nebucord_Model_RESTModifyCurrentUserNick constructor.
      *
      * Sets up the request.
      */
@@ -54,7 +53,7 @@ class Nebucord_Model_RESTGuildRemoveMemberRole extends Nebucord_Model implements
     }
 
     /**
-     * Nebucord_Model_RESTGuildRemoveMemberRole destructor.
+     * Nebucord_Model_RESTModifyCurrentUserNick destructor.
      */
     public function __destruct() {
         parent::__destruct();
@@ -68,7 +67,7 @@ class Nebucord_Model_RESTGuildRemoveMemberRole extends Nebucord_Model implements
      * @return string The API endpoint for this model.
      */
     public function getApiEndpoint() {
-        return "/guilds/".$this->_guildid."/members/".$this->_userid."/roles/".$this->_roleid;
+        return "/guilds/".$this->_guildid."/members/@me/nick";
     }
 
     /**

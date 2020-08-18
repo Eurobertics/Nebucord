@@ -65,6 +65,11 @@ class Nebucord_Model_Factory {
     /** @var array A table with available models wich used to send request. */
     private static $_modelclassreqtable = array(
 	    Nebucord_Status::REQ_CREATE_MESSAGE => "Nebucord\Models\Nebucord_Model_RESTMessage",
+        Nebucord_Status::REQ_GET_CHANNEL => "Nebucord\Models\Nebucord_Model_RESTGetChannel",
+        Nebucord_Status::REQ_CREATE_GUILD_CHANNEL => "Nebucord\Models\Nebucord_Model_RESTCreateGuildChannel",
+        Nebucord_Status::REQ_MODIFY_CHANNEL_POS => "Nebucord\Models\Nebucord_Model_RESTModifyChannelPos",
+        Nebucord_Status::REQ_GET_GUILD_MEMBER => "Nebucord\Models\Nebucord_Model_RESTGetGuildMember",
+        Nebucord_Status::REQ_CREATE_GUILD_MEMBER => "Nebucord\Models\Nebucord_Model_RESTCreateGuildMember",
         Nebucord_Status::REQ_GUILD_CHANNELS => "Nebucord\Models\Nebucord_Model_RESTGetGuildChannels",
         Nebucord_Status::REQ_GUILD_LIST_MEMBERS => "Nebucord\Models\Nebucord_Model_RESTListGuildMembers",
         Nebucord_Status::REQ_GUILD_GET_ROLES => "Nebucord\Models\Nebucord_Model_RESTGetGuildRoles",
@@ -78,6 +83,8 @@ class Nebucord_Model_Factory {
         Nebucord_Status::REQ_GUILD_MODIFY_CURRENT_NICK => "Nebucord\Models\Nebucord_Model_RESTGuildModifyGuildMember",
         Nebucord_Status::REQ_GUILD_ADD_MEMBER_ROLE => "Nebucord\Models\Nebucord_Model_RESTGuildAddMemberRole",
         Nebucord_Status::REQ_GUILD_REMOVE_MEMBER_ROLE => "Nebucord\Models\Nebucord_Model_RESTGuildRemoveMemberRole",
+        Nebucord_Status::REQ_MODIFY_CURRENT_USER_NICK => "Nebucord\Models\Nebucord_Model_RESTModifyCurrentUserNick",
+        Nebucord_Status::REQ_GUILD_REMOVE_MEMBER => "Nebucord\Models\Nebucord_Model_RESTGuildRemoveMember"
 	);
 
     /** @var array A table with available models data structues returned to a user callback for processing. */

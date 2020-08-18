@@ -24,54 +24,70 @@
 
 namespace Nebucord\Models;
 
+
+use Nebucord\Interfaces\Nebucord_IModelREST;
+
 /**
- * Class Nebucord_Model_Channel
+ * Class Nebucord_Model_RESTCreateChannel
  *
- * A model representing a channel object from a gateway.
+ * A model representing for creating a guild channel.
  *
  * For more information regarding the properties of this model @see https://discordapp.com/developers/docs/intro
  *
  * @package Nebucord\Models
  */
-class Nebucord_Model_Channel extends Nebucord_Model {
+class Nebucord_Model_RESTCreateChannel extends Nebucord_Model implements Nebucord_IModelREST {
 
-    protected $_id;
-    protected $_type;
-    protected $_guild_id;
-    protected $_position;
-    protected $_permission_overwrites;
+    /** @var string $_requesttype The request type needed by this model. */
+    private $_requesttype = "POST";
+
+    protected $_guildid;
     protected $_name;
+    protected $_type;
     protected $_topic;
-    protected $_nswf;
-    protected $_last_message_id;
     protected $_bitrate;
     protected $_user_limit;
     protected $_rate_limit_per_user;
-    protected $_recipients;
-    protected $_icon;
-    protected $_owner_id;
-    protected $_application_id;
+    protected $_position;
+    protected $_permissions_overwrite;
     protected $_parent_id;
-    protected $_last_pin_timestamp;
+    protected $_nsfw;
 
     /**
-     * Nebucord_Model_Channel constructor.
-     * Sets everything up and transfers the basic event data to the abstract class for storing through the
-     * base model class (Nebucord_Model).
+     * Nebucord_Model_RESTCreateChannel constructor.
      *
-     * @param \Nebucord\Base\Nebucord_Status $op The OP code of an event.
-     * @param \Nebucord\Base\Nebucord_Status $event The event from the gateway (mostly with OP code 0).
+     * Sets up the request.
      */
-    public function __construct($op = null, $event = null) {
-        parent::__construct($op, $event);
+    public function __construct() {
+        parent::__construct();
     }
 
     /**
-     * Nebucord_Model_Channel destructor.
-     *
-     * Cleas everything up on end.
+     * Nebucord_Model_RESTCreateChannel destructor.
      */
     public function __destruct() {
         parent::__destruct();
+    }
+
+    /**
+     * Gets the API endpoint.
+     *
+     * @see Nebucord_IModelREST::getApiEndpoint()
+     *
+     * @return string The API endpoint for this model.
+     */
+    public function getApiEndpoint() {
+        return "/guild/".$this->_guildid."/channels";
+    }
+
+    /**
+     * Gets the http request type.
+     *
+     * @see Nebucord_IModelREST::getRequestType()
+     *
+     * @return string The http request type for this model.
+     */
+    public function getRequestType() {
+        return $this->_requesttype;
     }
 }
