@@ -38,10 +38,11 @@ Of course not fully finished is it still able to do the most important things. T
 - What's missing
     - Some models for events
     - Some models and methods for interacting with REST
-    - Some gateway events
+    - Some gateway events 
     - Many error checking
     - Way more better logging and debugging options
     - OAuth 2.0 client implementation
+    - Multithreading (if applicable, thanks to [bitnykk](https://github.com/bitnykk) for the idea)
 
 Default and available parameters
 --------------------------------
