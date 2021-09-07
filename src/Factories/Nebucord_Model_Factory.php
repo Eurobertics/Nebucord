@@ -62,7 +62,7 @@ class Nebucord_Model_Factory {
         Nebucord_Status::OP_HEARTBEAT_ACK => "Nebucord\Models\Nebucord_Model_OPHeartbeatACK"
     );
 
-    /** @var array A table with available models wich used to send request. */
+    /** @var array A table with available models wich used to send request. (REST API) */
     private static $_modelclassreqtable = array(
 	    Nebucord_Status::REQ_CREATE_MESSAGE => "Nebucord\Models\Nebucord_Model_RESTMessage",
         Nebucord_Status::REQ_GET_CHANNEL => "Nebucord\Models\Nebucord_Model_RESTGetChannel",
