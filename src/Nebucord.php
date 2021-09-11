@@ -99,7 +99,7 @@ class Nebucord {
             $this->_params = $this->_config->returnParams();
         }
         if(empty($this->_params['intents'])) {
-            $this->_params['params'] = Nebucord_Status::INTENTS_DEFAULT_BITMASK;
+            $this->_params['intents'] = Nebucord_Status::INTENTS_DEFAULT_BITMASK;
         }
         if(empty($this->_params['wsretries'])) {
             $this->_params['wsretries'] = Nebucord_Status::MAX_RECONNECT_TRIES;
