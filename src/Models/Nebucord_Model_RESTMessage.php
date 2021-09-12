@@ -46,8 +46,13 @@ class Nebucord_Model_RESTMessage extends Nebucord_Model implements Nebucord_IMod
 	protected $_nonce = null;
 	protected $_tts = null;
 	protected $_file = null;
-	protected $_embed = null;
+	protected $_embeds = null;
+    protected $_embed = null; // deprecated
 	protected $_payload_json = null;
+    protected $_allowed_mentions;
+    protected $_message_reference;
+    protected $_components;
+    protected $_sticker_ids;
 
     /**
      * Nebucord_Model_RESTListGuildMembers constructor.

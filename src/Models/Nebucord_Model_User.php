@@ -41,8 +41,14 @@ class Nebucord_Model_User extends Nebucord_Model {
     protected $_avatar;
     protected $_bot;
     protected $_mfa_enabled;
+    protected $_banner;
+    protected $_accent_color;
+    protected $_locale;
     protected $_verified;
     protected $_email;
+    protected $_flags;
+    protected $_premium_type;
+    protected $_public_flags;
 
     /**
      * Nebucord_Model_User constructor.

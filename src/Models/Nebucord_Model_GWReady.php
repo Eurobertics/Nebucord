@@ -36,13 +36,11 @@ namespace Nebucord\Models;
 class Nebucord_Model_GWReady extends Nebucord_Model {
 
     protected $_v;
-    protected $_user_settings;
     protected $_user;
     protected $_session_id;
-    protected $_realationships;
-    protected $_private_channels;
-    protected $_presences;
+    protected $_shard;
     protected $_guilds;
+    protected $_application;
 
     /**
      * Nebucord_Model_GWReady constructor.

@@ -36,10 +36,8 @@ namespace Nebucord\Models;
 class Nebucord_Model_GWPresenceUpdate extends Nebucord_Model {
 
     protected $_user;
-    protected $_roles;
-    protected $_game;
-    protected $guild_id;
-    protected $status;
+    protected $_guild_id;
+    protected $_status;
     protected $activities;
     protected $client_status;
 

@@ -39,9 +39,12 @@ class Nebucord_Model_GWGuildMemberAdd extends Nebucord_Model {
     protected $_nick;
     protected $_roles;
     protected $_joined_at;
+    protected $_premium_since;
     protected $_deaf;
     protected $_mute;
-    protected $_guildid;
+    protected $_pending;
+    protected $_permissions;
+    protected $_guild_id;
 
     /**
      * Nebucord_Model_GWGuildMemberAdd constructor.

@@ -44,6 +44,8 @@ class Nebucord_Model_RESTModifyChannelPos extends Nebucord_Model implements Nebu
     protected $_guildid;
     protected $_id;
     protected $_position;
+    protected $_lock_permissions;
+    protected $_parent_id;
 
     /**
      * Nebucord_Model_RESTModifyChannelPos constructor.

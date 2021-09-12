@@ -38,6 +38,8 @@ class Nebucord_Model_OPIdentify extends Nebucord_Model {
     protected $_token;
     protected $_properties;
     protected $_compress = false;
+    protected $_large_threshold;
+    //protected $_shard;
     protected $_presence;
     protected $_intents;
 

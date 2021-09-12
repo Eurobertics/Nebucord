@@ -53,6 +53,13 @@ class Nebucord_Model_Channel extends Nebucord_Model {
     protected $_application_id;
     protected $_parent_id;
     protected $_last_pin_timestamp;
+    protected $_rtc_region;
+    protected $video_quality_mode;
+    protected $_message_count;
+    protected $_thread_metadata;
+    protected $_member;
+    protected $_default_auto_archive_duration;
+    protected $_permissions;
 
     /**
      * Nebucord_Model_Channel constructor.

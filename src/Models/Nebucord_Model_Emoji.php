@@ -42,6 +42,7 @@ class Nebucord_Model_Emoji extends Nebucord_Model {
     protected $_require_colons;
     protected $_managed;
     protected $_animated;
+    protected $_available;
 
 
     /**

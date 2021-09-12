@@ -41,6 +41,7 @@ class Nebucord_Model_RESTGetGuild extends Nebucord_Model implements Nebucord_IMo
     private $_requesttype = "GET";
 
     protected $_guildid;
+    protected $_with_counts;
 
     /**
      * Nebucord_Model_RESTGetGuild constructor.

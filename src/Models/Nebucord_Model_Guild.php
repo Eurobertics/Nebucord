@@ -38,15 +38,17 @@ class Nebucord_Model_Guild extends Nebucord_Model {
     protected $_id;
     protected $_name;
     protected $_icon;
+    protected $_icon_hash;
     protected $_splash;
+    protected $_discover_splash;
     protected $_owner;
     protected $_owner_id;
     protected $_permissions;
     protected $_region;
     protected $_afk_channel_id;
-    protected $_afk_timeour;
-    protected $_embed_enabled;
-    protected $_embed_channel_id;
+    protected $_afk_timeout;
+    protected $_widget_enabled;
+    protected $_widget_channel_id;
     protected $_verification_level;
     protected $_default_message_notifications;
     protected $_explicit_content_filter;
@@ -55,9 +57,9 @@ class Nebucord_Model_Guild extends Nebucord_Model {
     protected $_features;
     protected $_mfa_level;
     protected $_application_id;
-    protected $_widget_enabled;
-    protected $_widget_channel_id;
     protected $_system_channel_id;
+    protected $_system_channel_flags;
+    protected $_rules_channel_id;
     protected $_joined_at;
     protected $_large;
     protected $_unavailable;
@@ -65,7 +67,24 @@ class Nebucord_Model_Guild extends Nebucord_Model {
     protected $_voice_states;
     protected $_members;
     protected $_channels;
+    protected $_threads;
     protected $_presences;
+    protected $_max_presence;
+    protected $_max_members;
+    protected $_vanity_url_code;
+    protected $_description;
+    protected $_banner;
+    protected $_premium_tier;
+    protected $_premium_subscription_cound;
+    protected $_preferred_locale;
+    protected $_public_updates_channel_id;
+    protected $_max_video_channel_useres;
+    protected $_approximate_member_count;
+    protected $_approximate_presence_count;
+    protected $_welcome_screen;
+    protected $_nsfw_level;
+    protected $_stage_instances;
+    protected $_stickers;
 
     /**
      * Nebucord_Model_Guild constructor.

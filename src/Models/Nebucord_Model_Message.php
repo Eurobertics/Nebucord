@@ -57,8 +57,15 @@ class Nebucord_Model_Message extends Nebucord_Model {
     protected $_type;
     protected $_activity;
     protected $_application;
+    protected $_application_id;
     protected $_message_reference;
     protected $_flags;
+    protected $_referenced_message;
+    protected $_interaction;
+    protected $_thread;
+    protected $_components;
+    protected $_sticker_items;
+    protected $_stickers;
 
     /**
      * Nebucord_Model_Message constructor.

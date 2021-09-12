@@ -43,6 +43,7 @@ class Nebucord_Model_Role extends Nebucord_Model {
     protected $_permissions;
     protected $_managed;
     protected $_mentionable;
+    protected $_tags;
 
     /**
      * Nebucord_Model_Role constructor.
