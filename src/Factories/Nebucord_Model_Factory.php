@@ -52,7 +52,8 @@ class Nebucord_Model_Factory {
             Nebucord_Status::GWEVT_PRESENCE_UPDATE => "Nebucord\Models\Nebucord_Model_GWPresenceUpdate",
             Nebucord_Status::GWEVT_CHANNEL_CREATE => "Nebucord\Models\Nebucord_Model_Channel",
             Nebucord_Status::GWEVT_CHANNEL_UPDATE => "Nebucord\Models\Nebucord_Model_Channel",
-            Nebucord_Status::GWEVT_CHANNEL_DELETE => "Nebucord\Models\Nebucord_Model_Channel"
+            Nebucord_Status::GWEVT_CHANNEL_DELETE => "Nebucord\Models\Nebucord_Model_Channel",
+            Nebucord_Status::GWEVT_AUDIT_LOG => "Nebucord\Models\Nebucord_Model_AuditLog"
         ),
         Nebucord_Status::OP_HEARTBEAT => "Nebucord\Models\Nebucord_Model_OPHeartbeat",
         Nebucord_Status::OP_IDENTIFY => "Nebucord\Models\Nebucord_Model_OPIdentify",
@@ -84,7 +85,8 @@ class Nebucord_Model_Factory {
         Nebucord_Status::REQ_GUILD_ADD_MEMBER_ROLE => "Nebucord\Models\Nebucord_Model_RESTGuildAddMemberRole",
         Nebucord_Status::REQ_GUILD_REMOVE_MEMBER_ROLE => "Nebucord\Models\Nebucord_Model_RESTGuildRemoveMemberRole",
         Nebucord_Status::REQ_MODIFY_CURRENT_USER_NICK => "Nebucord\Models\Nebucord_Model_RESTModifyCurrentUserNick",
-        Nebucord_Status::REQ_GUILD_REMOVE_MEMBER => "Nebucord\Models\Nebucord_Model_RESTGuildRemoveMember"
+        Nebucord_Status::REQ_GUILD_REMOVE_MEMBER => "Nebucord\Models\Nebucord_Model_RESTGuildRemoveMember",
+        Nebucord_Status::REQ_GUILD_GET_AUDIT_LOGS => "Nebucord\Models\Nebucord_Model_RESTGetGuildAuditLogs"
 	);
 
     /** @var array A table with available models data structues returned to a user callback for processing. */
@@ -95,7 +97,8 @@ class Nebucord_Model_Factory {
         Nebucord_Status::MODEL_GUILDMEMBER => "Nebucord\Models\Nebucord_Model_GuildMember",
         Nebucord_Status::MODEL_USER => "Nebucord\Models\Nebucord_Model_User",
         Nebucord_Status::MODEL_ROLE => "Nebucord\Models\Nebucord_Model_Role",
-        Nebucord_Status::MODEL_EMOJI => "Nebucord\Models\Nebucord_Model_Emoji"
+        Nebucord_Status::MODEL_EMOJI => "Nebucord\Models\Nebucord_Model_Emoji",
+        Nebucord_Status::MODEL_AUDIT_LOG => "Nebucord\Models\Nebucord_Model_AuditLog"
     );
 
     /**
