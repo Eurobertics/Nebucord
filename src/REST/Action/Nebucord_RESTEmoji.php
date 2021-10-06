@@ -68,13 +68,13 @@ class Nebucord_RESTEmoji extends Nebucord_RESTAction {
      * @return array The array with emoji models from the guild
      */
     public function listGuildEmojis($guildid) {
-        $oReqEmojiModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GUILD_GET_ALL_EMOJIS);
+        $oReqEmojiModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_GUILD_GET_ALL_EMOJIS);
         $oReqEmojiModel->guildid = $guildid;
         $this->_httpclient->setParams($oReqEmojiModel);
         $res = $this->_httpclient->execute();
         $ret_ar = array();
         for($i = 0; $i < count($res); $i++) {
-            $oEmojiModel = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_EMOJI);
+            $oEmojiModel = Nebucord_Model_Factory::create();
             $oEmojiModel->populate($res[$i]);
             $ret_ar[] = $oEmojiModel;
             unset($oEmojiModel);
@@ -92,12 +92,12 @@ class Nebucord_RESTEmoji extends Nebucord_RESTAction {
      * @return \Nebucord\Models\Nebucord_Model The emoji model of the wanted emoji.
      */
     public function getGuildEmoji($guildid, $emojiid) {
-        $oReqEmojiModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GUILD_GET_EMOJI);
+        $oReqEmojiModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_GUILD_GET_EMOJI);
         $oReqEmojiModel->guildid = $guildid;
         $oReqEmojiModel->emojiid = $emojiid;
         $this->_httpclient->setParams($oReqEmojiModel);
         $res = $this->_httpclient->execute();
-        $oEmojiModel = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_EMOJI);
+        $oEmojiModel = Nebucord_Model_Factory::create();
         $oEmojiModel->populate($res);
         return $oEmojiModel;
     }

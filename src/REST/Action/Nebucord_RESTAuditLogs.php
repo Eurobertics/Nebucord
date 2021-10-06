@@ -61,7 +61,7 @@ class Nebucord_RESTAuditLogs extends Nebucord_RESTAction {
     }
 
     public function getGuildAuditLogs($guildid, $userid = 0, $action_type = 0, $before = 0, $limit = 50) {
-        $oReqAuditLogsModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GUILD_GET_AUDIT_LOGS);
+        $oReqAuditLogsModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_GUILD_GET_AUDIT_LOGS);
         $oReqAuditLogsModel->guildid = $guildid;
         if($userid > 0) {
             $oReqAuditLogsModel->userid = $userid;
@@ -75,7 +75,7 @@ class Nebucord_RESTAuditLogs extends Nebucord_RESTAction {
         $oReqAuditLogsModel->limit = $limit;
         $this->_httpclient->setParams($oReqAuditLogsModel);
         $res = $this->_httpclient->execute();
-        $oAuditLogsModel = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_AUDIT_LOG);
+        $oAuditLogsModel = Nebucord_Model_Factory::create();
         $oAuditLogsModel->populate($res);
         return $oAuditLogsModel;
     }

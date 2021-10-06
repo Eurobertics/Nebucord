@@ -24,6 +24,9 @@
 
 namespace Nebucord\Base;
 
+use Nebucord\Models\Nebucord_Model_REST;
+use Nebucord\REST\Base\Nebucord_RESTBuildAPIEndpoints;
+
 /**
  * Class Nebucord_Model_Abstract
  *
@@ -41,6 +44,9 @@ abstract class Nebucord_Model_Abstract {
 
     /** @var Nebucord_Status $_t The current gateway event. */
     protected $_t = null;
+
+    /** @var array $_data Storage for all model data. */
+    private $_data = array();
 
     /**
      * Nebucord_Model_Abstract constructor.
@@ -61,6 +67,7 @@ abstract class Nebucord_Model_Abstract {
      * Cleans everything up.
      */
     public function __destruct() {
+        $this->_data = array();
     }
 
     /**
@@ -72,9 +79,12 @@ abstract class Nebucord_Model_Abstract {
      * @return mixed The value of the given property name, if valid.
      */
     public function __get($name) {
-        $targetprop = "_".$name;
-        if(property_exists($this, $targetprop)) {
+        if($name == 'op' || $name == 't' || $name == 's') {
+            $targetprop = '_'.$name;
             return $this->$targetprop;
+        }
+        if(array_key_exists('_'.$name, $this->_data)) {
+            return $this->_data['_'.$name];
         }
         return null;
     }
@@ -88,9 +98,11 @@ abstract class Nebucord_Model_Abstract {
      * @param mixed $value The value to be stored in the property name (if valid).
      */
     public function __set($name, $value) {
-        $targetprop = "_".$name;
-        if(property_exists($this, $targetprop)) {
+        if($name == 'op' || $name == 't' || $name == 's') {
+            $targetprop = '_'.$name;
             $this->$targetprop = $value;
+        } else {
+            $this->_data['_' . $name] = $value;
         }
     }
 
@@ -103,8 +115,7 @@ abstract class Nebucord_Model_Abstract {
      * @return bool If the property exists true, otherwise false.
      */
     public function __isset($name) {
-        $targetprop = "_".$name;
-        if(!is_null($this->$targetprop)) { return true; }
+        if(array_key_exists('_'.$name, $this->_data)) { return true; }
         return false;
     }
 
@@ -116,8 +127,7 @@ abstract class Nebucord_Model_Abstract {
      * @param string $name The name of the property to be deleted.
      */
     public function __unset($name) {
-        $targetprop = "_".$name;
-        unset($this->$targetprop);
+        unset($this->_data['_'.$name]);
     }
 
     /**
@@ -134,23 +144,17 @@ abstract class Nebucord_Model_Abstract {
         $this->_t = (!isset($data['t'])) ? null : $data['t'];
         if(isset($data['d'])) {
             foreach ($data['d'] as $property => $value) {
-                $targetprop = "_" . $property;
-                if (property_exists($this, $targetprop)) {
-                    $this->$targetprop = $value;
-                }
+                $this->_data['_'.$property] = $value;
             }
         } else {
             foreach ($data as $property => $value) {
-                $targetprop = "_" . $property;
-                if (property_exists($this, $targetprop)) {
-                    $this->$targetprop = $value;
-                }
+                $this->_data['_'.$property] = $value;
             }
         }
     }
 
     /**
-     * Returns a array representation of a model.
+     * Returns an array representation of a model.
      *
      * Every property wich exists in a model will be returned by "key=>value" pair in an array.
      * Methods are not exported. This is often needed to convert a model to array before preparing to send somewhere.
@@ -160,17 +164,17 @@ abstract class Nebucord_Model_Abstract {
     public function toArray() {
         $retar = array();
 
-        $prop_ar = get_class_vars(get_class($this));
-        foreach($prop_ar as $prop => $value) {
-            if(($prop != "_op" && $prop != "_s" && $prop != "_t") && $this->_op != null) {
-                if(get_class($this) == "Nebucord\Models\Nebucord_Model_OPHeartbeat") {
+        foreach($this->_data as $prop => $value) {
+            if($this->_op != null) {
+                $retar['op'] = $this->_op;
+                if($this->_op == Nebucord_Status::OP_HEARTBEAT) {
                     $retar['d'] = $this->_d;
                 } else {
-                    $retar['d'][substr($prop, 1)] = $this->$prop;
+                    $retar['d'][substr($prop, 1)] = $this->_data[$prop];
                 }
             } else {
-                if($prop == "_channelid" || $prop == "_requesttype") { continue; }
-                $retar[substr($prop, 1)] = $this->$prop;
+                //if($prop == "_channelid" || $prop == "_requesttype") { continue; }
+                $retar[substr($prop, 1)] = $this->_data[$prop];
             }
         }
 

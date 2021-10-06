@@ -71,13 +71,13 @@ class Nebucord_RESTGuild extends Nebucord_RESTAction {
      * @return array|Nebucord_Model_Channel The array of models with the channel data.
      */
     public function getGuildChannels($guildid) {
-        $oChannelRequest = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GUILD_CHANNELS);
+        $oChannelRequest = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_GUILD_CHANNELS);
         $oChannelRequest->guildid = $guildid;
         $this->_httpclient->setParams($oChannelRequest);
         $res = $this->_httpclient->execute();
         $res_ar = array();
         for($i = 0; $i < count($res); $i++) {
-            $oChannel = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_CHANNEL);
+            $oChannel = Nebucord_Model_Factory::create();
             $oChannel->populate($res[$i]);
             $res_ar[] = $oChannel;
         }
@@ -97,7 +97,7 @@ class Nebucord_RESTGuild extends Nebucord_RESTAction {
      * @return array|Nebucord_Model_GuildMember The array of models with the guild member data.
      */
     public function getGuildMembers($guildid, $limit = 1, $after = 0) {
-        $oMemberRequest = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GUILD_LIST_MEMBERS);
+        $oMemberRequest = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_GUILD_LIST_MEMBERS);
         $oMemberRequest->guildid = $guildid;
         $oMemberRequest->limit = $limit;
         $oMemberRequest->after = $after;
@@ -106,11 +106,11 @@ class Nebucord_RESTGuild extends Nebucord_RESTAction {
         $res_ar = array();
         for($i = 0; $i < count($res); $i++) {
             if(!is_null($res[$i]['user'])) {
-                $oMember = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_USER);
+                $oMember = Nebucord_Model_Factory::create();
                 $oMember->populate($res[$i]['user']);
                 $res[$i]['user'] = $oMember;
             }
-            $oGuildMember = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_GUILDMEMBER);
+            $oGuildMember = Nebucord_Model_Factory::create();
             $oGuildMember->populate($res[$i]);
             $res_ar[] = $oGuildMember;
         }
@@ -126,13 +126,13 @@ class Nebucord_RESTGuild extends Nebucord_RESTAction {
      * @return array|Nebucord_Model_Role An array of the roles from the guild.
      */
     public function getGuildRoles($guildid) {
-        $oRoleGetRequest = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GUILD_GET_ROLES);
+        $oRoleGetRequest = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_GUILD_GET_ROLES);
         $oRoleGetRequest->guildid = $guildid;
         $this->_httpclient->setParams($oRoleGetRequest);
         $res = $this->_httpclient->execute();
         $res_ar = array();
         for($i = 0; $i < count($res); $i++) {
-            $oRole = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_ROLE);
+            $oRole = Nebucord_Model_Factory::create();
             $oRole->populate($res[$i]);
             $res_ar[] = $oRole;
         }
@@ -148,12 +148,12 @@ class Nebucord_RESTGuild extends Nebucord_RESTAction {
      * @return Nebucord_Model_Guild The guild model with it's data.
      */
     public function getGuild($guildid) {
-        $oGetGuildRequest = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GET_GUILD);
+        $oGetGuildRequest = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_GET_GUILD);
         $oGetGuildRequest->guildid = $guildid;
         $this->_httpclient->setParams($oGetGuildRequest);
         $res = $this->_httpclient->execute();
         /** @var Nebucord_Model_Guild $oGuildModel */
-        $oGuildModel = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_GUILD);
+        $oGuildModel = Nebucord_Model_Factory::create();
         $oGuildModel->populate($res);
         return $oGuildModel;
     }
@@ -174,7 +174,7 @@ class Nebucord_RESTGuild extends Nebucord_RESTAction {
      * @param null $channelid Channel id to move user in or null if not to be moved.
      */
     public function modifyGuildMember($guildid, $userid, $newnick = null, $roles = null, $mute = null, $deaf = null, $channelid = null) {
-        $oModifyGuildUser = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GUILD_MODIFY_MEMBER);
+        $oModifyGuildUser = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_GUILD_MODIFY_MEMBER);
         $oModifyGuildUser->guildid = $guildid;
         $oModifyGuildUser->userid = $userid;
         $oModifyGuildUser->nick = $newnick;
@@ -196,7 +196,7 @@ class Nebucord_RESTGuild extends Nebucord_RESTAction {
      * @param null|string $newnick New nickname for @me user.
      */
     public function modifyCurrentNickname($guildid, $newnick) {
-        $oModifyGuildUserNick = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GUILD_MODIFY_CURRENT_NICK);
+        $oModifyGuildUserNick = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_GUILD_MODIFY_CURRENT_NICK);
         $oModifyGuildUserNick->guildid = $guildid;
         $oModifyGuildUserNick->nick = $newnick;
         $this->_httpclient->setParams($oModifyGuildUserNick);
@@ -214,7 +214,7 @@ class Nebucord_RESTGuild extends Nebucord_RESTAction {
      * @param integer $roleid The role id to be added.
      */
     public function addMemberRole($guildid, $userid, $roleid) {
-        $oAddGuildUserRole = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GUILD_ADD_MEMBER_ROLE);
+        $oAddGuildUserRole = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_GUILD_ADD_MEMBER_ROLE);
         $oAddGuildUserRole->guildid = $guildid;
         $oAddGuildUserRole->userid = $userid;
         $oAddGuildUserRole->roleid = $roleid;
@@ -233,7 +233,7 @@ class Nebucord_RESTGuild extends Nebucord_RESTAction {
      * @param integer $roleid The role id to be removed.
      */
     public function removeMemberRole($guildid, $userid, $roleid) {
-        $oRemoveGuildUserRole = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GUILD_REMOVE_MEMBER_ROLE);
+        $oRemoveGuildUserRole = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_GUILD_REMOVE_MEMBER_ROLE);
         $oRemoveGuildUserRole->guildid = $guildid;
         $oRemoveGuildUserRole->userid = $userid;
         $oRemoveGuildUserRole->roleid = $roleid;

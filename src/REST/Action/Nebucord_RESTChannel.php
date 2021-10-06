@@ -69,11 +69,11 @@ class Nebucord_RESTChannel extends Nebucord_RESTAction {
      * @return \Nebucord\Models\Nebucord_Model The message model with the answer from the REST gateway.
      */
     public function createMessage($channel, $message, array $embed = array()) {
-        $oReqMessageModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_CREATE_MESSAGE);
+        $oReqMessageModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_CREATE_MESSAGE);
         $oReqMessageModel->populate(["content" => $message, "channelid" => $channel, "embed" => $embed]);
         $this->_httpclient->setParams($oReqMessageModel);
         $res = $this->_httpclient->execute();
-        $oMessageModel = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_MESSAGE);
+        $oMessageModel = Nebucord_Model_Factory::create();
         $oMessageModel->populate($res);
         return $oMessageModel;
     }
@@ -84,13 +84,13 @@ class Nebucord_RESTChannel extends Nebucord_RESTAction {
      * Same as createMessage(), but this method accpets a Nebucord_RESTMessage model instead of
      * individual parameters.
      *
-     * @param \Nebucord\Models\Nebucord_Model_RESTMessage $oMessage The rest message request model wich contains the message send data.
+     * @param \Nebucord\Models\Nebucord_Model_REST $oMessage The rest message request model wich contains the message send data.
      * @return \Nebucord\Models\Nebucord_Model The message model with the answer from the REST gateway.
      */
-    public function createMessageObject(\Nebucord\Models\Nebucord_Model_RESTMessage $oMessage) {
+    public function createMessageObject(\Nebucord\Models\Nebucord_Model_REST $oMessage) {
         $this->_httpclient->setParams($oMessage);
         $res = $this->_httpclient->execute();
-        $oMessageModel = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_MESSAGE);
+        $oMessageModel = Nebucord_Model_Factory::create();
         $oMessageModel->populate($res);
         return $oMessageModel;
     }
@@ -105,10 +105,10 @@ class Nebucord_RESTChannel extends Nebucord_RESTAction {
      * @param integer|null $around The snowflake message id of a message where to get other messages around from.
      * @param integer|null $before The snowflake message id of a message to receive message before this (message) id.
      * @param integer|null $after The snowflake message id of a message to receive message after this (message) id.
-     * @return array|\Nebucord\Models\Nebucord_Model_Message The array with the message objects from the given channel.
+     * @return array|\Nebucord\Models\Nebucord_Model The array with the message objects from the given channel.
      */
     public function getChannelMessages($channelid, $limit = 50, $around = null, $before = null, $after = null) {
-        $oChannelMsgReq = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_CHANNEL_ALL_MESSAGES);
+        $oChannelMsgReq = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_CHANNEL_ALL_MESSAGES);
         $oChannelMsgReq->channelid = $channelid;
         $oChannelMsgReq->limit = $limit;
         $oChannelMsgReq->around = $around;
@@ -118,7 +118,7 @@ class Nebucord_RESTChannel extends Nebucord_RESTAction {
         $res = $this->_httpclient->execute();
         $return_ar = array();
         for($i = 0; $i < count($res); $i++) {
-            $oMessageModel = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_MESSAGE);
+            $oMessageModel = Nebucord_Model_Factory::create();
             $oMessageModel->populate($res[$i]);
             $return_ar[] = $oMessageModel;
             unset($oMessageModel);

@@ -29,7 +29,7 @@ use Nebucord\Base\Nebucord_Model_Abstract;
 /**
  * Class Nebucord_Model
  *
- * An empty base model if no model exists for the given event/request.
+ * An empty base model for events.
  *
  * @package Nebucord\Models
  */

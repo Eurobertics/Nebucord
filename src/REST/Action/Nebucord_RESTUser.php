@@ -70,11 +70,11 @@ class Nebucord_RESTUser extends Nebucord_RESTAction {
      * @return \Nebucord\Models\Nebucord_Model The channel model on success with the dm channel data.
      */
     public function createDM($recipientid) {
-        $oReqChannelModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_USER_CREATE_DM);
+        $oReqChannelModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_USER_CREATE_DM);
         $oReqChannelModel->recipient_id = $recipientid;
         $this->_httpclient->setParams($oReqChannelModel);
         $res = $this->_httpclient->execute();
-        $oChannelModel = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_CHANNEL);
+        $oChannelModel = Nebucord_Model_Factory::create();
         $oChannelModel->populate($res);
         return $oChannelModel;
     }
@@ -88,11 +88,11 @@ class Nebucord_RESTUser extends Nebucord_RESTAction {
      * @return Nebucord_Model The model representation of the fetched user.
      */
     public function getUser($userid) {
-        $oReqUserModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REQ_GET_USER);
+        $oReqUserModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_GET_USER);
         $oReqUserModel->userid = $userid;
         $this->_httpclient->setParams($oReqUserModel);
         $res = $this->_httpclient->execute();
-        $oUserModel = Nebucord_Model_Factory::createModel(Nebucord_Status::MODEL_USER);
+        $oUserModel = Nebucord_Model_Factory::create();
         $oUserModel->populate($res);
         return $oUserModel;
     }

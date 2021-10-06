@@ -35,6 +35,9 @@ use Nebucord\Base\Nebucord_Status;
  */
 abstract class Nebucord_RESTBase_Abstract {
 
+    /** @const string[] SENDREQUEST_TYPES The possible request types. */
+    const SENDREQUEST_TYPES = array('POST', 'PUT', 'PATCH');
+
     /** @var string $_apiurl The Discord REST API host url with protocol. */
     protected $_apiurl = "ssl://discordapp.com";
 

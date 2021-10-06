@@ -31,7 +31,7 @@ use Nebucord\Events\Nebucord_ActionTable;
 use Nebucord\Events\Nebucord_EventTable;
 use Nebucord\Factories\Nebucord_Model_Factory;
 use Nebucord\Http\Nebucord_WebSocket;
-use Nebucord\Models\Nebucord_Model_GWReady;
+use Nebucord\Models\Nebucord_Model;
 use Nebucord\Models\Nebucord_Model_GWResumed;
 use Nebucord\NebucordREST;
 
@@ -217,17 +217,17 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                 $oInEvent = $this->_evtctrl->dispatchEventLocal();
                 if(isset($oInEvent->heartbeat_interval)) { $intervaltime = $oInEvent->heartbeat_interval; }
                 if(isset($oInEvent->s) && $this->_runstate == Nebucord_Status::NC_RUN) { $currentsequence = $oInEvent->s; $this->_actctrl->setSequence($oInEvent->s); }
-                if($oInEvent instanceof Nebucord_Model_GWReady) {
+                if($oInEvent->t == Nebucord_Status::GWEVT_READY) {
                     $this->botStartup($oInEvent);
                 }
 
                 $this->_actctrl->setInternalAction($oInEvent, $this->_runstate);
                 $oOutEvent = $this->_actctrl->getInternalActionEvent();
                 if($oOutEvent && $oOutEvent->op != Nebucord_Status::OP_HEARTBEAT_ACK) {
-                    if(get_class($oOutEvent) == "Nebucord\Models\Nebucord_Model_RESTMessage") {
+                    if(get_class($oOutEvent) == "Nebucord\Models\Nebucord_Model_REST") {
                         $this->botMessage($oOutEvent);
                     } else {
-                        if($oOutEvent instanceof Nebucord_Model_GWResumed) { $this->setRuntimeState(Nebucord_Status::NC_RUN); $timer->reStartTimer(); $timer->reStartTimer(1); $this->_reconnect_tries = 0; }
+                        if($oOutEvent->t == Nebucord_Status::GWEVT_RESUMED) { $this->setRuntimeState(Nebucord_Status::NC_RUN); $timer->reStartTimer(); $timer->reStartTimer(1); $this->_reconnect_tries = 0; }
                         else { $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oOutEvent->toArray())); }
                         if($sendbytes == -1) {
                             \Nebucord\Logging\Nebucord_Logger::error("Can't write event to gateway, exiting...");
@@ -271,9 +271,9 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
      *
      * Get inital parameters from gateway and sends a short startup message to the bot admins.
      *
-     * @param Nebucord_Model_GWReady $evt The returned GatewayReady event with initial parameters.
+     * @param Nebucord_Model $evt The returned GatewayReady event with initial parameters.
      */
-    private function botStartup(Nebucord_Model_GWReady $evt) {
+    private function botStartup(Nebucord_Model $evt) {
         $this->_session_id = $evt->session_id;
         $this->_actctrl->setSession($evt->session_id);
         $this->_botuserid = $evt->user['id'];

@@ -27,7 +27,7 @@ namespace Nebucord\Interfaces;
 /**
  * Interface Nebucord_IModelREST
  *
- * On createing data models for a REST request this interface sets the minium requirements a model must implement.
+ * On creating data models for a REST request this interface sets the minimum requirements a model must implement.
  * Also this interface is used to set base class identification for some methods used for a inherited class.
  *
  * @package Nebucord\Interfaces
@@ -35,41 +35,41 @@ namespace Nebucord\Interfaces;
 Interface Nebucord_IModelREST {
 
     /**
-     * Returns an API endpoint based on the model.
+     * Sets the API endpoint for REST
      *
-     * Returns the API endpoint based on the model used.
+     * Sets the full API REST endpoint.
      *
-     * @return string The API endpoing used by a REST request.
+     * @param string $endpoint The API REST endpoint.
+     */
+    public function setApiEndpoint(string $endpoint);
+
+    /**
+     * Gets the API endpoint for REST
+     *
+     * Gets the full current REST API endpoint. Mostly used for internal
+     * https requests to the gateway.
+     *
+     * @see Nebucord_RESTHTTPClient
+     * @return string The full REST endpoint.
      */
     public function getApiEndpoint();
 
     /**
-     * Gets the request type for a model.
+     * Sets the HTTP REST request type
      *
-     * Not all REST request using the same request type. This method returns the requested type by model.
-     * Mostly inherited from Nebucord_Model.
+     * The https request type (POST, PUT, etc.) is set here.
      *
-     * @return string The HTTP request type (such es POST, GET, PUT, etc.).
+     * @param string $requesttype The requested request type for the API endpoint.
+     * @throws \Exception If wrong or unknown type is set, an exception is thrown.
+     */
+    public function setRequestType(string $requesttype);
+
+    /**
+     * Get the REST http request type
+     *
+     * Mostly for internal use for the REST gateway. Gets the http request type.
+     *
+     * @return string The http request type.
      */
     public function getRequestType();
-
-    /**
-     * Fills a model by an array.
-     *
-     * The given array will we iterated and stored in the modely key => property, $value => property value.
-     * If exists.
-     *
-     * @param array $data The data to ba stored within the model.
-     */
-    public function populate(array $data);
-
-    /**
-     * Returns a array representation of a model.
-     *
-     * Every property wich exists in a model will be returned by "key=>value" pair in an array.
-     * Methods are not exported. This is often needed to convert a model to array before preparing to send somewhere.
-     *
-     * @return array The array with the propertys=>values of the model.
-     */
-    public function toArray();
 }
