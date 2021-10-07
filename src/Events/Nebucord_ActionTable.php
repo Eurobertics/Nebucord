@@ -89,15 +89,19 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
         if(substr($command, 0, strpos($command, " ")) == self::SETSTATUS) {
             $oStatusUpdateModel = Nebucord_Model_Factory::create(Nebucord_Status::OP_STATUS_UPDATE);
             $oStatusUpdateModel->since = (time() * 1000);
-            $oStatusUpdateModel->game = null;
+            $oStatusUpdateModel->activities = [];
             $oStatusUpdateModel->afk = false;
 
             if(strpos($command, "#") !== false) {
                 $activity = substr($command, strpos($command, "#") + 1, strpos($command, "#") - strpos($command, "#") - 1);
                 $command = str_replace("#".$activity."#", "", $command);
                 $activity_cmdar = explode("|", $activity);
-                $activity_setar = array("name" => $activity_cmdar[0], "type" => $activity_ar[$activity_cmdar[1]], "url" => $activity_cmdar[2]);
-                $oStatusUpdateModel->game = $activity_setar;
+                $activity_setar = array("name" => $activity_cmdar[0], "type" => $activity_ar[$activity_cmdar[1]]);
+                if($activity_ar[$activity_cmdar[1]] == 1 && isset($activity_cmdar[2])) {
+                    $activity_setar['url'] = $activity_cmdar[2];
+                }
+                $activityar[] = $activity_setar;
+                $oStatusUpdateModel->activities = $activityar;
             }
 
             $commandline_ar = explode(" ", $command);
