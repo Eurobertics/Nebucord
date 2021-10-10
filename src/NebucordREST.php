@@ -24,6 +24,7 @@
 
 namespace Nebucord;
 
+use Nebucord\REST\Action\Nebucord_RESTExecutor;
 use Nebucord\REST\Base\Nebucord_RESTHTTPClient;
 
 /**
@@ -58,24 +59,18 @@ class NebucordREST {
     }
 
     /**
-     * Creates action class for requests.
+     * Creates the REST executor
      *
-     * Returns an action class based on the requested action name. This is a basic wrapper to get the actions if
-     * available.
-     * If a action ressource is not available, null is returned.
+     * The REST executor is a class which provides all ressources to perform a
+     * REST request to the Discord REST gateway.
+     * This includes also the base preparing of the http client for REST.
      *
-     * For more information about action see: @see https://discordapp.com/developers/docs/intro -> resources
-     *
-     * @param string $name The action name to be created for requests.
-     * @return object|null The action resource of null if not available.
+     * @return Nebucord_RESTExecutor The REST executor for performing the REST request.
      */
-    public function __get($name) {
-    	$actionclass = "Nebucord\REST\Action\Nebucord_REST".ucfirst($name);
-    	if(class_exists($actionclass)) {
-	    	$httpclient = new Nebucord_RESTHTTPClient($this->_params);
-			$httpclient->setupBaseHeader();
-		    return new $actionclass($httpclient);
-    	}
-    	return null;
+    public function createRESTExecutor()
+    {
+        $httpclient = new Nebucord_RESTHTTPClient($this->_params);
+        $httpclient->setupBaseHeader();
+        return new Nebucord_RESTExecutor($httpclient);
     }
 }

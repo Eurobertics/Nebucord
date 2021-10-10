@@ -32,7 +32,7 @@ use Nebucord\Events\Nebucord_EventTable;
 use Nebucord\Factories\Nebucord_Model_Factory;
 use Nebucord\Http\Nebucord_WebSocket;
 use Nebucord\Models\Nebucord_Model;
-use Nebucord\Models\Nebucord_Model_GWResumed;
+use Nebucord\Models\Nebucord_Model_REST;
 use Nebucord\NebucordREST;
 
 /**
@@ -282,8 +282,12 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
 
         $readyconfirmmsg = array("title" => Nebucord_Status::CLIENTBROWSER." (v. ".Nebucord_Status::VERSION.")", "description" => "Bot details:", "fields" => array(array("name" => "Bot name", "value" => $this->_botusername, "inline" => false), array("name" => "Bot Snowflake ID", "value" => $this->_botuserid, "inline" => false)));
         for($i = 0; $i < count($this->_params['ctrlusr']); $i++) {
-            $dmch = $this->_rest->user->createDM($this->_params['ctrlusr'][$i]);
-            $this->_rest->channel->createMessage($dmch->id, "Bot is ready and online.", $readyconfirmmsg);
+            $dmch = $this->_rest->createRESTExecutor()->executeFromArray(Nebucord_Status::REST_USER_CREATE_DM, ['recipient_id' => $this->_params['ctrlusr'][$i]]);
+            $this->_rest->createRESTExecutor()->executeFromArray(Nebucord_Status::REST_CREATE_MESSAGE, [
+                'channelid' => $dmch->id,
+                'content' => "Bot is ready and online.",
+                'embed' => $readyconfirmmsg
+            ]);
         }
         unset($dmch);
         unset($readyconfirmmsg);
@@ -297,8 +301,12 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
     private function botShutdown() {
         $shutdownmsg = array("title" => Nebucord_Status::CLIENTBROWSER." (v. ".Nebucord_Status::VERSION.")", "description" => "Bot details:", "fields" => array(array("name" => "Bot name", "value" => $this->_botusername, "inline" => false), array("name" => "Bot Snowflake ID", "value" => $this->_botuserid, "inline" => false)));
         for($i = 0; $i < count($this->_params['ctrlusr']); $i++) {
-            $dmch = $this->_rest->user->createDM($this->_params['ctrlusr'][$i]);
-            $this->_rest->channel->createMessage($dmch->id, "Bot ending process and exits, shutdown scheduled.", $shutdownmsg);
+            $dmch = $this->_rest->createRESTExecutor()->executeFromArray(Nebucord_Status::REST_USER_CREATE_DM, ['recipient_id' => $this->_params['ctrlusr'][$i]]);
+            $this->_rest->createRESTExecutor()->executeFromArray(Nebucord_Status::REST_CREATE_MESSAGE, [
+                'channelid' => $dmch->id,
+                'content' => "Bot ending process and exits, shutdown scheduled.",
+                'embed' => $shutdownmsg
+            ]);
         }
         unset($dmch);
         unset($shutdownmsg);
@@ -312,6 +320,8 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
      * @param \Nebucord\Models\Nebucord_Model $evt The message object.
      */
     private function botMessage(\Nebucord\Models\Nebucord_Model $evt) {
-        $this->_rest->channel->createMessageObject($evt);
+        $oRESTRequestModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_CREATE_MESSAGE);
+        $oRESTRequestModel->populate($evt->toArray());
+        $this->_rest->createRESTExecutor()->execute(Nebucord_Status::REST_CREATE_MESSAGE, $evt);
     }
 }
