@@ -56,6 +56,9 @@ abstract class Nebucord_RESTBuildAPIEndpoints
 
     private static function replaceParam(string $apiendpoint, $paramname, $paramval)
     {
+        if(is_array($paramval)) {
+            return $apiendpoint;
+        }
         return str_replace('##' . strtoupper($paramname) . '##', $paramval, $apiendpoint);
     }
 }
