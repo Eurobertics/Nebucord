@@ -42,34 +42,10 @@ abstract class Nebucord_RESTBuildAPIEndpoints
         $oRestArrayLoader = new Nebucord_RESTAPIEndpointsLoader();
         $restarray = $oRestArrayLoader->getRestArray();
         $endpoint = $restarray[$apiendpoint][1];
-        if(isset($param['guildid']) && !is_null($param['guildid'])) {
-            $endpoint = self::replaceGuildId($endpoint, $param['guildid']);
+        foreach($param as $pkey => $pvalue) {
+            $endpoint = self::replaceParam($endpoint,$pkey, $pvalue);
         }
-        if(isset($param['channelid']) && !is_null($param['channelid'])) {
-            $endpoint = self::replaceChannelId($endpoint, $param['channelid']);
-        }
-        if(isset($param['userid']) && !is_null($param['userid'])) {
-            $endpoint = self::replaceUserId($endpoint, $param['userid']);
-        }
-        if(isset($param['limit']) && !is_null($param['limit'])) {
-            $endpoint = self::replaceLimit($endpoint, $param['limit']);
-        }
-        if(isset($param['around']) && !is_null($param['around'])) {
-            $endpoint = self::replaceAround($endpoint, $param['around']);
-        }
-        if(isset($param['before']) && !is_null($param['before'])) {
-            $endpoint = self::replaceBefore($endpoint, $param['before']);
-        }
-        if(isset($param['after']) && !is_null($param['after'])) {
-            $endpoint = self::replaceAfter($endpoint, $param['after']);
-        }
-        if(isset($param['emojiid']) && !is_null($param['emojiid'])) {
-            $endpoint = self::replaceAfter($endpoint, $param['emojiid']);
-        }
-        if(isset($param['roleid']) && !is_null($param['roleid'])) {
-            $endpoint = self::replaceAfter($endpoint, $param['roleid']);
-        }
-        return $endpoint;
+        return preg_replace('/(\#\#)[a-zA-Z]*(\#\#)/', '', $endpoint);
     }
 
     public static function setRequestType(string $apiendpoint) {
@@ -78,48 +54,8 @@ abstract class Nebucord_RESTBuildAPIEndpoints
         return $restarray[$apiendpoint][0];
     }
 
-    private static function replaceGuildId(string $apiendpoint, int $guildid)
+    private static function replaceParam(string $apiendpoint, $paramname, $paramval)
     {
-        return str_replace('##GUILDID##', $guildid, $apiendpoint);
-    }
-
-    private static function replaceChannelId(string $apiendpoint, int $channelid)
-    {
-        return str_replace('##CHANNELID##', $channelid, $apiendpoint);
-    }
-
-    private static function replaceUserId(string $apiendpoint, int $userid)
-    {
-        return str_replace('##USERID##', $userid, $apiendpoint);
-    }
-
-    private static function replaceLimit(string $apiendpoint, int $limit)
-    {
-        return str_replace('##LIMIT##', $limit, $apiendpoint);
-    }
-
-    private static function replaceAround(string $apiendpoint, int $around)
-    {
-        return str_replace('##AROUNT##', "&around=".$around, $apiendpoint);
-    }
-
-    private static function replaceBefore(string $apiendpoint, int $before)
-    {
-        return str_replace('##BEFORE##', "&before=".$before, $apiendpoint);
-    }
-
-    private static function replaceAfter(string $apiendpoint, int $after)
-    {
-        return str_replace('##AFTER##', "&after=".$after, $apiendpoint);
-    }
-
-    private static function replaceEmojiId(string $apiendpoint, int $emojiid)
-    {
-        return str_replace('##EMOJIID##', $emojiid, $apiendpoint);
-    }
-
-    private static function replaceRoleId(string $apiendpoint, int $roleid)
-    {
-        return str_replace('##ROLEID##', $roleid, $apiendpoint);
+        return str_replace('##' . strtoupper($paramname) . '##', $paramval, $apiendpoint);
     }
 }

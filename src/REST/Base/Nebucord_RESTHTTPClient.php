@@ -77,7 +77,10 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
      * @param Nebucord_IModelREST $model
      */
     public function setParams(Nebucord_IModelREST $model) {
-        $json_payload = json_encode($model->toArray());
+        $json_payload = '';
+        if($model->getRequestType() != 'GET') {
+            $json_payload = json_encode($model->toArray());
+        }
         $this->_param_endpoint = $model->getApiEndpoint();
         $this->_param_requesttype = $model->getRequestType();
         $this->_param_contentlength = strlen($json_payload);
