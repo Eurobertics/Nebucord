@@ -1,7 +1,7 @@
 REST_CREATE_MESSAGE;POST;/channels/##CHANNELID##/messages
 REST_CREATE_DM;POST;/users/@me/channels
-GET_GUILD_CHANNELS;POST;/guild/##GUILDID##/channels
-REST_LIST_GUILD_MEMBERS;/guilds/##GUILDID##/members?limit=##LIMIT####AFTER##
+REST_GET_GUILD_CHANNELS;POST;/guild/##GUILDID##/channels
+REST_LIST_GUILD_MEMBERS;GET;/guilds/##GUILDID##/members?limit=##LIMIT####AFTER##
 REST_GUILD_GET_ROLES;GET;/guilds/##GUILDID##/roles
 REST_GET_ALL_CHANNEL_MESSAGES;GET;"/channels/##CHANNELID/messages?limit=##LIMIT####AROUND####BEFORE####AFTER##
 REST_GET_GUILD_EMOJI;GET;/guilds/##guildid##/emojis/##EMOJIID##
