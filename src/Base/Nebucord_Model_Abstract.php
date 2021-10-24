@@ -143,6 +143,13 @@ abstract class Nebucord_Model_Abstract {
         $this->_s = (!isset($data['s'])) ? null : $data['s'];
         $this->_t = (!isset($data['t'])) ? null : $data['t'];
         if(isset($data['d'])) {
+            if(!is_array($data['d'])) {
+                echo "\n\n";
+                echo gettype($data['d']);
+                echo "\n";
+                var_dump($data['d']);
+                echo "\n\n";
+            }
             foreach ($data['d'] as $property => $value) {
                 $this->_data['_'.$property] = $value;
             }
