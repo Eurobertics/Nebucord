@@ -210,9 +210,9 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
 
             if($message[0] == 0 && !empty($message[1])) {
                 if(!$this->_evtctrl->readEvent($message[1])) {
-                    \Nebucord\Logging\Nebucord_Logger::error("Could not decode message from gateway, API or connection may broken (received NULL). Exiting!");
-                    $this->setRuntimeState(Nebucord_Status::NC_EXIT);
-                    continue;
+                    \Nebucord\Logging\Nebucord_Logger::error("Could not decode message from gateway, API or connection may broken (received NULL). Ignoring message!");
+                    //$this->setRuntimeState(Nebucord_Status::NC_EXIT);
+                    //continue;
                 }
                 $oInEvent = $this->_evtctrl->dispatchEventLocal();
                 if(isset($oInEvent->heartbeat_interval)) { $intervaltime = $oInEvent->heartbeat_interval; }

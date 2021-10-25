@@ -97,6 +97,7 @@ class Nebucord_EventController extends Nebucord_Controller_Abstract {
     public function readEvent($eventmessage) {
         $this->_eventmessage = $this->parseJSON($eventmessage);
         if(is_null($this->_eventmessage)) {
+            $this->_model = Nebucord_Model_Factory::create();
             return false;
         }
         $this->buildEventData();
