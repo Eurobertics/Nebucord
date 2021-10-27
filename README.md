@@ -52,11 +52,12 @@ Default and available parameters
 | Bot token                  | token       | bottoken          | (string)*empty*                 |
 | ACL user snowflakes        | ctrluser    | acl               | (array)[]                       |
 | WS connection retries      | wsretries   | websocket.retries | (integer)3                      |
-| Default GW intent bitmask* | intents     | intents.*         | (integer)32509 / (boolean)true* |
+| Default GW intent bitmask* | intents     | intents.*         | (integer)31997 / (boolean)true* |
 
 **\*Note:**  
-The intent bitmask defaults to be everything is true except `GUILD_MEMBERS` and `GUILD_PRESENCES`.
-These two options has to be manual set to `true` and they have to be activated in the Bot
+The intent bitmask defaults to be everything is true except `GUILD_MEMBERS`, `GUILD_PRESENCES`
+and `GUILD_MESSAGES`.
+These three options has to be manual set to `true` and they have to be activated in the Bot
 preferences on the Discord application management webpage.
 The bitmask is `32767` if everything set to true or for config as parameter.
 
@@ -183,14 +184,18 @@ include "vendor/autoload.php";
 use Nebucord\NebucordREST;
 
 $nebucordREST = new NebucordREST(['token' => 'your_bot_token']);
-$message_model = $nebucordREST->channel->createMessage(123123123123 /* channel id */, "message");
+$message_model = $nebucordREST->createRESTExecutor()->createRESTActionFromArray(
+    \Nebucord\Base\Nebucord_Status::REST_CREATE_MESSAGE,
+    [
+        'channelid' => 123123123123,
+        'content' => "message"
+    ]
+);
 ```
 
 "$message_model" is an object with the answer from the REST gateway.
 
 Basic usage for receiving guild channels:
-
-Basic usage for sending a message:
  
  ```php
 <?php
@@ -199,10 +204,19 @@ include "vendor/autoload.php";
 use Nebucord\NebucordREST;
 
 $nebucordREST = new NebucordREST(['token' => 'your_bot_token']);
-$channels = $nebucordREST->guild->getGuildChannels(123123123123123 /* guild id*/);
+$channels = $nebucordREST->createRESTExecutor()->createRESTActionFromArray(
+    \Nebucord\Base\Nebucord_Status::REST_GET_GUILD_CHANNELS,
+    [
+        'guildid' => 123123123123123,
+    ]
+);
 ```
 
 "$channels" is an array of channel models for processing.
+
+`createRESTExecutor()` returns an object which can be re-used for creating REST rest request.  
+It is also possible to to create a REST request with `createRESTAction(string Nebucord_Status::REST_*, Nebucord_Model_REST $restmodel)`
+instead of `createRESTActionFromArray(string Nebucord_Status::REST_*, array $restparams)` and pass an predefined `Nebucord_Model_REST` object with all params for the REST gateway.
 
 More info
 ---------

@@ -66,6 +66,12 @@ class Nebucord_RESTAPIEndpointsLoader
         $this->restdata = array();
     }
 
+    /**
+     * Creates an array with all REST data
+     *
+     * After loading the API REST data from the CSV, this method builds
+     * an array for further processing.
+     */
     private function setupRestArray()
     {
         $restarray = array();
@@ -78,6 +84,14 @@ class Nebucord_RESTAPIEndpointsLoader
         $this->restdata = $restarray;
     }
 
+    /**
+     * Returns the builded REST data array
+     *
+     * After building the array from the CSV, this method returns it
+     * for further processing.
+     *
+     * @return array The REST API data array for building the endpoints.
+     */
     public function getRestArray()
     {
         return $this->restdata;

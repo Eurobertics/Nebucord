@@ -25,6 +25,7 @@
 namespace Nebucord\REST\Base;
 
 use Nebucord\Base\Nebucord_Status;
+use Nebucord\Models\Nebucord_Model_REST;
 
 /**
  * Class Nebucord_RESTBuildAPIEndpoints
@@ -37,6 +38,19 @@ use Nebucord\Base\Nebucord_Status;
  */
 abstract class Nebucord_RESTBuildAPIEndpoints
 {
+
+    /**
+     * Loads and builds the REST API endpoints
+     *
+     * This method is responsible for loading the CSV file with all
+     * REST API data and to build the API endpoint.
+     *
+     * @see Nebucord_Status for $apiendpoint
+     * @see Nebucord_Model_REST::toArray() for $param the be used
+     * @param string $apiendpoint A Nebucord_Status REST request const which sets the API endpoint to be build
+     * @param array $param The data used to build the API endpoint such as channel ids, guild ids limits and such things (mostly generated from Nebucord_Model_REST::toArray()
+     * @return string The finished API endpoint ready to use for the REST HTTP client
+     */
     public static function buildApiEndpoint(string $apiendpoint, array $param = array())
     {
         $oRestArrayLoader = new Nebucord_RESTAPIEndpointsLoader();
@@ -48,12 +62,35 @@ abstract class Nebucord_RESTBuildAPIEndpoints
         return preg_replace('/(\#\#)[a-zA-Z]*(\#\#)/', '', $endpoint);
     }
 
+    /**
+     * Returns the request type for the API endpoint
+     *
+     * After loading the CSV file for the API endpoints, the request type is from the given
+     * $apiendpoint var extracted and returned.
+     *
+     * @see Nebucord_Status for $apiendpoint
+     * @see Nebucord_RESTBase_Abstract for possible request types
+     * @param string $apiendpoint A Nebucord_Status REST request const which sets the API endpoint to be build
+     * @return string The given request type ready to use for the REST HTTP client (such as GET, POST, PUT, etc.)
+     */
     public static function setRequestType(string $apiendpoint) {
         $oRestArrayLoader = new Nebucord_RESTAPIEndpointsLoader();
         $restarray = $oRestArrayLoader->getRestArray();
         return $restarray[$apiendpoint][0];
     }
 
+    /**
+     * The function for replacing placeholder with data for endpoints
+     *
+     * Is an $apiendpoint loaded by the class::buildApiEndpoint() method, this helper method
+     * replaces the placeholder in the $apiendpoint string with values used for the gateway. These
+     * are such data like limits, channel- or guild ids and so on.
+     *
+     * @param string $apiendpoint The loaded REST API endpoint from the CSV file
+     * @param $paramname The parameter in the endpoint string to be searched for
+     * @param $paramval The parameter to be inserted as data for the placeholder
+     * @return string The finished REST endpoint after replacing the param
+     */
     private static function replaceParam(string $apiendpoint, $paramname, $paramval)
     {
         if(is_array($paramval)) {

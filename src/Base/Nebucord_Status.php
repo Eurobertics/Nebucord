@@ -301,7 +301,7 @@ abstract class Nebucord_Status {
     const INTENT_DIRECT_MESSAGE_REACTIONS = 1 << 13;
     const INTENT_DIRECT_MESSAGE_TYPING = 1 << 14;
 
-    const INTENTS_DEFAULT_BITMASK = 32509;
+    const INTENTS_DEFAULT_BITMASK = 31997;
 
     const NC_RUN = 1;
     const NC_EXIT = 0;
