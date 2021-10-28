@@ -53,6 +53,7 @@ Default and available parameters
 | ACL user snowflakes        | ctrluser    | acl               | (array)[]                       |
 | WS connection retries      | wsretries   | websocket.retries | (integer)3                      |
 | Default GW intent bitmask* | intents     | intents.*         | (integer)31997 / (boolean)true* |
+| DM on failures             | dmonfailures| websocket.dmonfailures | (boolean)true              |
 
 **\*Note:**  
 The intent bitmask defaults to be everything is true except `GUILD_MEMBERS`, `GUILD_PRESENCES`

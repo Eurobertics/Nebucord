@@ -303,6 +303,8 @@ abstract class Nebucord_Status {
 
     const INTENTS_DEFAULT_BITMASK = 31997;
 
+    const DMONFAILURES_DEFAULT = true;
+
     const NC_RUN = 1;
     const NC_EXIT = 0;
     const NC_RECONNECT = 2;

@@ -280,6 +280,11 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
                     $this->_outevent = $this->_acttbl->doStatus($msg);
                     $this->_outevent->populate(['channelid' => $this->_inevent->channel_id]);
                     //$this->_outevent->channelid = $this->_inevent->channel_id;
+                } else if (strpos($msg, Nebucord_IActionTable::DOREBOOT) !== false) {
+                    \Nebucord\Logging\Nebucord_Logger::warn("Reboot command received: " . $msg);
+                    \Nebucord\Logging\Nebucord_Logger::warn("Rebooting and reconnecting Nebucord to Discord...");
+                    $this->_outevent = $this->_acttbl->doRestart($msg);
+                    $this->_outevent->populate(['channelid' => $this->_inevent->channel_id]);
                 }
             }
         }

@@ -112,6 +112,7 @@ class Nebucord_Configloader {
         $params['token'] = $this->cfg->bottoken;
         $params['ctrlusr'] = $this->getControlUsers();
         $params['wsretries'] = $this->cfg->websocket->retries;
+        $params['dmonfailures'] = $this->cfg->websocket->dmonfailures;
         $params['intents'] = $this->getIntentsBitmask();
         return $params;
     }

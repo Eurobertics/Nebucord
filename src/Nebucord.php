@@ -88,7 +88,7 @@ class Nebucord {
     /**
      * Bootstrapping before start.
      *
-     * Starts the basics and gets configuration parameters (currently not used). After bootstrapping the socket
+     * Starts the basics and gets configuration parameters. After bootstrapping the socket
      * connection and configurations, Nebucord is able to run.
      *
      * @return Nebucord Returns itself (Nebucord).
@@ -103,6 +103,9 @@ class Nebucord {
         }
         if(empty($this->_params['wsretries'])) {
             $this->_params['wsretries'] = Nebucord_Status::MAX_RECONNECT_TRIES;
+        }
+        if(empty($this->_params['dmonfailures'])) {
+            $this->_params['dmonfailures'] = Nebucord_Status::DMONFAILURES_DEFAULT;
         }
         $this->_wscon = Nebucord_WebSocket::getInstance();
         $this->_bootstrappingdone = true;

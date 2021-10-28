@@ -191,6 +191,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
             $message = $this->_wscon->soReadAll();
             if($message[0] == -1) {
                 \Nebucord\Logging\Nebucord_Logger::error("Error reading event from gateway, disconnect and try to reconnect...");
+                $this->botFailureMessage(serialize($message), Nebucord_Status::NC_RECONNECT);
                 $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
                 continue;
                 //break;
@@ -202,7 +203,8 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                     \Nebucord\Logging\Nebucord_Logger::warn("Websocket code 1001 received, reconnecting...");
                     $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
                 } else {
-                    $this->setRuntimeState(Nebucord_Status::NC_EXIT);
+                    $this->botFailureMessage(serialize($message), Nebucord_Status::NC_RECONNECT);
+                    $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
                 }
                 continue;
                 //break;
@@ -210,8 +212,9 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
 
             if($message[0] == 0 && !empty($message[1])) {
                 if(!$this->_evtctrl->readEvent($message[1])) {
-                    \Nebucord\Logging\Nebucord_Logger::error("Could not decode message from gateway, API or connection may broken (received NULL). Ignoring message!");
-                    //$this->setRuntimeState(Nebucord_Status::NC_EXIT);
+                    \Nebucord\Logging\Nebucord_Logger::error("Could not decode message from gateway, API or connection may broken (received NULL). Ignoring message and reconnect for resume!");
+                    $this->botFailureMessage(serialize($message), Nebucord_Status::NC_RECONNECT);
+                    $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
                     //continue;
                 }
                 $oInEvent = $this->_evtctrl->dispatchEventLocal();
@@ -226,13 +229,15 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                 if($oOutEvent && $oOutEvent->op != Nebucord_Status::OP_HEARTBEAT_ACK) {
                     if(get_class($oOutEvent) == "Nebucord\Models\Nebucord_Model_REST") {
                         $this->botMessage($oOutEvent);
+                        $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
                     } else {
                         if($oOutEvent->t == Nebucord_Status::GWEVT_RESUMED) { $this->setRuntimeState(Nebucord_Status::NC_RUN); $timer->reStartTimer(); $timer->reStartTimer(1); $this->_reconnect_tries = 0; }
                         else { $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oOutEvent->toArray())); }
                         if($sendbytes == -1) {
                             \Nebucord\Logging\Nebucord_Logger::error("Can't write event to gateway, exiting...");
+                            $this->botFailureMessage("Can't write event to gateway, exiting...", Nebucord_Status::NC_RECONNECT);
                             $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
-                            break;
+                            continue;
                         }
                         if ($oOutEvent->status == "offline") {
                             $this->setRuntimeState(Nebucord_Status::NC_EXIT);
@@ -246,6 +251,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
 
             if($timer->getTime(1) > ($intervaltime * 1.5) && $this->_runstate == Nebucord_Status::NC_RUN) {
                 \Nebucord\Logging\Nebucord_Logger::error("Did not receive any heartbeat response from gateway. Connection broken? Try to reconnect...");
+                $this->botFailureMessage("Did not receive any heartbeat response from gateway. Connection broken? Try to reconnect...", Nebucord_Status::NC_RECONNECT);
                 $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
             }
 
@@ -258,6 +264,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                     $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oHeartbeat->toArray()));
                     if($sendbytes == -1) {
                         \Nebucord\Logging\Nebucord_Logger::error("Can't write heartbeat message to gateway, exiting...");
+                        $this->botFailureMessage("Can't write heartbeat message to gateway, exiting...", Nebucord_Status::NC_RECONNECT);
                         $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
                         //break;
                     }
@@ -323,5 +330,48 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
         $oRESTRequestModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_CREATE_MESSAGE);
         $oRESTRequestModel->populate($evt->toArray());
         $this->_rest->createRESTExecutor()->execute(Nebucord_Status::REST_CREATE_MESSAGE, $evt);
+    }
+
+    /**
+     * Sends a error notice
+     *
+     * If Nebucord receives an error from the websocket gateway, a message is sent to all
+     * controls user as a notice.
+     *
+     * @param string $errmsg The errorstring Nebucord received
+     * @param int $state The new state Nebucord enters based on the error
+     */
+    private function botFailureMessage(string $errmsg, int $state)
+    {
+        if(!$this->_params['dmonfailures']) { return; }
+        $errormsg = array(
+            "title" => Nebucord_Status::CLIENTBROWSER." (v. ".Nebucord_Status::VERSION.")",
+            "description" => "Nebucord API error:",
+            "fields" => array(
+                array(
+                    "name" => "Bot name",
+                    "value" => $this->_botusername,
+                    "inline" => false),
+                array(
+                    "name" => "Errormessage",
+                    "value" => $errmsg,
+                    "inline" => false),
+                array(
+                    "name" => "New state",
+                    "value" => $state,
+                    "inline" => false
+                )
+            )
+        );
+        for($i = 0; $i < count($this->_params['ctrlusr']); $i++) {
+            $dmch = $this->_rest->createRESTExecutor()->executeFromArray(Nebucord_Status::REST_USER_CREATE_DM, ['recipient_id' => $this->_params['ctrlusr'][$i]]);
+            $this->_rest->createRESTExecutor()->executeFromArray(Nebucord_Status::REST_CREATE_MESSAGE, [
+                'channelid' => $dmch->id,
+                'content' => "Nebucord API encountered an error!",
+                'embed' => $errormsg
+            ]);
+        }
+        unset($dmch);
+        unset($errormsg);
     }
 }

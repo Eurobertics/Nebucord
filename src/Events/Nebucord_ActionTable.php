@@ -27,6 +27,7 @@ namespace Nebucord\Events;
 use Nebucord\Interfaces\Nebucord_IActionTable;
 use Nebucord\Base\Nebucord_Status;
 use Nebucord\Factories\Nebucord_Model_Factory;
+use Nebucord\Models\Nebucord_Model;
 
 /**
  * Class Nebucord_ActionTable
@@ -276,5 +277,20 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
             return $oMessageCreate;
         }
         return null;
+    }
+
+    /**
+     * Restarts Nebucord
+     *
+     * @see Nebucord_IActionTable::doRestart()
+     *
+     * @param string $command The command on which this action should fire (default: !reboot).
+     * @return Nebucord_Model|null The model return to the runtime controller to execute the action by the ActionController.
+     */
+    public function doRestart($command)
+    {
+        $oMessageCreateModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_CREATE_MESSAGE);
+        $oMessageCreateModel->populate(['content' => "Reconnecting to the gateway!"]);
+        return $oMessageCreateModel;
     }
 }

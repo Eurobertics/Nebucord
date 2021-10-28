@@ -55,6 +55,9 @@ interface Nebucord_IActionTable {
     /** @var string This is a public command, it shows the bot status. */
     const DOVERSION = "!version";
 
+    /** @var string The bot will restart and reconnect to the gateway by this command. */
+    const DOREBOOT = "!reboot";
+
     /**
      * Stops Nebucord and sets runtime to exit.
      *
@@ -125,4 +128,14 @@ interface Nebucord_IActionTable {
      * @return Nebucord_Model|null The model returned to the runtime controller to execute the action by the ActionController.
      */
     public function doVersion($command);
+
+    /**
+     * Restarts Nebucord
+     *
+     * Restarts Nebucord and reconnects to the Websocket Gateway.
+     *
+     * @param string $command The command on which this action should fire (default:; !reboot).
+     * @return Nebucord_Model|null The model return to the runtime controller to execute the action by the ActionController.
+     */
+    public function doRestart($command);
 }
