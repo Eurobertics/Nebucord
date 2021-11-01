@@ -57,9 +57,9 @@ abstract class Nebucord_RESTBuildAPIEndpoints
         $restarray = $oRestArrayLoader->getRestArray();
         $endpoint = $restarray[$apiendpoint][1];
         foreach($param as $pkey => $pvalue) {
-            $endpoint = self::replaceParam($endpoint,$pkey, $pvalue);
+            $endpoint = self::replaceParam($endpoint, $pkey, $pvalue, (($apiendpoint[0] == 'GET') ? true : false));
         }
-        return preg_replace('/(\#\#)[a-zA-Z]*(\#\#)/', '', $endpoint);
+        return substr($endpoint, 0, -1);
     }
 
     /**
@@ -87,15 +87,22 @@ abstract class Nebucord_RESTBuildAPIEndpoints
      * are such data like limits, channel- or guild ids and so on.
      *
      * @param string $apiendpoint The loaded REST API endpoint from the CSV file
-     * @param $paramname The parameter in the endpoint string to be searched for
-     * @param $paramval The parameter to be inserted as data for the placeholder
+     * @param $paramname mixed The parameter in the endpoint string to be searched for
+     * @param $paramval mixed parameter to be inserted as data for the placeholder
+     * @param bool $paramappendtourl If true, unreplaced params are appended to the API endpoint for GET requests
      * @return string The finished REST endpoint after replacing the param
      */
-    private static function replaceParam(string $apiendpoint, $paramname, $paramval)
+    private static function replaceParam(string $apiendpoint, $paramname, $paramval, bool $paramappendtourl = false)
     {
         if(is_array($paramval)) {
             return $apiendpoint;
         }
-        return str_replace('##' . strtoupper($paramname) . '##', $paramval, $apiendpoint);
+        $apiendpoint = str_replace('##' . strtoupper($paramname) . '##', $paramval, $apiendpoint, $count);
+        if($paramappendtourl) {
+            if ($count == 0) {
+                $apiendpoint = $paramname . "=" . $paramval . "&";
+            }
+        }
+        return $apiendpoint;
     }
 }

@@ -186,9 +186,9 @@ use Nebucord\NebucordREST;
 
 $nebucordREST = new NebucordREST(['token' => 'your_bot_token']);
 $message_model = $nebucordREST->createRESTExecutor()->createRESTActionFromArray(
-    \Nebucord\Base\Nebucord_Status::REST_CREATE_MESSAGE,
+    \Nebucord\REST\Base\Nebucord_RESTStatus::REST_CREATE_MESSAGE,
     [
-        'channelid' => 123123123123,
+        'channel_id' => 123123123123,
         'content' => "message"
     ]
 );
@@ -206,9 +206,9 @@ use Nebucord\NebucordREST;
 
 $nebucordREST = new NebucordREST(['token' => 'your_bot_token']);
 $channels = $nebucordREST->createRESTExecutor()->createRESTActionFromArray(
-    \Nebucord\Base\Nebucord_Status::REST_GET_GUILD_CHANNELS,
+    \Nebucord\REST\Base\Nebucord_RESTStatus::REST_GET_GUILD_CHANNELS,
     [
-        'guildid' => 123123123123123,
+        'guild_id' => 123123123123123,
     ]
 );
 ```
@@ -216,8 +216,8 @@ $channels = $nebucordREST->createRESTExecutor()->createRESTActionFromArray(
 "$channels" is an array of channel models for processing.
 
 `createRESTExecutor()` returns an object which can be re-used for creating REST rest request.  
-It is also possible to to create a REST request with `createRESTAction(string Nebucord_Status::REST_*, Nebucord_Model_REST $restmodel)`
-instead of `createRESTActionFromArray(string Nebucord_Status::REST_*, array $restparams)` and pass an predefined `Nebucord_Model_REST` object with all params for the REST gateway.
+It is also possible to to create a REST request with `createRESTAction(string Nebucord_RESTStatus::REST_*, Nebucord_Model_REST $restmodel)`
+instead of `createRESTActionFromArray(string Nebucord_RESTStatus::REST_*, array $restparams)` and pass an predefined `Nebucord_Model_REST` object with all params for the REST gateway.
 
 More info
 ---------

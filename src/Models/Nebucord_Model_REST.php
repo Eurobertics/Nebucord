@@ -42,7 +42,7 @@ use Nebucord\REST\Base\Nebucord_RESTBuildAPIEndpoints;
 class Nebucord_Model_REST extends Nebucord_Model implements Nebucord_IModelREST
 {
 
-    /** @var string $_status_type Holds the status type of the model (example: Nebucord_Status::REST_CREATE_MESSAGE).  */
+    /** @var string $_status_type Holds the status type of the model (example: Nebucord_RESTStatus::REST_CREATE_MESSAGE).  */
     private $_status_type;
 
     /** @var string $_api_endpoint stores the current REST endpoint. */

@@ -28,6 +28,7 @@ use Nebucord\Interfaces\Nebucord_IActionTable;
 use Nebucord\Base\Nebucord_Status;
 use Nebucord\Factories\Nebucord_Model_Factory;
 use Nebucord\Models\Nebucord_Model;
+use Nebucord\REST\Base\Nebucord_RESTStatus;
 
 /**
  * Class Nebucord_ActionTable
@@ -174,7 +175,7 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
                     )
                 )
             );
-            $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_CREATE_MESSAGE);
+            $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_RESTStatus::REST_CREATE_MESSAGE);
             $oMessageCreate->populate(['content' => null, 'embed' => $message]);
             return $oMessageCreate;
         }
@@ -191,7 +192,7 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
      */
     public function doEcho($command) {
         if(substr($command, 0, strpos($command, " ")) == self::DOECHO) {
-            $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_CREATE_MESSAGE);
+            $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_RESTStatus::REST_CREATE_MESSAGE);
             $oMessageCreate->content = "Echo test:".substr($command, strpos($command, " "));
             return $oMessageCreate;
         }
@@ -208,7 +209,7 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
      */
     public function doSay($command) {
         if(substr($command, 0, strpos($command, " ")) == self::DOSAY) {
-            $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_CREATE_MESSAGE);
+            $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_RESTStatus::REST_CREATE_MESSAGE);
             $oMessageCreate->content = substr($command, strpos($command, " "));
             return $oMessageCreate;
         }
@@ -225,7 +226,7 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
      */
     public function doStatus($command) {
         if($command == self::DOSTATUS) {
-            $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_CREATE_MESSAGE);
+            $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_RESTStatus::REST_CREATE_MESSAGE);
             $oMessageCreate->content = "Bot is up and running.";
             return $oMessageCreate;
         }
@@ -272,7 +273,7 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
                     )
                 )
             );
-            $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_CREATE_MESSAGE);
+            $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_RESTStatus::REST_CREATE_MESSAGE);
             $oMessageCreate->populate(['content' => null, 'embed' => $message]);
             return $oMessageCreate;
         }
@@ -289,7 +290,7 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
      */
     public function doRestart($command)
     {
-        $oMessageCreateModel = Nebucord_Model_Factory::createREST(Nebucord_Status::REST_CREATE_MESSAGE);
+        $oMessageCreateModel = Nebucord_Model_Factory::createREST(Nebucord_RESTStatus::REST_CREATE_MESSAGE);
         $oMessageCreateModel->populate(['content' => "Reconnecting to the gateway!"]);
         return $oMessageCreateModel;
     }

@@ -67,7 +67,7 @@ abstract class Nebucord_Model_Factory {
      * When sending back to the gateway, respectively the REST API of Discord, this method
      * creates the models which can be sent to the gateway by REST.
      *
-     * @param string $request The ID of the REST request (example: Nebucord_Status::REST_CREATE_MESSAGE).
+     * @param string $request The ID of the REST request (example: Nebucord_RESTStatus::REST_CREATE_MESSAGE).
      * @return Nebucord_IModelREST The created and instantiated model for request.
      * @throws \Exception Throws an exception on unknown or wrong http request type.
      */
