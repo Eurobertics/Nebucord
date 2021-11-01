@@ -57,7 +57,7 @@ abstract class Nebucord_RESTBuildAPIEndpoints
         $restarray = $oRestArrayLoader->getRestArray();
         $endpoint = $restarray[$apiendpoint][1];
         foreach($param as $pkey => $pvalue) {
-            $endpoint = self::replaceParam($endpoint, $pkey, $pvalue, (($apiendpoint[0] == 'GET') ? true : false));
+            $endpoint = self::replaceParam($endpoint, $pkey, $pvalue, (($restarray[$apiendpoint][0] == 'GET') ? true : false));
         }
         return substr($endpoint, 0, -1);
     }
