@@ -100,7 +100,7 @@ abstract class Nebucord_RESTBuildAPIEndpoints
         $apiendpoint = str_replace('##' . strtoupper($paramname) . '##', $paramval, $apiendpoint, $count);
         if($paramappendtourl) {
             if ($count == 0) {
-                $apiendpoint = $paramname . "=" . $paramval . "&";
+                $apiendpoint .= $paramname . "=" . $paramval . "&";
             }
         }
         return $apiendpoint;
