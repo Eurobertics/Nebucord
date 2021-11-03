@@ -204,8 +204,9 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                     \Nebucord\Logging\Nebucord_Logger::warn("Websocket code 1001 received, reconnecting...");
                     $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
                 } else {
-                    $this->botFailureMessage(serialize($message), Nebucord_Status::NC_RECONNECT);
-                    $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
+                    $this->botFailureMessage(serialize($message), Nebucord_Status::NC_EXIT);
+                    \Nebucord\Logging\Nebucord_Logger::error("Websocket code ".$message[1]." received, seems unnatural, exiting!");
+                    $this->setRuntimeState(Nebucord_Status::NC_EXIT);
                 }
                 continue;
                 //break;
