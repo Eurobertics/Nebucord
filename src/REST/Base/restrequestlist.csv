@@ -26,8 +26,9 @@ REST_PIN_MESSAGE;PUT;/channels/##CHANNEL_ID##/pins/##MESSAGE_ID##?
 REST_UNPIN_MESSAGE;DELETE;/channels/##CHANNEL_ID##/pins/##MESSAGE_ID##?
 REST_GROUP_DM_ADD_RECIPIENT;PUT;/channels/##CHANNEL_ID##/recipients/##USER_ID##?
 REST_GROUP_DM_REMOVE_RECIPIENT;DELETE;/channels/##CHANNEL_ID##/recipients/##USER_ID##?
-REST_START_THREAD_WITH_MESSAGE;POST;/channels/##CHANNEL_ID##/messages/##MESSAGE_ID##/threads?
+REST_START_THREAD_FROM_MESSAGE;POST;/channels/##CHANNEL_ID##/messages/##MESSAGE_ID##/threads?
 REST_START_THREAD_WITHOUT_MESSAGE;POST;/channels/##CHANNEL_ID##/threads?
+REST_START_THREAD_IN_FORUM_CHANNEL;POST;/channels/##CHANNEL_ID##/threads?
 REST_JOIN_THREAD;PUT;/channels/##CHANNEL_ID##/thread-members/@me?
 REST_ADD_THREAD_MEMBER;PUT;/channels/##CHANNEL_ID##/thread-members/##USER_ID##?
 REST_LEAVE_THREAD;DELETE;/channels/##CHANNEL_ID##/thread-members/@me?
@@ -85,6 +86,12 @@ REST_GET_GUILD_WELCOME_SCREEN;GET;/guilds/##GUILD_ID##/welcome-screen?
 REST_MODIFY_GUILD_WELCOME_SCREEN;PATCH;/guilds/##GUILD_ID##/welcome-screen?
 REST_MODIFY_CURRENT_USER_VOICE_STATE;PATCH;/guilds/##GUILD_ID##/voice-states/@me?
 REST_MODIFY_USER_VOICE_STATE;PATCH;/guilds/##GUILD_ID##/voice-states/##USER_ID##?
+REST_LIST_SCHEDULED_EVENTS_FOR_GUILD;GET;/guilds/##GUILD_ID##/scheduled-events?
+REST_CREATE_GUILD_SCHEDULED_EVENT;POST;/guilds/##GUILD_ID##/scheduled-events?
+REST_GET_GUILD_SCHEDULED_EVENT;GET;/guilds/##GUILD_ID##/scheduled-events/##GUILD##_scheduled_event.id?
+REST_MODIFY_GUILD_SCHEDULED_EVENT;PATCH;/guilds/##GUILD_ID##/scheduled-events/##GUILD##_scheduled_event.id?
+REST_DELETE_GUILD_SCHEDULED_EVENT;DELETE;/guilds/##GUILD_ID##/scheduled-events/##GUILD##_scheduled_event.id?
+REST_GET_GUILD_SCHEDULED_EVENT_USERS;GET;/guilds/##GUILD_ID##/scheduled-events/##GUILD##_scheduled_event.id/users?
 REST_GET_GUILD_TEMPLATE;GET;/guilds/templates/##TEMPLATE_CODE##?
 REST_CREATE_GUILD_FROM_GUILD_TEMPLATE;POST;/guilds/templates/##TEMPLATE_CODE##?
 REST_GET_GUILD_TEMPLATES;GET;/guilds/##GUILD_ID##/templates?
@@ -109,6 +116,7 @@ REST_GET_CURRENT_USER;GET;/users/@me?
 REST_GET_USER;GET;/users/##USER_ID##?
 REST_MODIFY_CURRENT_USER;PATCH;/users/@me?
 REST_GET_CURRENT_USER_GUILDS;GET;/users/@me/guilds?
+REST_GET_CURRENT_USER_GUILD_MEMBER;GET;/users/@me/guilds/##GUILD_ID##/member?
 REST_LEAVE_GUILD;DELETE;/users/@me/guilds/##GUILD_ID##?
 REST_CREATE_DM;POST;/users/@me/channels?
 REST_CREATE_GROUP_DM;POST;/users/@me/channels?
