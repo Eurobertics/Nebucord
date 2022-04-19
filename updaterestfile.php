@@ -1,5 +1,5 @@
 <?php
-$docsrcdirectory = '..\\..\\Discord_Docs_Ressource\\docs\\resources';
+$docsrcdirectorylist = ['..\\..\\Discord_Docs_Ressource\\docs\\resources', '..\\..\\Discord_Docs_Ressource\\docs\\interactions'];
 $targetcsvfile = './src/REST/Base/restrequestlist.csv';
 $targetclassfile = './src/REST/Base/Nebucord_RESTStatus.php';
 
@@ -10,45 +10,56 @@ function lb() {
     return "<br />";
 }
 
-echo "Begin building REST request from Discord docs. Using directory '".$docsrcdirectory."'".lb();
 $csvarray = array();
 $constarray = array();
-$filelist = array_diff(scandir($docsrcdirectory), array('.', '..'));
-for($fi = 0; $fi < count($filelist); $fi++) {
-    if(!isset($filelist[$fi])) { continue; }
-
-    $curfilearray = file($docsrcdirectory."\\".$filelist[$fi]);
-    for($i = 0; $i < count($curfilearray); $i++) {
-        if(strpos($curfilearray[$i], '%') === false) { continue; }
-        $expstr = explode('%', substr($curfilearray[$i], 3));
-        $csv_part1 = 'REST_' . strtoupper(str_replace(' ', '_', trim($expstr[0])));
-        $slashinrestname = strpos($csv_part1, "/");
-        if($slashinrestname !== false) {
-            $csv_part1 = substr($csv_part1, 0, $slashinrestname);
+for($dir_i = 0; $dir_i < count($docsrcdirectorylist); $dir_i++) {
+    $docsrcdirectory = $docsrcdirectorylist[$dir_i];
+    echo "Begin building REST request from Discord docs. Using directory '" . $docsrcdirectory . "'" . lb();
+    $filelist = scandir($docsrcdirectory);
+    for ($fi = 0; $fi < count($filelist); $fi++) {
+        if ($filelist[$fi] == '.' || $filelist[$fi] == '..') {
+            continue;
         }
-        if(in_array($csv_part1, $constarray)) { continue; }
 
-        $expstr2 = explode(' ', trim($expstr[1]));
-        $csv_part2 = $expstr2[0];
-
-        preg_match_all("/{([a-zA-Z.]*)/", $expstr2[1], $matches);
-
-        if(count($matches[1]) > 0) {
-            $curworkline = $expstr2[1];
-            for($ii = 0; $ii < count($matches[1]); $ii++) {
-                $replacevar = '##' . strtoupper(str_replace('.', '_', $matches[1][$ii])) . '##';
-                $curworkline = str_replace("{".$matches[1][$ii], $replacevar, $curworkline);
+        echo "Current file for processing: ".$filelist[$fi] . lb();
+        $curfilearray = file($docsrcdirectory . "\\" . $filelist[$fi]);
+        for ($i = 0; $i < count($curfilearray); $i++) {
+            if (strpos($curfilearray[$i], '%') === false) {
+                continue;
             }
-            $curworkline = preg_replace("/#([a-zA-Z\/_-]*})/", '', $curworkline);
-            $csv_part3 = $curworkline;
-            unset($curworkline);
-        } else {
-            $csv_part3 = $expstr2[1];
+            $expstr = explode('%', substr($curfilearray[$i], 3));
+            $csv_part1 = 'REST_' . strtoupper(str_replace(' ', '_', trim($expstr[0])));
+            $slashinrestname = strpos($csv_part1, "/");
+            if ($slashinrestname !== false) {
+                $csv_part1 = substr($csv_part1, 0, $slashinrestname);
+            }
+            if (in_array($csv_part1, $constarray)) {
+                continue;
+            }
+
+            $expstr2 = explode(' ', trim($expstr[1]));
+            $csv_part2 = $expstr2[0];
+
+            preg_match_all("/{([a-zA-Z.]*)/", $expstr2[1], $matches);
+
+            if (count($matches[1]) > 0) {
+                $curworkline = $expstr2[1];
+                for ($ii = 0; $ii < count($matches[1]); $ii++) {
+                    $replacevar = '##' . strtoupper(str_replace('.', '_', $matches[1][$ii])) . '##';
+                    $curworkline = str_replace("{" . $matches[1][$ii], $replacevar, $curworkline);
+                }
+                $curworkline = preg_replace("/#([a-zA-Z\/_-]*})/", '', $curworkline);
+                $csv_part3 = $curworkline;
+                unset($curworkline);
+            } else {
+                $csv_part3 = $expstr2[1];
+            }
+            $csvarray[] = str_replace('-', '_', $csv_part1) . ";" . $csv_part2 . ";" . $csv_part3 . "?";
+            $constarray[] = str_replace('-', '_', $csv_part1);
         }
-        $csvarray[] = $csv_part1.";".$csv_part2.";".$csv_part3."?";
-        $constarray[] = $csv_part1;
     }
 }
+$csvarray[] = "REST_INTERACTION_RESPONSE;POST;interactions/##INTERACTION_ID##/##INTERACTION_TOKEN/callback?"; // TODO Interactions to be automated in the future?
 
 echo "Building done... writing to '".$targetcsvfile."'".lb();
 $fd = fopen($targetcsvfile, 'w');
@@ -103,6 +114,7 @@ echo "Building consts from Discord docs...".lb();
 for($i = 0; $i < count($constarray); $i++) {
     $classstring .= "\tconst ".$constarray[$i]." = '".$constarray[$i]."';\n";
 }
+$classstring .= "\tconst REST_INTERACTION_RESPONSE = 'REST_INTERACTION_RESPONSE';\n"; // TODO Interactions to be automated in the future?
 $classstring .= "}";
 fwrite($fd, $classstring);
 fclose($fd);

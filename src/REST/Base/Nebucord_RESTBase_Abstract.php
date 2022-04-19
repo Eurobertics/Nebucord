@@ -42,7 +42,7 @@ abstract class Nebucord_RESTBase_Abstract {
     protected $_apiurl = "ssl://discordapp.com";
 
     /** @var string $_apiver The used Discord REST API version. */
-    protected $_apiver = "6";
+    protected $_apiver = "9";
 
     /** @var string $_apiurl The Discord REST API host. */
     protected $_discordhost = "discordapp.com";
