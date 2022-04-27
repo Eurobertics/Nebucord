@@ -45,6 +45,9 @@ abstract class Nebucord_Model_Abstract {
     /** @var Nebucord_Status $_t The current gateway event. */
     protected $_t = null;
 
+    /** @var string $_http_status_code The last webserver response status code if it is a response from a REST request. */
+    protected $_http_status_code = null;
+
     /** @var array $_data Storage for all model data. */
     private $_data = array();
 
@@ -79,7 +82,7 @@ abstract class Nebucord_Model_Abstract {
      * @return mixed The value of the given property name, if valid.
      */
     public function __get($name) {
-        if($name == 'op' || $name == 't' || $name == 's') {
+        if($name == 'op' || $name == 't' || $name == 's' || $name == 'http_status_code') {
             $targetprop = '_'.$name;
             return $this->$targetprop;
         }
@@ -98,7 +101,7 @@ abstract class Nebucord_Model_Abstract {
      * @param mixed $value The value to be stored in the property name (if valid).
      */
     public function __set($name, $value) {
-        if($name == 'op' || $name == 't' || $name == 's') {
+        if($name == 'op' || $name == 't' || $name == 's' || $name == 'http_status_code') {
             $targetprop = '_'.$name;
             $this->$targetprop = $value;
         } else {
@@ -142,11 +145,15 @@ abstract class Nebucord_Model_Abstract {
         $this->_op = (!isset($data['op'])) ? null : $data['op'];
         $this->_s = (!isset($data['s'])) ? null : $data['s'];
         $this->_t = (!isset($data['t'])) ? null : $data['t'];
+        $this->_http_status_code = (!isset($data['http_status_code'])) ? null : $data['http_status_code'];
         if(isset($data['d'])) {
             foreach ($data['d'] as $property => $value) {
                 $this->_data['_'.$property] = $value;
             }
         } else {
+            if(isset($data['http_status_code'])) {
+                unset($data['http_status_code']);
+            }
             foreach ($data as $property => $value) {
                 $this->_data['_'.$property] = $value;
             }

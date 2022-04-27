@@ -159,19 +159,27 @@ class Nebucord_RESTExecutor extends Nebucord_RESTAction
     public function executeREST()
     {
         $res = $this->_httpclient->execute();
-        if(count($res) > 0) {
-            if(self::checkReturnArrayType($res)) {
-                $this->returnmodel = Nebucord_Model_Factory::create();
-                $this->returnmodel->populate($res);
-            } else {
-                for($i = 0; $i < count($res); $i++) {
-                    $tmpmodel = Nebucord_Model_Factory::create();
-                    $tmpmodel->populate($res[$i]);;
-                    $this->returnmodel[] = $tmpmodel;
-                    unset($tmpmodel);
+        if(!is_null($res[1])) {
+            if (count($res[1]) > 0) {
+                if (self::checkReturnArrayType($res[1])) {
+                    $this->returnmodel = Nebucord_Model_Factory::create();
+                    $this->returnmodel->populate($res[1]);
+                    $this->returnmodel->http_status_code = $res[0];
+                    return;
+                } else {
+                    for ($i = 0; $i < count($res[1]); $i++) {
+                        $tmpmodel = Nebucord_Model_Factory::create();
+                        $tmpmodel->populate($res[1][$i]);
+                        $tmpmodel->http_status_code = $res[0];
+                        $this->returnmodel[] = $tmpmodel;
+                        unset($tmpmodel);
+                    }
+                    return;
                 }
             }
         }
+        $this->returnmodel = Nebucord_Model_Factory::create();
+        $this->returnmodel->http_status_code = $res[0];
     }
 
     /**
@@ -190,8 +198,8 @@ class Nebucord_RESTExecutor extends Nebucord_RESTAction
     /**
      * Checks return type of data from gateway
      *
-     * A simple check if data return from the request is an data model (represented as an associative array)
-     * or as an array of data models (a role list for example) which is in turn a numieric array of assiciative data
+     * A simple check if data return from the request is a data model (represented as an associative array)
+     * or as an array of data models (a role list for example) which is in turn a numeric array of associative data
      * arrays.
      *
      * @param array $array The data array to check for the array type.

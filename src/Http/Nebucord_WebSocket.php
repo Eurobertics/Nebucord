@@ -183,7 +183,7 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
     }
 
     /**
-     * Decoes a message received by the gateway.
+     * Decodes a message received by the gateway.
      *
      * As for sending, Nebucord needs to unframe (and unmask if so) the message and reads the information from the
      * message header as stated in RFC 6455.
