@@ -37,7 +37,7 @@ use Nebucord\Controller\Nebucord_RuntimeController;
  */
 class Nebucord {
 
-    /** @var null $_config Configuration parameter, currently not used. */
+    /** @var null $_config Configuration parameter. */
     private $_config = null;
 
     /** @var Nebucord_WebSocket $_wscon The websocket object for transfering data. */
@@ -91,6 +91,8 @@ class Nebucord {
      * Starts the basics and gets configuration parameters. After bootstrapping the socket
      * connection and configurations, Nebucord is able to run.
      *
+     * @param string $configfile A INI config file for configuration.
+     * @param string $configpath The path for the config file.
      * @return Nebucord Returns itself (Nebucord).
      */
     public function bootstrap(string $configfile = 'nebucord.ini', string $configpath = './') {

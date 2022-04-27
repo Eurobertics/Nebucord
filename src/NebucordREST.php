@@ -24,6 +24,7 @@
 
 namespace Nebucord;
 
+use Nebucord\Base\Nebucord_Configloader;
 use Nebucord\REST\Action\Nebucord_RESTExecutor;
 use Nebucord\REST\Base\Nebucord_RESTHTTPClient;
 
@@ -34,6 +35,9 @@ use Nebucord\REST\Base\Nebucord_RESTHTTPClient;
  * of the API is designed to send request to Discord. This is done by a REST based API.
  */
 class NebucordREST {
+
+    /** @var null $_config Configuration parameter. */
+    private $_config = null;
 
     /** @var array User given parameters.- */
     private $_params;
@@ -47,6 +51,9 @@ class NebucordREST {
      */
     public function __construct(array $params = array()) {
         $this->_params = $params;
+        if(count($params) == 0) {
+            $this->bootstrap();
+        }
     }
 
     /**
@@ -56,6 +63,24 @@ class NebucordREST {
      */
     public function __destruct() {
         $this->_params = array();
+    }
+
+    /**
+     * Bootstrapping before start.
+     *
+     * Starts the basics and gets configuration parameters. After bootstrapping the REST
+     * executor should be started to create request.
+     *
+     * @param string $configfile A INI config file for configuration.
+     * @param string $configpath The path for the config file.
+     * @return NebucordREST Returns itself (NebucordREST).
+     */
+    public function bootstrap(string $configfile = 'nebucord.ini', string $configpath = './') {
+        if(count($this->_params) == 0) {
+            $this->_config = new Nebucord_Configloader($configfile, $configpath);
+            $this->_params = $this->_config->returnParams();
+        }
+        return $this;
     }
 
     /**
