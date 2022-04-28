@@ -31,4 +31,4 @@ jobs:
         with:
           file: /Docker/Dockerfile
           push: true
-          tags: user/app:latest
+          tags: eurobertics/nebucord:latest
