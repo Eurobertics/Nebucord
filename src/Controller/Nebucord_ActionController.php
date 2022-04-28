@@ -285,6 +285,10 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
                     \Nebucord\Logging\Nebucord_Logger::warn("Rebooting and reconnecting Nebucord to Discord...");
                     $this->_outevent = $this->_acttbl->doRestart($msg);
                     $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id, 'reboot' => true]);
+                } else if (strpos($msg, Nebucord_IActionTable::DOLISTAPPCOMMANDS) !== false) {
+                    \Nebucord\Logging\Nebucord_Logger::info("List application command received: " . $msg);
+                    $this->_outevent = $this->_acttbl->doListAppCommands($msg, $this->_botuserid, $this->_token, $this->_inevent->guild_id);
+                    $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
                 }
             }
         }
@@ -336,6 +340,14 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
         }
         if(strpos($message, " ".$this->_botuserid) !== false) {
             $message = str_replace(" ".$this->_botuserid, "", $message);
+            $returnstate = true;
+        }
+        if(strpos($message, "<@".$this->_botuserid."> ") !== false) {
+            $message = str_replace("<@".$this->_botuserid, "> ", $message);
+            $returnstate = true;
+        }
+        if(strpos($message, " <@".$this->_botuserid.">") !== false) {
+            $message = str_replace(" <@".$this->_botuserid.">", "", $message);
             $returnstate = true;
         }
         return $returnstate;

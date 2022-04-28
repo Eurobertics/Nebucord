@@ -28,6 +28,7 @@ use Nebucord\Interfaces\Nebucord_IActionTable;
 use Nebucord\Base\Nebucord_Status;
 use Nebucord\Factories\Nebucord_Model_Factory;
 use Nebucord\Models\Nebucord_Model;
+use Nebucord\NebucordREST;
 use Nebucord\REST\Base\Nebucord_RESTStatus;
 
 /**
@@ -293,5 +294,64 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
         $oMessageCreateModel = Nebucord_Model_Factory::createREST(Nebucord_RESTStatus::REST_CREATE_MESSAGE);
         $oMessageCreateModel->populate(['content' => "Reconnecting to the gateway!"]);
         return $oMessageCreateModel;
+    }
+
+    /**
+     * Restarts Nebucord
+     *
+     * @see Nebucord_IActionTable::doRestart()
+     *
+     * @param string $command The command on which this action should fire (default: !listappcmds).
+     * @param integer $botuserid The bot user id which owns the app commands (application id).
+     * @param string $bottoken The bot token to authenticate when receiving the app commands.
+     * @param integer $guild_id The guild id for listing the guild app commands (mostly the guild where the command originates from).
+     * @return Nebucord_Model|null The model return to the runtime controller to execute the action by the ActionController.
+     */
+    public function doListAppCommands($command, $botuserid, $bottoken, $guild_id)
+    {
+        $oNebucordREST = new NebucordREST(['token' => $bottoken]);
+        $cmdsglobal = $oNebucordREST->createRESTExecutor()->executeFromArray(Nebucord_RESTStatus::REST_GET_GLOBAL_APPLICATION_COMMANDS, [
+            'application_id' => $botuserid
+        ]);
+        $cmdsguild = $oNebucordREST->createRESTExecutor()->executeFromArray(Nebucord_RESTStatus::REST_GET_GUILD_APPLICATION_COMMANDS, [
+            'application_id' => $botuserid,
+            'guild_id' => $guild_id
+        ]);
+        $cmdtypes = [Nebucord_Status::APPLICATION_TYPE_CHAT_INPUT => "Slash command", Nebucord_Status::APPLICATION_TYPE_USER => "User interaction", Nebucord_Status::APPLICATION_TYPE_MESSAGE => "Message interaction"];
+        $cmdarray = array();
+        if(is_array($cmdsguild)) {
+            for($i = 0; $i < count($cmdsguild); $i++) {
+                $cmdline = array();
+                $cmdline['name'] = $cmdsguild[$i]->name." (ID: ".$cmdsguild[$i]->id.")";
+                $cmdline['value'] = "Type: Guild command\nInteraction style: ".$cmdtypes[$cmdsguild[$i]->type]."\nDescription ```".$cmdtypes[$cmdsguild[$i]->type]."```";
+                $cmdline['inline'] = false;
+                $cmdarray[] = $cmdline;
+            }
+        }
+        if(is_array($cmdsglobal)) {
+            for($i = 0; $i < count($cmdsglobal); $i++) {
+                $cmdline = array();
+                $cmdline['name'] = $cmdsglobal[$i]->name." (ID: ".$cmdsglobal[$i]->id.")";
+                $cmdline['value'] = "Type: Guild command\nInteraction style: ".$cmdsglobal[$cmdsglobal[$i]->type]."\nDescription ```".$cmdsglobal[$cmdsglobal[$i]->type]."```";
+                $cmdline['inline'] = false;
+                $cmdarray[] = $cmdline;
+            }
+        }
+        if(count($cmdarray) == 0) {
+            $cmdline = array();
+            $cmdline['name'] = "No commands found";
+            $cmdline['value'] = "No global or guild commands found";
+            $cmdline['inline'] = false;
+            $cmdarray[] = $cmdline;
+        }
+        $message = array(
+            "title" => "Available Bot commands",
+            "description" => "Lists all application commands registered by this bot (application), this includes global commands, as well as guild commands",
+            "fields" => $cmdarray
+        );
+        unset($oNebucordREST);
+        $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_RESTStatus::REST_CREATE_MESSAGE);
+        $oMessageCreate->populate(['content' => null, 'embed' => $message]);
+        return $oMessageCreate;
     }
 }

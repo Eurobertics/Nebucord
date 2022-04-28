@@ -58,6 +58,9 @@ interface Nebucord_IActionTable {
     /** @var string The bot will restart and reconnect to the gateway by this command. */
     const DOREBOOT = "!reboot";
 
+    /** @var string List all application or slash commands. */
+    const DOLISTAPPCOMMANDS = "!listappcmds";
+
     /**
      * Stops Nebucord and sets runtime to exit.
      *
@@ -134,8 +137,22 @@ interface Nebucord_IActionTable {
      *
      * Restarts Nebucord and reconnects to the Websocket Gateway.
      *
-     * @param string $command The command on which this action should fire (default:; !reboot).
+     * @param string $command The command on which this action should fire (default: !reboot).
      * @return Nebucord_Model|null The model return to the runtime controller to execute the action by the ActionController.
      */
     public function doRestart($command);
+
+    /**
+     * List application commands
+     *
+     * Since Discord API endpoint version 8 (AFAIK) Discord supports application and slash commands which needs
+     * to be registered. This command lists all commands within a guild and all global commands.
+     *
+     * @param string $command The command on which this action should fire (default: !listappcmds).
+     * @param integer $botuserid The bot user id which owns the app commands (application id).
+     * @param string $bottoken The bot token to authenticate when receiving the app commands.
+     * @param integer $guild_id The guild id for listing the guild app commands (mostly the guild where the command originates from).
+     * @return Nebucord_Model|null The model return to the runtime controller to execute the action by the ActionController.
+     */
+    public function doListAppCommands($command, $botuserid, $bottoken, $guild_id);
 }
