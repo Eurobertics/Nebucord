@@ -1,4 +1,4 @@
-name: Nebucord Docker Build and Push to DockerHub
+name: Nebucord Docker build and push to DockerHub
 
 on:
   push:
