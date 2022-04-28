@@ -45,7 +45,8 @@ to the working directory of Docker instance. In simple example is as follows:
 
 ```php
 <?php
-include "/opt/nebucord/vendor/autoload.php";
+include "/opt/nebucord/vendor/autoload.php"; // Composer autloadervvccccnirbeddtetteuubtdgllegehnnbfnbhtbhcnlv
+
 
 use Nebucord\Nebucord;
 

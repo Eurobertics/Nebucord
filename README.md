@@ -18,7 +18,7 @@ welcome.*
 Of course not fully finished is it still able to do the most important things. This includes:
 
 - Nebucord WebSocket API
-    - Setup bot and run bot(s)
+    - Setup and run bot(s)
     - Set status for bots
     - Simple control commands
     - Callback classes to intercept Discord gateway events
@@ -26,22 +26,18 @@ Of course not fully finished is it still able to do the most important things. T
     - Setting user id's for bot controlling
     - Configurable by parameter or by .ini file
     - Customable gateway intents
+    - Application and interactions API
     
 - Nebucord REST API
     - Model oriented interface on data receiving
-    - Sending messages to a channel or DM
-    - Receiving roles
-    - Receiving message(s)
-    - Receiving guild members
-    - many more...
+    - Application and interactions API
+    - Followup Messages for interactions
+    - Complete Discord REST API 
+    - Configurable by parameter or by .ini file
 
 - What's missing
-    - Some models for events
-    - Some models and methods for interacting with REST
-    - Some gateway events 
     - Many error checking
     - Way more better logging and debugging options
-    - OAuth 2.0 client implementation
     - Multithreading (if applicable, thanks to [bitnykk](https://github.com/bitnykk) for the idea)
 
 Default and available parameters
@@ -111,6 +107,10 @@ the native autoloader:
 ```php
 include "src/nebucord_autoloader.php";
 ```
+**Note:**
+You have to include the native autoloader of the dependencie packages as well. See
+package dependencies above.
+
 ---
 
 Example usage - WebSocket API
@@ -122,7 +122,7 @@ Usage websocket API, minimalistic example:
 
 ```php
 <?php
-include "vendor/autoload.php";
+include "vendor/autoload.php"; // Composer autloader
 
 use Nebucord\Nebucord;
 
@@ -141,7 +141,7 @@ A more complex example:
 
 ```php
 <?php
-include "vendor/autoload.php";
+include "vendor/autoload.php"; // Composer autoloader
 
 use Nebucord\Nebucord;
 
@@ -180,7 +180,7 @@ Basic usage for sending a message:
  
  ```php
 <?php
-include "vendor/autoload.php";
+include "vendor/autoload.php"; // Composer autloader
 
 use Nebucord\NebucordREST;
 
@@ -215,9 +215,9 @@ $channels = $nebucordREST->createRESTExecutor()->createRESTActionFromArray(
 
 "$channels" is an array of channel models for processing.
 
-`createRESTExecutor()` returns an object which can be re-used for creating REST rest request.  
-It is also possible to to create a REST request with `createRESTAction(string Nebucord_RESTStatus::REST_*, Nebucord_Model_REST $restmodel)`
-instead of `createRESTActionFromArray(string Nebucord_RESTStatus::REST_*, array $restparams)` and pass an predefined `Nebucord_Model_REST` object with all params for the REST gateway.
+`createRESTExecutor()` returns an object which can be re-used for creating REST request.  
+It is also possible to create a REST request with `createRESTAction(string Nebucord_RESTStatus::REST_*, Nebucord_Model_REST $restmodel)`
+instead of `createRESTActionFromArray(string Nebucord_RESTStatus::REST_*, array $restparams)` and pass a predefined `Nebucord_Model_REST` object with all params for the REST gateway.
 
 More info
 ---------

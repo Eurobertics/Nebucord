@@ -343,7 +343,7 @@ abstract class Nebucord_Status {
 
     const CLIENTBROWSER = 'NebucordWS API';
     const CLIENTHOST = 'nebucordws.nebulatien.org';
-    const VERSION = '0.9RC1';
+    const VERSION = '1.0';
 
     /**
      * Returns the OS.
