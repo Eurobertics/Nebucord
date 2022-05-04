@@ -51,7 +51,7 @@ class Nebucord_RESTAPIEndpointsLoader
      */
     public function __construct()
     {
-        $this->fileloader = new CSVReader('./src/REST/Base/restrequestlist.csv');
+        $this->fileloader = new CSVReader(dirname(__FILE__) . '/restrequestlist.csv');
         $this->fileloader->load();
         $this->setupRestArray();
     }
