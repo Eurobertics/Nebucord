@@ -96,7 +96,7 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
             $oStatusUpdateModel->afk = false;
 
             if(strpos($command, "#") !== false) {
-                $activity = substr($command, strpos($command, "#") + 1, strpos($command, "#") - strpos($command, "#") - 1);
+                $activity = substr($command, strpos($command, "#") + 1, -1);
                 $command = str_replace("#".$activity."#", "", $command);
                 $activity_cmdar = explode("|", $activity);
                 $activity_setar = array("name" => $activity_cmdar[0], "type" => $activity_ar[$activity_cmdar[1]]);

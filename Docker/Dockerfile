@@ -1,7 +1,7 @@
 FROM php:7.4-cli
 LABEL maintainer.name="Bernd Robertz"
 LABEL maintainer.email="brobertz.net@gmail.com"
-LABEL version="0.9RC1"
+LABEL version="1.0.3"
 LABEL description="Nebucord, a Discord bot with REST and WebSocket."
 ENV DEBIAN_FRONTEND noninteractive
 

@@ -2,10 +2,13 @@ Nebucord - Discord WebSocket and REST API
 =========================================
 
 
+
 [![GitHub Release](https://img.shields.io/github/release/eurobertics/nebucord.svg?colorB=brightgreen&label=latest-stable)](https://github.com/eurobertics/nebucord)
-[![GitHub Development](https://img.shields.io/badge/dev--master-v1.0.2-red.svg)](https://github.com/eurobertics/nebucord)
-[![Github commits (since latest release)](https://img.shields.io/github/commits-since/Eurobertics/nebucord/latest.svg)](https://github.com/Eurobertics/Nebucord)
+[![GitHub Development](https://img.shields.io/badge/dev--master-v1.0.3-red.svg)](https://github.com/eurobertics/nebucord)
 [![GitHub license](https://img.shields.io/github/license/eurobertics/nebucord.svg)](https://github.com/Eurobertics/Nebucord/blob/master/LICENSE)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Eurobertics_Nebucord&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Eurobertics_Nebucord)
+
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=Eurobertics_Nebucord)
 
 This is another implementation of the Discord API. It implements an HTTP WebSocket client
 as well as a REST API.  
