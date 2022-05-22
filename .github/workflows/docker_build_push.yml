@@ -72,4 +72,5 @@ jobs:
         with:
           file: /Docker/Dockerfile
           push: true
-          tags: eurobertics/nebucord:latest
+          tags: ghcr.io/eurobertics/nebucord:latest
+          labels: ${{ steps.meta.outputs.labels }}
