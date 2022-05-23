@@ -89,6 +89,12 @@ user@linux:~# composer require eurobertics/nebucord
 ```
 user@linux:~# docker pull eurobertics/nebucord:latest
 ```
+---
+
+**By GitHub Packages (more information can be found on [GitHub Pulling container images](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#pulling-container-images):**
+```
+docker pull ghcr.io/eurobertics/nebucord:latest
+```
 
 **Note:**  
 If you want use .ini configuration, you have to put your .ini File (`nebucord.ini` i. e.) in the mounted
