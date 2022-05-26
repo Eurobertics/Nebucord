@@ -92,7 +92,7 @@ user@linux:~# docker pull eurobertics/nebucord:latest
 ```
 ---
 
-**By GitHub Packages (more information can be found on [GitHub Pulling container images](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#pulling-container-images):**
+**By GitHub Packages (more information can be found on [GitHub Pulling container images](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#pulling-container-images)):**
 ```
 docker pull ghcr.io/eurobertics/nebucord:latest
 ```
