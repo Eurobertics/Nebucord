@@ -34,6 +34,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           file: /Docker/Dockerfile
+          platforms: linux/amd64,linux/arm64/v6,linux/arm/v7
           push: true
           tags: eurobertics/nebucord:latest
 
@@ -71,7 +72,7 @@ jobs:
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           file: /Docker/Dockerfile
-          platform: linux/amd64,linux/arm64/v6,linux/arm/v7
+          platforms: linux/amd64,linux/arm64/v6,linux/arm/v7
           push: true
           tags: ghcr.io/eurobertics/nebucord:latest
           labels: ${{ steps.meta.outputs.labels }}
