@@ -10,7 +10,8 @@ latest stable release of Nebucord.
 **GitHub project:** [https://github.com/Eurobertics/Nebucord](https://github.com/Eurobertics/Nebucord)  
 **Packagist:** [https://packagist.org/packages/eurobertics/nebucord](https://packagist.org/packages/eurobertics/nebucord)  
 **Discord:** [Nebulatien #bot-werkstatt-💡](https://discord.gg/fVHmDD3) ![Discord](https://img.shields.io/discord/429204025678757899)  
-**Docker base image:** [php:7.4-cli](https://hub.docker.com/_/php)
+**Docker base image:** [php:7.4-cli](https://hub.docker.com/_/php)  
+**Supported architectures:** `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/arm/v6`
 
 ## What is Nebucord
 
