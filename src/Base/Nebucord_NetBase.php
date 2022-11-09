@@ -42,7 +42,7 @@ class Nebucord_NetBase {
     //protected $_gatewayhost = "gateway.discord.gg";
 
     /** @var string $_remoteapiversion The current API version of the Discord API endpoint. */
-    protected $_remoteapiversion = "9";
+    protected $_remoteapiversion = "10";
 
     /**
      * @var bool $_transfercompression Are we shoud use transfer compression? (zlib compression on the webserver is needed for this).

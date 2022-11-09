@@ -81,6 +81,9 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
 
     /** @var NebucordREST $_rest Nebucord REST api object. */
     private $_rest;
+    
+    /** @var string $_reconnectwsurl The WSS URI for reconnecting to the Discord gateway. */
+    private $_reconnectwsurl;
 
     /**
      * Nebucord_RuntimeController constructor.
@@ -169,7 +172,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
         }
         sleep(mt_rand(1, 4));
         \Nebucord\Logging\Nebucord_Logger::infoImportant("Try to reconnect...");
-        if(!$this->_wscon->reconnect()) {
+        if(!$this->_wscon->reconnect($this->$_reconnectwsurl)) {
             $this->resume();
             $this->_reconnect_tries++;
         }
@@ -223,6 +226,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                 if(isset($oInEvent->heartbeat_interval)) { $intervaltime = $oInEvent->heartbeat_interval; }
                 if(!is_null($oInEvent->s) && $this->_runstate == Nebucord_Status::NC_RUN) { $currentsequence = $oInEvent->s; $this->_actctrl->setSequence($oInEvent->s); }
                 if($oInEvent->t == Nebucord_Status::GWEVT_READY) {
+                    $this->$_reconnectwsurl = $oInEvent->resume_gateway_url;
                     $this->botStartup($oInEvent);
                 }
 

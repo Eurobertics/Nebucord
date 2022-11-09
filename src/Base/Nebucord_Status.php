@@ -275,6 +275,7 @@ abstract class Nebucord_Status {
     const INTENT_DIRECT_MESSAGES = 1 << 12;
     const INTENT_DIRECT_MESSAGE_REACTIONS = 1 << 13;
     const INTENT_DIRECT_MESSAGE_TYPING = 1 << 14;
+    const INTENT_MESSAGE_CONTENT = 1 << 15;
 
     const APPLICATION_TYPE_CHAT_INPUT = 1;
     const APPLICATION_TYPE_USER = 2;
@@ -377,6 +378,7 @@ abstract class Nebucord_Status {
      * @return string Device (software) on wich Nebucord is running.
      */
     static public function getDevice() {
-        return "PHP".phpversion()." / ".php_uname('m')." Host";
+        #return "PHP".phpversion()." / ".php_uname('m')." Host";
+        return "NebucordWS API / PHP".phpversion();
     }
 }

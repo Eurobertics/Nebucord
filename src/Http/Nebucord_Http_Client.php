@@ -172,7 +172,8 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
         return true;
     }
 
-    public function reconnect() {
+    public function reconnect($reconnectwsurl) {
+        $this->_gatewayhost = $reconnectwsurl;
         fclose($this->_socket);
         if($this->connect()) {
             \Nebucord\Logging\Nebucord_Logger::info("Trying to get missing events, sending resume request...");
