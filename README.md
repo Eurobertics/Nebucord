@@ -4,7 +4,7 @@ Nebucord - Discord WebSocket and REST API
 
 
 [![GitHub Release](https://img.shields.io/github/release/eurobertics/nebucord.svg?colorB=brightgreen&label=latest-stable)](https://github.com/eurobertics/nebucord)
-[![GitHub Development](https://img.shields.io/badge/dev--master-v1.0.3-red.svg)](https://github.com/eurobertics/nebucord)
+[![GitHub Development](https://img.shields.io/badge/dev--master-v1.1-red.svg)](https://github.com/eurobertics/nebucord)
 [![GitHub license](https://img.shields.io/github/license/eurobertics/nebucord.svg)](https://github.com/Eurobertics/Nebucord/blob/master/LICENSE)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Eurobertics_Nebucord&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Eurobertics_Nebucord)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Eurobertics_Nebucord&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Eurobertics_Nebucord)
@@ -52,13 +52,13 @@ Default and available parameters
 | Bot token                  | token       | bottoken          | (string)*empty*                 |
 | ACL user snowflakes        | ctrluser    | acl               | (array)[]                       |
 | WS connection retries      | wsretries   | websocket.retries | (integer)3                      |
-| Default GW intent bitmask* | intents     | intents.*         | (integer)31997 / (boolean)true* |
+| Default GW intent bitmask* | intents     | intents.*         | (integer)3243261 / (boolean)true* |
 | DM on failures             | dmonfailures| websocket.dmonfailures | (boolean)true              |
 
 **\*Note:**  
-The intent bitmask defaults to be everything is true except `GUILD_MEMBERS`, `GUILD_PRESENCES`
-and `GUILD_MESSAGES`.
-These three options has to be manual set to `true` and they have to be activated in the Bot
+The intent bitmask defaults to be everything is true except `GUILD_MEMBERS`, `GUILD_PRESENCES`,
+`GUILD_MESSAGES` and ˋMESSAGE_CONTENTˋ.
+These four options has to be manual set to `true` and they have to be activated in the Bot
 preferences on the Discord application management webpage.
 The bitmask is `32767` if everything set to true or for config as parameter.
 

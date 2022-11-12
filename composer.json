@@ -3,7 +3,7 @@
   "description": "A full featured Discord WebSocket and REST API.",
   "type": "library",
   "require": {
-    "php": "^7.0",
+    "php": "^8.1",
     "ext-json": "*",
     "eurobertics/connfetti-ini": "*"
   },
