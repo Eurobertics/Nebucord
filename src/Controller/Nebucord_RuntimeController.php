@@ -103,6 +103,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
         $this->_params = $params;
 
         $this->_reconnect_tries = 0;
+        $this->_reconnectwsurl = "";
     }
 
     /**
@@ -113,6 +114,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
     public function __destruct() {
         parent::__destruct();
         $this->_reconnect_tries = 0;
+        $this->_reconnectwsurl = "";
     }
 
     /**
