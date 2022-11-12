@@ -172,7 +172,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
         }
         sleep(mt_rand(1, 4));
         \Nebucord\Logging\Nebucord_Logger::infoImportant("Try to reconnect...");
-        if(!$this->_wscon->reconnect($this->$_reconnectwsurl)) {
+        if(!$this->_wscon->reconnect($this->_reconnectwsurl)) {
             $this->resume();
             $this->_reconnect_tries++;
         }
