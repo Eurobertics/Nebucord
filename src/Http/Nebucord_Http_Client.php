@@ -172,13 +172,21 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
         return true;
     }
 
-    public function reconnect($reconnectwsurl) {
-        $this->_gatewayhost = $reconnectwsurl;
+    public function reconnect() {
         fclose($this->_socket);
         if($this->connect()) {
             \Nebucord\Logging\Nebucord_Logger::info("Trying to get missing events, sending resume request...");
             return true;
         }
         return false;
+    }
+
+    public function setNewWSConnectURL($reconnectwsurl)
+    {
+        $this->_gatewayhost = substr($reconnectwsurl, 6);
+        if($this->_gatewayhost == null || empty($this->_gatewayhost)) {
+            throw new \Exception("Error getting Discord websocket API URI!");
+        }
+        $this->_fullgatewayhost = "ssl://".$this->_gatewayhost.":443";
     }
 }

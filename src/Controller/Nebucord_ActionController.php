@@ -193,6 +193,7 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
         switch($this->_inevent->op) {
             case Nebucord_Status::OP_DISPATCH: $this->doDispatch(); break;
             case Nebucord_Status::OP_HELLO: $this->doIdentify(); break;
+            case Nebucord_Status::OP_RECONNECT: $this->doReconnect(); break;
             case Nebucord_Status::OP_HEARTBEAT_ACK: $this->doHeartbeatACK(); break;
             default: $this->_inevent = null; $this->_outevent = null; break;
         }
@@ -224,6 +225,11 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
             $this->_outevent = Nebucord_Model_Factory::create(Nebucord_Status::OP_IDENTIFY);
             $this->_outevent->populate(['op' => Nebucord_Status::OP_IDENTIFY, 'd' => ['token' => $this->_token, 'properties' => ['$os' => Nebucord_Status::getOS(), '$browser' => Nebucord_Status::getBrowser(), '$device' => Nebucord_Status::getDevice()], 'compress' => false, 'presence' => ['since' => null, 'game' => null, 'status' => 'online', 'afk' => false], 'intents' => $this->_intents]]);
         }
+    }
+
+    private function doReconnect()
+    {
+        // Implement reconnect out event
     }
 
     private function onResume() {
