@@ -190,7 +190,6 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
         $timer->startTimer(1);
         while($this->_runstate > Nebucord_Status::NC_EXIT) {
             $message = $this->_wscon->soReadAll();
-            var_dump($message);
             if($message[0] == -1) {
                 \Nebucord\Logging\Nebucord_Logger::error("Error reading event from gateway, disconnect and try to reconnect...");
                 $this->botFailureMessage(serialize($message), Nebucord_Status::NC_RECONNECT);
@@ -214,6 +213,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
             }
 
             if($message[0] == 0 && !empty($message[1])) {
+                var_dump($message[1]);
                 if(!$this->_evtctrl->readEvent($message[1])) {
                     \Nebucord\Logging\Nebucord_Logger::error("Could not decode message from gateway, API or connection may broken (received NULL). Ignoring message and reconnect for resume!");
                     $this->botFailureMessage(serialize($message), Nebucord_Status::NC_RECONNECT);
