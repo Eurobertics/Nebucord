@@ -191,7 +191,6 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
         while($this->_runstate > Nebucord_Status::NC_EXIT) {
             $message = $this->_wscon->soReadAll();
             if($message[0] == -1) {
-                var_dump($message[1]);
                 \Nebucord\Logging\Nebucord_Logger::error("Error reading event from gateway, disconnect and try to reconnect...");
                 $this->botFailureMessage(serialize($message), Nebucord_Status::NC_RECONNECT);
                 $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
@@ -199,11 +198,11 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                 //break;
             }
             if($message[0] == -2) {
-                var_dump($message[1]);
                 \Nebucord\Logging\Nebucord_Logger::error("Gateway respond with error: ".$message[1]);
                 \Nebucord\Logging\Nebucord_Logger::error("Gateway closes connection, exiting...");
-                if(substr($message[1], 0, 4) == "1001") {
-                    \Nebucord\Logging\Nebucord_Logger::warn("Websocket code 1001 received, reconnecting...");
+                if(substr($message[1], 0, 4) == "1001" || substr($message[1], 0, 4) == "1000" ) {
+                    $closecode = substr($message[1], 0, 4) == "1001"
+                    \Nebucord\Logging\Nebucord_Logger::warn("Websocket close code received (".$closecode."), reconnecting...");
                     $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
                 } else {
                     $this->botFailureMessage(serialize($message), Nebucord_Status::NC_EXIT);
@@ -215,7 +214,6 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
             }
 
             if($message[0] == 0 && !empty($message[1])) {
-                var_dump($message[1]);
                 if(!$this->_evtctrl->readEvent($message[1])) {
                     \Nebucord\Logging\Nebucord_Logger::error("Could not decode message from gateway, API or connection may broken (received NULL). Ignoring message and reconnect for resume!");
                     $this->botFailureMessage(serialize($message), Nebucord_Status::NC_RECONNECT);

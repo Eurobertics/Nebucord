@@ -183,10 +183,5 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
 
     public function setNewWSConnectURL($reconnectwsurl)
     {
-        $this->_gatewayhost = substr($reconnectwsurl, 6);
-        if($this->_gatewayhost == null || empty($this->_gatewayhost)) {
-            throw new \Exception("Error getting Discord websocket API URI!");
-        }
-        $this->_fullgatewayhost = "ssl://".$this->_gatewayhost.":443";
     }
 }
