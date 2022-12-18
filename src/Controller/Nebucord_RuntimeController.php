@@ -201,7 +201,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                 \Nebucord\Logging\Nebucord_Logger::error("Gateway respond with error: ".$message[1]);
                 \Nebucord\Logging\Nebucord_Logger::error("Gateway closes connection, exiting...");
                 if(substr($message[1], 0, 4) == "1001" || substr($message[1], 0, 4) == "1000" ) {
-                    $closecode = substr($message[1], 0, 4) == "1001"
+                    $closecode = substr($message[1], 0, 4) == "1001";
                     \Nebucord\Logging\Nebucord_Logger::warn("Websocket close code received (".$closecode."), reconnecting...");
                     $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
                 } else {
@@ -224,7 +224,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                 if(isset($oInEvent->heartbeat_interval)) { $intervaltime = $oInEvent->heartbeat_interval; }
                 if(!is_null($oInEvent->s) && $this->_runstate == Nebucord_Status::NC_RUN) { $currentsequence = $oInEvent->s; $this->_actctrl->setSequence($oInEvent->s); }
                 if($oInEvent->t == Nebucord_Status::GWEVT_READY) {
-                    //$this->_wscon->setNewWSConnectURL($oInEvent->resume_gateway_url);
+                    $this->_wscon->setNewWSConnectURL($oInEvent->resume_gateway_url);
                     $this->botStartup($oInEvent);
                 }
 

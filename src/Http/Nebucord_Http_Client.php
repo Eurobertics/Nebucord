@@ -101,7 +101,7 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
      *
      * Sends builded header for inital commit and awaits response.
      *
-     * @return bool On success true, otherwise false.
+     * @return bool On success true, otherwise false, or -1 if socket response with error.
      */
     private function sendHeader() {
         \Nebucord\Logging\Nebucord_Logger::info("Connecting to Discord WebSocket gateway...");
@@ -131,6 +131,26 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
             $this->_socket = -1;
             return false;
         }
+    }
+    
+    /**
+     * Connects to the reconnect Webosocket
+     * 
+     * Uses the new written _fullgatewayhost to connect to the Websocket
+     * without sending HTTP header since the reconnect procedure does not need
+     * to reconnect with new WS upgrade.
+     * 
+     * @return int On success 1, otherwise -1 if socket response with error.
+     */
+    public function connectToWSURL()
+    {
+        $socket = stream_socket_client($this->_fullgatewayhost);
+        if(!socket) {
+            return -1;
+        }
+        stream_set_blocking($socket, false);
+        $this->_socket = $socket;
+        return 1;
     }
 
     /**
@@ -174,7 +194,7 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
 
     public function reconnect() {
         fclose($this->_socket);
-        if($this->connect()) {
+        if($this->connectToWSURL()) {
             \Nebucord\Logging\Nebucord_Logger::info("Trying to get missing events, sending resume request...");
             return true;
         }
@@ -183,5 +203,8 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
 
     public function setNewWSConnectURL($reconnectwsurl)
     {
+        $this->_gatewayhost = substr($reconnectwsurl, 6);
+        $this->_fullgatewayhost = "ssl://".$this->_gatewayhost.":443";
+        var_dump($this->_fullgatewayhost);
     }
 }
