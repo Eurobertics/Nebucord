@@ -205,6 +205,5 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
     {
         $this->_gatewayhost = substr($reconnectwsurl, 6);
         $this->_fullgatewayhost = "ssl://".$this->_gatewayhost.":443";
-        var_dump($this->_fullgatewayhost);
     }
 }

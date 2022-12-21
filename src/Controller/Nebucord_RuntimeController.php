@@ -200,9 +200,20 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
             if($message[0] == -2) {
                 \Nebucord\Logging\Nebucord_Logger::error("Gateway respond with error: ".$message[1]);
                 \Nebucord\Logging\Nebucord_Logger::error("Gateway closes connection, exiting...");
-                if(substr($message[1], 0, 4) == "1001" || substr($message[1], 0, 4) == "1000" ) {
-                    $closecode = substr($message[1], 0, 4) == "1001";
-                    \Nebucord\Logging\Nebucord_Logger::warn("Websocket close code received (".$closecode."), reconnecting...");
+                if(((int)substr($message[1], 0, 4) >= 1000 && (int)substr($message[1], 0, 4) <= 1015) || ((int)substr($message[1], 0, 4) >= 4000 && (int)substr($message[1], 0, 4) <= 4014)) {
+                    $closecode = substr($message[1], 0, 4);
+                    $whichaction = Nebucord_Status::NC_RECONNECT;
+                    switch($closecode) {
+                        case "4004":
+                        case "4010":
+                        case "4011":
+                        case "4012":
+                        case "4013":
+                        case "4014": $whichaction = Nebucord_Status::NC_EXIT; break;
+                        default: $whichaction = Nebucord_Status::NC_RECONNECT; break;
+                    }
+                    $this->botFailureMessage("Websocket close code '".$closecode."' received.", $whichaction);
+                    \Nebucord\Logging\Nebucord_Logger::warn("Websocket close code received (".$closecode."). Nebucord state code: ".$whichaction);
                     $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
                 } else {
                     $this->botFailureMessage(serialize($message), Nebucord_Status::NC_EXIT);
