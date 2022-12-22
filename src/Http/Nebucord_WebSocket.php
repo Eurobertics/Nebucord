@@ -279,10 +279,12 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
     /**
      * Sends all data to the gateway.
      *
-     * After endoding the data to be send with JSON, this method determine the length, frames it and sends it
+     * After encoding the data to be sent with JSON, this method determine the length, frames it and sends it
      * to the gateway.
      *
      * @param string $data The JSON encoded string to be send.
+     * @param string $type The type of Websocket frame to be send.
+     * @param bool $masked Is the WS frame masked?
      * @return integer The length which was send or -1 on error.
      */
     public function soWriteAll($data, $type = 'text', $masked = true) {
