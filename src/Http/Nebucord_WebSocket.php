@@ -285,7 +285,7 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
      * @param string $data The JSON encoded string to be send.
      * @return integer The length which was send or -1 on error.
      */
-    public function soWriteAll($data) {
+    public function soWriteAll($data, $type = 'text', $masked = true) {
         if($this->ratelimit_timer->getTime() > Nebucord_Status::RATELIMIT_TIMEFRAME) {
             $this->ratelimit_timer->reStartTimer();
             $this->requestcount = 0;
@@ -294,7 +294,7 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
             \Nebucord\Logging\Nebucord_Logger::warn("Request dropped due to rate limit!");
             return 0;
         }
-        $encdata = $this->wsEncode($data);
+        $encdata = $this->wsEncode($data, $type, $masked);
         if(!$encdata) { return -1; }
         $length = strlen($encdata);
         $sendbytes = 0;
