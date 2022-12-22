@@ -47,20 +47,20 @@ Of course not fully finished is it still able to do the most important things. T
 Default and available parameters
 --------------------------------
 
-| Parameter                  | Config name | INI config name   | Default value                   |
-|----------------------------|-------------|-------------------|---------------------------------|
-| Bot token                  | token       | bottoken          | (string)*empty*                 |
-| ACL user snowflakes        | ctrluser    | acl               | (array)[]                       |
-| WS connection retries      | wsretries   | websocket.retries | (integer)3                      |
-| Default GW intent bitmask* | intents     | intents.*         | (integer)3243261 / (boolean)true* |
-| DM on failures             | dmonfailures| websocket.dmonfailures | (boolean)true              |
+| Parameter                  | Config name | INI config name   | Default value                     |
+|----------------------------|-------------|-------------------|-----------------------------------|
+| Bot token                  | token       | bottoken          | (string)*empty*                   |
+| ACL user snowflakes        | ctrluser    | acl               | (array)[]                         |
+| WS connection retries      | wsretries   | websocket.retries | (integer)3                        |
+| Default GW intent bitmask* | intents     | intents.*         | (integer)3276541 / (boolean)true* |
+| DM on failures             | dmonfailures| websocket.dmonfailures | (boolean)true                |
 
 **\*Note:**  
 The intent bitmask defaults to be everything is true except `GUILD_MEMBERS`, `GUILD_PRESENCES`,
-`GUILD_MESSAGES` and ˋMESSAGE_CONTENTˋ.
+`GUILD_MESSAGES` and `MESSAGE_CONTENT`.
 These four options has to be manual set to `true` and they have to be activated in the Bot
 preferences on the Discord application management webpage.
-The bitmask is `32767` if everything set to true or for config as parameter.
+The bitmask is `3276799` if everything set to true or for config as parameter.
 
 **Note:**  
 Configuration by parameter has priority to configuration by .ini file.
