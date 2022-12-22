@@ -299,7 +299,7 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
     /**
      * Restarts Nebucord
      *
-     * @see Nebucord_IActionTable::doRestart()
+     * @see Nebucord_IActionTable::doListAppCommands()
      *
      * @param string $command The command on which this action should fire (default: !listappcmds).
      * @param integer $botuserid The bot user id which owns the app commands (application id).
