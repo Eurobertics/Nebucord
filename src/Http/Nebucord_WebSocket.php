@@ -110,7 +110,7 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
      * about the message. This method does it.
      *
      * @param string $message The message to be framed.
-     * @param string $type The message type so it can be correct framed (in this case mostly text).
+     * @param string $type The message type, so it can be correct framed (in this case mostly text).
      * @param bool $masked Should the message be binary masked on sending?
      * @return string The (maybe) masked and framed message in once.
      */
