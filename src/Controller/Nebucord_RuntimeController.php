@@ -258,7 +258,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                             continue;
                         }
                         if ($oOutEvent->status == "offline") {
-                            $sendbytes = $this->_wscon->soWriteAll('1000 Client disconnected', 'close');
+                            $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON(['1000 Client disconnected']), 'close');
                             $this->setRuntimeState(Nebucord_Status::NC_EXIT);
                             $this->botShutdown();
                         }
