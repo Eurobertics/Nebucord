@@ -145,7 +145,7 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
     public function connectToWSURL()
     {
         $socket = stream_socket_client($this->_fullgatewayhost);
-        if(!socket) {
+        if(!$socket) {
             return -1;
         }
         stream_set_blocking($socket, false);
