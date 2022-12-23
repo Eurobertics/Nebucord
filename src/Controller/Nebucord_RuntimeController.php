@@ -169,7 +169,11 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
         }
         sleep(mt_rand(1, 4));
         \Nebucord\Logging\Nebucord_Logger::infoImportant("Try to reconnect...");
-        if(!$this->_wscon->reconnect()) {
+        $fullreconnect = false;
+        if($this->getRuntimeState() == Nebucord_Status::NC_FULLRECONNECT) {
+            $fullreconnect = true;
+        }
+        if(!$this->_wscon->reconnect($fullreconnect)) {
             $this->resume();
             $this->_reconnect_tries++;
         }
@@ -202,19 +206,18 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                 \Nebucord\Logging\Nebucord_Logger::error("Gateway closes connection, exiting...");
                 if(((int)substr($message[1], 0, 4) >= 1000 && (int)substr($message[1], 0, 4) <= 1015) || ((int)substr($message[1], 0, 4) >= 4000 && (int)substr($message[1], 0, 4) <= 4014)) {
                     $closecode = substr($message[1], 0, 4);
-                    $whichaction = Nebucord_Status::NC_RECONNECT;
                     switch($closecode) {
                         case "4004":
                         case "4010":
                         case "4011":
                         case "4012":
                         case "4013":
-                        case "4014": $whichaction = Nebucord_Status::NC_EXIT; break;
+                        case "4014": $whichaction = Nebucord_Status::NC_FULLRECONNECT; break;
                         default: $whichaction = Nebucord_Status::NC_RECONNECT; break;
                     }
                     $this->botFailureMessage("Websocket close code '".$closecode."' received.", $whichaction);
                     \Nebucord\Logging\Nebucord_Logger::warn("Websocket close code received (".$closecode."). Nebucord state code: ".$whichaction);
-                    $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
+                    $this->setRuntimeState($whichaction);
                 } else {
                     $this->botFailureMessage(serialize($message), Nebucord_Status::NC_EXIT);
                     \Nebucord\Logging\Nebucord_Logger::error("Websocket code ".$message[1]." received, seems unnatural, exiting!");
@@ -253,12 +256,12 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                         else { $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oOutEvent->toArray())); }
                         if($sendbytes == -1) {
                             \Nebucord\Logging\Nebucord_Logger::error("Can't write event to gateway, exiting...");
-                            $this->botFailureMessage("Can't write event to gateway, exiting...", Nebucord_Status::NC_RECONNECT);
-                            $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
+                            $this->botFailureMessage("Can't write event to gateway, exiting...", Nebucord_Status::NC_FULLRECONNECT);
+                            $this->setRuntimeState(Nebucord_Status::NC_FULLRECONNECT);
                             continue;
                         }
                         if ($oOutEvent->status == "offline") {
-                            $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON(['1000']), 'close');
+                            $sendbytes = $this->_wscon->soWriteAll('1000', 'close');
                             $this->setRuntimeState(Nebucord_Status::NC_EXIT);
                             $this->botShutdown();
                         }

@@ -368,6 +368,7 @@ abstract class Nebucord_Status {
     const NC_RUN = 1;
     const NC_EXIT = 0;
     const NC_RECONNECT = 2;
+    const NC_FULLRECONNECT = 3;
 
     const MAX_RECONNECT_TRIES = 3;
 
