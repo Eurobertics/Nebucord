@@ -261,8 +261,8 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                             continue;
                         }
                         if ($oOutEvent->status == "offline") {
-                            //$sendbytes = $this->_wscon->soWriteAll($this->prepareJSON(['1000']), 'close');
-                            $this->_wscon->soWriteAll($this->prepareJSON($oOutEvent->toArray()));
+                            $sendbytes = $this->_wscon->soWriteAll("1000", 'close');
+                            //$this->_wscon->soWriteAll($this->prepareJSON($oOutEvent->toArray()));
                             $this->setRuntimeState(Nebucord_Status::NC_EXIT);
                             $this->botShutdown();
                         }
