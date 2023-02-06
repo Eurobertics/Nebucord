@@ -5,6 +5,8 @@ LABEL version="1.1"
 LABEL description="Nebucord, a Discord bot with REST and WebSocket."
 ENV DEBIAN_FRONTEND noninteractive
 
+RUN groupadd -f nebucord && RUN useradd -M -g nebucord nebucord
+
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 RUN apt-get update && apt-get -y install libonig-dev libcurl4-openssl-dev libbz2-dev libzip-dev zlib1g-dev libpng-dev libxslt1-dev libmemcached-dev wget git unzip && rm -rf /var/lib/apt/lists/*
@@ -23,4 +25,5 @@ VOLUME /var/nebucord
 COPY Docker/nebucord_entrypoint.php /var/nebucord_entry
 WORKDIR /var/nebucord
 
+USER nebucord
 ENTRYPOINT ["php", "-f", "/var/nebucord_entry/nebucord_entrypoint.php"]

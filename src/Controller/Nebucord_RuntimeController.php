@@ -167,7 +167,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
             $this->setRuntimeState(Nebucord_Status::NC_EXIT);
             return;
         }
-        sleep(mt_rand(1, 4));
+        sleep(random_int(1, 4));
         \Nebucord\Logging\Nebucord_Logger::infoImportant("Try to reconnect...");
         $fullreconnect = false;
         if($this->getRuntimeState() == Nebucord_Status::NC_FULLRECONNECT) {
