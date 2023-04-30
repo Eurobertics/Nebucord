@@ -160,22 +160,20 @@ class Nebucord_RESTExecutor extends Nebucord_RESTAction
     {
         $res = $this->_httpclient->execute();
         if(!is_null($res[1])) {
-            if (count($res[1]) > 0) {
-                if (self::checkReturnArrayType($res[1])) {
-                    $this->returnmodel = Nebucord_Model_Factory::create();
-                    $this->returnmodel->populate($res[1]);
-                    $this->returnmodel->http_status_code = $res[0];
-                    return;
-                } else {
-                    for ($i = 0; $i < count($res[1]); $i++) {
-                        $tmpmodel = Nebucord_Model_Factory::create();
-                        $tmpmodel->populate($res[1][$i]);
-                        $tmpmodel->http_status_code = $res[0];
-                        $this->returnmodel[] = $tmpmodel;
-                        unset($tmpmodel);
-                    }
-                    return;
+            if (count($res[1]) > 0 && self::checkReturnArrayType($res[1])) {
+                $this->returnmodel = Nebucord_Model_Factory::create();
+                $this->returnmodel->populate($res[1]);
+                $this->returnmodel->http_status_code = $res[0];
+                return;
+            } else {
+                for ($i = 0; $i < count($res[1]); $i++) {
+                    $tmpmodel = Nebucord_Model_Factory::create();
+                    $tmpmodel->populate($res[1][$i]);
+                    $tmpmodel->http_status_code = $res[0];
+                    $this->returnmodel[] = $tmpmodel;
+                    unset($tmpmodel);
                 }
+                return;
             }
         }
         $this->returnmodel = Nebucord_Model_Factory::create();

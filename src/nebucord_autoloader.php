@@ -40,7 +40,7 @@ function nebucord_autoloader($class) {
 
     $class_uri = $basedir."/".$classname.".php";
     if(file_exists($class_uri)) {
-        include $class_uri;
+        include_once $class_uri;
     }
 }
 

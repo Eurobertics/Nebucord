@@ -121,9 +121,6 @@ class Nebucord_Timer {
      * @return int 0 on failure, 1 on success.
      */
     public function reStartTimer($id = 0) {
-        if($id < 0) { return 0; }
-        $this->_timers[$id]['start'] = $this->mtAsFloat();
-        $this->_timers[$id]['time'] = 0;
-        return 1;
+        return $this->startTimer($id);
     }
 }

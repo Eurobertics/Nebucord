@@ -5,5 +5,5 @@ if($argc == 1) {
     echo "Then run docker with the main file you created for Nebucord, i. e:\n\n";
     echo "'docker run -it --rm -v \${pwd}/nebucordclasses:/var/nebucord eurobertics/nebucord:tag yourfile.php'\n\n";
 } else {
-    include '/var/nebucord/' .$argv[1];
+    include_once '/var/nebucord/' .$argv[1];
 }

@@ -175,14 +175,12 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
             $splitheaderrow = explode(":", $splitheader[$i]);
             $header_ar[trim($splitheaderrow[0])] = (isset($splitheaderrow[1])) ? trim($splitheaderrow[1]) : '';
         }
-        //if(strpos($res_ar[0], "200 OK") !== false) {
-            $r = $res_ar[1];
-            if(substr($r, 0, 1) != "{") {
-                $r = trim(substr($res_ar[1], 4, -3));
-            }
-            $res = array();
-            if(strlen($r) > 0) { $res = json_decode(preg_replace('/[[:cntrl:]]/', '', $r), true); }
-        //}
+        $r = $res_ar[1];
+        if(substr($r, 0, 1) != "{") {
+            $r = trim(substr($res_ar[1], 4, -3));
+        }
+        $res = array();
+        if(strlen($r) > 0) { $res = json_decode(preg_replace('/[[:cntrl:]]/', '', $r), true); }
         $this->checkRateLimit($header_ar);
         return [substr($header_ar['Response'], 9), $res];
     }

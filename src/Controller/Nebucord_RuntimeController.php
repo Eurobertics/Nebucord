@@ -46,6 +46,9 @@ use Nebucord\REST\Base\Nebucord_RESTStatus;
  */
 class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
 
+    private const BOTNAMELITERAL = "Bot name";
+    private const BOTDETAILLITERAL = "Bot details";
+
     /** @var Nebucord_Status $_runstate The current runstate of Nebucord. */
     private $_runstate;
 
@@ -66,9 +69,6 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
 
     /** @var array $_params User parameter wich are determine bot token, user access i. e. . */
     private $_params;
-
-    // /** @var string $_session The session of the connection from the gateway. */
-    //private $_session_id;
 
     /** @var integer $_botuserid The user id of the connected bot to. */
     private $_botuserid;
@@ -199,7 +199,6 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                 $this->botFailureMessage(serialize($message), Nebucord_Status::NC_RECONNECT);
                 $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
                 continue;
-                //break;
             }
             if($message[0] == -2) {
                 \Nebucord\Logging\Nebucord_Logger::error("Gateway respond with error: ".$message[1]);
@@ -224,7 +223,6 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                     $this->setRuntimeState(Nebucord_Status::NC_EXIT);
                 }
                 continue;
-                //break;
             }
 
             if($message[0] == 0 && !empty($message[1])) {
@@ -262,7 +260,6 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                         }
                         if ($oOutEvent->status == "offline") {
                             $sendbytes = $this->_wscon->soWriteAll("1000", 'close');
-                            //$this->_wscon->soWriteAll($this->prepareJSON($oOutEvent->toArray()));
                             $this->setRuntimeState(Nebucord_Status::NC_EXIT);
                             $this->botShutdown();
                         }
@@ -278,19 +275,16 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
                 $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
             }
 
-            if($intervaltime > 0 && $this->_runstate == Nebucord_Status::NC_RUN) {
-                if($timer->getTime() > $intervaltime) {
-                    $timer->reStartTimer();
-                    $oHeartbeat = Nebucord_Model_Factory::create(Nebucord_Status::OP_HEARTBEAT);
-                    $oHeartbeat->d = $currentsequence;
-                    \Nebucord\Logging\Nebucord_Logger::info("Sending heartbeat...");
-                    $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oHeartbeat->toArray()));
-                    if($sendbytes == -1) {
-                        \Nebucord\Logging\Nebucord_Logger::error("Can't write heartbeat message to gateway, exiting...");
-                        $this->botFailureMessage("Can't write heartbeat message to gateway, exiting...", Nebucord_Status::NC_RECONNECT);
-                        $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
-                        //break;
-                    }
+            if($intervaltime > 0 && $this->_runstate == Nebucord_Status::NC_RUN && $timer->getTime() > $intervaltime) {
+                $timer->reStartTimer();
+                $oHeartbeat = Nebucord_Model_Factory::create(Nebucord_Status::OP_HEARTBEAT);
+                $oHeartbeat->d = $currentsequence;
+                \Nebucord\Logging\Nebucord_Logger::info("Sending heartbeat...");
+                $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oHeartbeat->toArray()));
+                if($sendbytes == -1) {
+                    \Nebucord\Logging\Nebucord_Logger::error("Can't write heartbeat message to gateway, exiting...");
+                    $this->botFailureMessage("Can't write heartbeat message to gateway, exiting...", Nebucord_Status::NC_RECONNECT);
+                    $this->setRuntimeState(Nebucord_Status::NC_RECONNECT);
                 }
             }
         }
@@ -304,13 +298,12 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
      * @param Nebucord_Model $evt The returned GatewayReady event with initial parameters.
      */
     private function botStartup(Nebucord_Model $evt) {
-        //$this->_session_id = $evt->session_id;
         $this->_actctrl->setSession($evt->session_id);
         $this->_botuserid = $evt->user['id'];
         $this->_botusername = $evt->user['username'];
         $this->_actctrl->setBotId($this->_botuserid);
 
-        $readyconfirmmsg = array("title" => Nebucord_Status::CLIENTBROWSER." (v. ".Nebucord_Status::VERSION.")", "description" => "Bot details:", "fields" => array(array("name" => "Bot name", "value" => $this->_botusername, "inline" => false), array("name" => "Bot Snowflake ID", "value" => $this->_botuserid, "inline" => false)));
+        $readyconfirmmsg = array("title" => Nebucord_Status::CLIENTBROWSER." ".Nebucord_Status::VERSION, "description" => self::BOTDETAILLITERAL, "fields" => array(array("name" => self::BOTNAMELITERAL, "value" => $this->_botusername, "inline" => false), array("name" => "Bot Snowflake ID", "value" => $this->_botuserid, "inline" => false)));
         for($i = 0; $i < count($this->_params['ctrlusr']); $i++) {
             $dmch = $this->_rest->createRESTExecutor()->executeFromArray(Nebucord_RESTStatus::REST_CREATE_DM, ['recipient_id' => $this->_params['ctrlusr'][$i]]);
             $this->_rest->createRESTExecutor()->executeFromArray(Nebucord_RESTStatus::REST_CREATE_MESSAGE, [
@@ -329,7 +322,7 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
      * Sends a shutdown notification to the bot admins.
      */
     private function botShutdown() {
-        $shutdownmsg = array("title" => Nebucord_Status::CLIENTBROWSER." (v. ".Nebucord_Status::VERSION.")", "description" => "Bot details:", "fields" => array(array("name" => "Bot name", "value" => $this->_botusername, "inline" => false), array("name" => "Bot Snowflake ID", "value" => $this->_botuserid, "inline" => false)));
+        $shutdownmsg = array("title" => Nebucord_Status::CLIENTBROWSER." ".Nebucord_Status::VERSION, "description" => self::BOTDETAILLITERAL, "fields" => array(array("name" => self::BOTNAMELITERAL, "value" => $this->_botusername, "inline" => false), array("name" => "Bot Snowflake ID", "value" => $this->_botuserid, "inline" => false)));
         for($i = 0; $i < count($this->_params['ctrlusr']); $i++) {
             $dmch = $this->_rest->createRESTExecutor()->executeFromArray(Nebucord_RESTStatus::REST_CREATE_DM, ['recipient_id' => $this->_params['ctrlusr'][$i]]);
             $this->_rest->createRESTExecutor()->executeFromArray(Nebucord_RESTStatus::REST_CREATE_MESSAGE, [
@@ -368,11 +361,11 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
     {
         if(!$this->_params['dmonfailures']) { return; }
         $errormsg = array(
-            "title" => Nebucord_Status::CLIENTBROWSER." (v. ".Nebucord_Status::VERSION.")",
+            "title" => Nebucord_Status::CLIENTBROWSER." ".Nebucord_Status::VERSION,
             "description" => "Nebucord API error:",
             "fields" => array(
                 array(
-                    "name" => "Bot name",
+                    "name" => self::BOTNAMELITERAL,
                     "value" => $this->_botusername,
                     "inline" => false),
                 array(

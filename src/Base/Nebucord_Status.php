@@ -386,7 +386,7 @@ abstract class Nebucord_Status {
      *
      * @return string The operating system wich this is running on.
      */
-    static public function getOS() {
+    public static function getOS() {
         return php_uname('s');
     }
 
@@ -398,7 +398,7 @@ abstract class Nebucord_Status {
      *
      * @return string Client browser identification.
      */
-    static public function getBrowser() {
+    public static function getBrowser() {
         return self::CLIENTBROWSER;
     }
 
@@ -410,8 +410,7 @@ abstract class Nebucord_Status {
      *
      * @return string Device (software) on wich Nebucord is running.
      */
-    static public function getDevice() {
-        #return "PHP".phpversion()." / ".php_uname('m')." Host";
+    public static function getDevice() {
         return "NebucordWS API / PHP".phpversion();
     }
 }

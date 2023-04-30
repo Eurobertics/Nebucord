@@ -180,7 +180,6 @@ abstract class Nebucord_Model_Abstract {
                     $retar['d'][substr($prop, 1)] = $this->_data[$prop];
                 }
             } else {
-                //if($prop == "_channelid" || $prop == "_requesttype") { continue; }
                 $retar[substr($prop, 1)] = $this->_data[$prop];
             }
         }

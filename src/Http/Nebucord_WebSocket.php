@@ -167,8 +167,9 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
         if ($masked===true) {
             // generate a random mask:
             $mask = array();
-            for ($i = 0; $i<4; $i++)
-                $mask[$i] = chr(rand(0, 255));
+            for ($i = 0; $i<4; $i++) {
+                $mask[$i] = chr(random_int(0, 255));
+            }
             $frameheader = array_merge($frameheader, $mask);
         }
 
@@ -259,7 +260,6 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
         $rectext = $buf = "";
         $wsopcode = 0;
         $buf = fread($this->_socket, self::$BUFFERSIZE);
-        if($buf === false) { return [-1]; }
         if(strlen($buf) > 0) {
             $buf = $this->wsDecode($buf, $pl_len, $wsopcode);
             if($wsopcode == 8) { return [-2, $buf]; }

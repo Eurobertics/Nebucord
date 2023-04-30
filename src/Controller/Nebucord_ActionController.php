@@ -93,7 +93,7 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
         $this->_sequence = 0;
         $this->_sessionid = null;
 
-        if(count($params) > 0) {
+        if(empty($params)) {
             foreach($params as $key => $val) {
                 $prop = "_".$key;
                 if(property_exists($this, $prop)) {
@@ -244,7 +244,6 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
      * not in use.
      */
     private function doHeartbeatACK() {
-        //$this->_outevent = Nebucord_Model_Factory::create(Nebucord_Status::OP_HEARTBEAT_ACK);
         \Nebucord\Logging\Nebucord_Logger::info("Receiving heartbeat ACK.");
         $this->_outevent = Nebucord_Model_Factory::create(Nebucord_Status::OP_HEARTBEAT_ACK);
         $this->_outevent->populate(['op' => Nebucord_Status::OP_HEARTBEAT_ACK]);
@@ -259,43 +258,37 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
     private function onCreateMessageCommand() {
         $msg = $this->_inevent->content;
         if($this->authControlUser()) {
-            if($this->checkBotID($msg)) {
-                if (strpos($msg, Nebucord_IActionTable::SHUTDOWN) !== false) {
-                    \Nebucord\Logging\Nebucord_Logger::warn("Shutdown command received: " . $msg);
-                    $this->_outevent = $this->_acttbl->doShutdown($msg);
-                } else if (strpos($msg, Nebucord_IActionTable::SETSTATUS) !== false) {
-                    \Nebucord\Logging\Nebucord_Logger::info("Setstatus command received: " . $msg);
-                    $this->_outevent = $this->_acttbl->setStatus($msg);
-                } else if (strpos($msg, Nebucord_IActionTable::GETHELP) !== false) {
-                    \Nebucord\Logging\Nebucord_Logger::info("Help command received: " . $msg);
-                    $this->_outevent = $this->_acttbl->getHelp($msg);
-                    $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-                    //$this->_outevent->channel_id = $this->_inevent->channel_id;
-                } else if (strpos($msg, Nebucord_IActionTable::DOECHO) !== false) {
-                    \Nebucord\Logging\Nebucord_Logger::info("Echo test command received: " . $msg);
-                    $this->_outevent = $this->_acttbl->doEcho($msg);
-                    $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-                    //$this->_outevent->channel_id = $this->_inevent->channel_id;
-                } else if (strpos($msg, Nebucord_IActionTable::DOSAY) !== false) {
-                    \Nebucord\Logging\Nebucord_Logger::info("Do say command received: " . $msg);
-                    $this->_outevent = $this->_acttbl->doSay($msg);
-                    $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-                    //$this->_outevent->channel_id = $this->_inevent->channel_id;
-                } else if (strpos($msg, Nebucord_IActionTable::DOSTATUS) !== false) {
-                    \Nebucord\Logging\Nebucord_Logger::info("Get status command received: " . $msg);
-                    $this->_outevent = $this->_acttbl->doStatus($msg);
-                    $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-                    //$this->_outevent->channelid = $this->_inevent->channel_id;
-                } else if (strpos($msg, Nebucord_IActionTable::DOREBOOT) !== false) {
-                    \Nebucord\Logging\Nebucord_Logger::warn("Reboot command received: " . $msg);
-                    \Nebucord\Logging\Nebucord_Logger::warn("Rebooting and reconnecting Nebucord to Discord...");
-                    $this->_outevent = $this->_acttbl->doRestart($msg);
-                    $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id, 'reboot' => true]);
-                } else if (strpos($msg, Nebucord_IActionTable::DOLISTAPPCOMMANDS) !== false) {
-                    \Nebucord\Logging\Nebucord_Logger::info("List application command received: " . $msg);
-                    $this->_outevent = $this->_acttbl->doListAppCommands($msg, $this->_botuserid, $this->_token, $this->_inevent->guild_id);
-                    $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-                }
+            if ($this->checkBotID($msg) && strpos($msg, Nebucord_IActionTable::SHUTDOWN) !== false) {
+                \Nebucord\Logging\Nebucord_Logger::warn("Shutdown command received: " . $msg);
+                $this->_outevent = $this->_acttbl->doShutdown($msg);
+            } else if ($this->checkBotID($msg) && strpos($msg, Nebucord_IActionTable::SETSTATUS) !== false) {
+                \Nebucord\Logging\Nebucord_Logger::info("Setstatus command received: " . $msg);
+                $this->_outevent = $this->_acttbl->setStatus($msg);
+            } else if ($this->checkBotID($msg) && strpos($msg, Nebucord_IActionTable::GETHELP) !== false) {
+                \Nebucord\Logging\Nebucord_Logger::info("Help command received: " . $msg);
+                $this->_outevent = $this->_acttbl->getHelp($msg);
+                $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
+            } else if ($this->checkBotID($msg) && strpos($msg, Nebucord_IActionTable::DOECHO) !== false) {
+                \Nebucord\Logging\Nebucord_Logger::info("Echo test command received: " . $msg);
+                $this->_outevent = $this->_acttbl->doEcho($msg);
+                $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
+            } else if ($this->checkBotID($msg) && strpos($msg, Nebucord_IActionTable::DOSAY) !== false) {
+                \Nebucord\Logging\Nebucord_Logger::info("Do say command received: " . $msg);
+                $this->_outevent = $this->_acttbl->doSay($msg);
+                $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
+            } else if ($this->checkBotID($msg) && strpos($msg, Nebucord_IActionTable::DOSTATUS) !== false) {
+                \Nebucord\Logging\Nebucord_Logger::info("Get status command received: " . $msg);
+                $this->_outevent = $this->_acttbl->doStatus($msg);
+                $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
+            } else if ($this->checkBotID($msg) && strpos($msg, Nebucord_IActionTable::DOREBOOT) !== false) {
+                \Nebucord\Logging\Nebucord_Logger::warn("Reboot command received: " . $msg);
+                \Nebucord\Logging\Nebucord_Logger::warn("Rebooting and reconnecting Nebucord to Discord...");
+                $this->_outevent = $this->_acttbl->doRestart($msg);
+                $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id, 'reboot' => true]);
+            } else if ($this->checkBotID($msg) && strpos($msg, Nebucord_IActionTable::DOLISTAPPCOMMANDS) !== false) {
+                \Nebucord\Logging\Nebucord_Logger::info("List application command received: " . $msg);
+                $this->_outevent = $this->_acttbl->doListAppCommands($msg, $this->_botuserid, $this->_token, $this->_inevent->guild_id);
+                $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
             }
         }
         if (strpos($msg, Nebucord_IActionTable::DOVERSION) !== false) {

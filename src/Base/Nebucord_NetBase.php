@@ -39,7 +39,6 @@ class Nebucord_NetBase {
 
     /** @var string $_gatewayhost The host of the Discord gateway. */
     protected $_gatewayhost = null;
-    //protected $_gatewayhost = "gateway.discord.gg";
 
     /** @var string $_remoteapiversion The current API version of the Discord API endpoint. */
     protected $_remoteapiversion = "10";

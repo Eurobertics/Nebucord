@@ -83,9 +83,7 @@ abstract class Nebucord_RESTBase_Abstract {
      * Sets up the base data and clears all arrays for usage.
      */
     public function __construct() {
-        $this->_header = array();
-        $this->_addition_header_post = array();
-        $this->_params = array();
+        $this->getClassRessources();
     }
 
     /**
@@ -94,7 +92,19 @@ abstract class Nebucord_RESTBase_Abstract {
      * Cleans up properties wich are not used any more on exit.
      */
     public function __destruct() {
-    	$this->_header = array();
+        $this->getClassRessources();
+    }
+
+    /**
+     * Setup class ressource
+     *
+     * Sets needed class properties ready to use.
+     *
+     * @return void
+     */
+    private function getClassRessources()
+    {
+        $this->_header = array();
         $this->_addition_header_post = array();
         $this->_params = array();
     }
@@ -129,14 +139,14 @@ abstract class Nebucord_RESTBase_Abstract {
      *
      * @param \Nebucord\Interfaces\Nebucord_IModelREST $model The model from which the parameters should be get.
      */
-    protected abstract function setParams(\Nebucord\Interfaces\Nebucord_IModelREST $model);
+    abstract protected function setParams(\Nebucord\Interfaces\Nebucord_IModelREST $model);
 
     /**
      * Builds the request.
      *
      * After preparing the http header, this one fills the header for final sending.
      */
-    protected abstract function buildRequest();
+    abstract protected function buildRequest();
 
     /**
      * HTTP header to string.
@@ -145,14 +155,14 @@ abstract class Nebucord_RESTBase_Abstract {
      *
      * @return string The header as a string.
      */
-    protected abstract function requestToString();
+    abstract protected function requestToString();
 
     /**
      * Connects to the REST gateway.
      *
      * Fires up the connection to the gateway and prepares it for sending the heeader.
      */
-    protected abstract function connect();
+    abstract protected function connect();
 
     /**
      * Sends the header request.
@@ -161,7 +171,7 @@ abstract class Nebucord_RESTBase_Abstract {
      *
      * @return integer The bytes wich are send.
      */
-    protected abstract function send();
+    abstract protected function send();
 
     /**
      * Receives data from the gateway.
@@ -170,7 +180,7 @@ abstract class Nebucord_RESTBase_Abstract {
      *
      * @return string The parsed repsonse.
      */
-    protected abstract function receive();
+    abstract protected function receive();
 
     /**
      * Parses the response header.
@@ -181,7 +191,7 @@ abstract class Nebucord_RESTBase_Abstract {
      * @param string $response The full blown response header with payload.
      * @return array|null The parsed payload as array from JSON string or null on error.
      */
-    protected abstract function parseResponse($response);
+    abstract protected function parseResponse($response);
 
     /**
      * Executes the REST request.
@@ -191,5 +201,5 @@ abstract class Nebucord_RESTBase_Abstract {
      *
      * @return string|null The payload from JSON string or null on error.
      */
-    public abstract function execute();
+    abstract public function execute();
 }

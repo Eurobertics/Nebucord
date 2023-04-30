@@ -51,7 +51,7 @@ class NebucordREST {
      */
     public function __construct(array $params = array()) {
         $this->_params = $params;
-        if(count($params) == 0) {
+        if(empty($params)) {
             $this->bootstrap();
         }
     }

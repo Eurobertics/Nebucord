@@ -74,7 +74,9 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"$&/()=[]{}0123456789';
         $key = '';
         $chars_length = strlen($chars);
-        for ($i = 0; $i < 16; $i++) $key .= $chars[mt_rand(0, $chars_length-1)];
+        for ($i = 0; $i < 16; $i++) {
+            $key .= $chars[random_int(0, $chars_length-1)];
+        }
         return base64_encode($key);
     }
 
@@ -86,14 +88,13 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
      * @return string The GET HTTP header for websocket connection upgrade.
      */
     private function createWSHeader() {
-        $header = "GET ".$this->_gatewaypath." HTTP/1.1\r\n".
+        return "GET ".$this->_gatewaypath." HTTP/1.1\r\n".
             "Upgrade: websocket\r\n".
             "Connection: Upgrade\r\n".
             "Host: ".$this->_gatewayhost."\r\n".
             "Origin: https://".$this->_gatewayhost."\r\n".
             "Sec-WebSocket-Key: ".$this->generateWSKey()."\r\n".
             "Sec-WebSocket-Version: 13\r\n\r\n";
-        return $header;
     }
 
     /**
@@ -126,11 +127,12 @@ class Nebucord_Http_Client extends Nebucord_NetBase {
         unset($timer);
         if($this->checkReturnHeader($retheader)) {
             $this->_socket = $socket;
-            return true;
+            $retstate = true;
         } else {
             $this->_socket = -1;
-            return false;
+            $retstate = false;
         }
+        return $retstate;
     }
     
     /**

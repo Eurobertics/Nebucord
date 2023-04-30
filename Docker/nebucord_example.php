@@ -1,5 +1,5 @@
 <?php
-include "/opt/nebucord/vendor/autoload.php";
+include_once "/opt/nebucord/vendor/autoload.php";
 
 use Nebucord\Nebucord;
 
