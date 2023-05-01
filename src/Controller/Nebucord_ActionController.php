@@ -93,7 +93,7 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
         $this->_sequence = 0;
         $this->_sessionid = null;
 
-        if(empty($params)) {
+        if(!empty($params)) {
             foreach($params as $key => $val) {
                 $prop = "_".$key;
                 if(property_exists($this, $prop)) {
