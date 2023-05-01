@@ -257,41 +257,41 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
      */
     private function onCreateMessageCommand() {
         $msg = $this->_inevent->content;
-        if($this->authControlUser()) {
-            if ($this->checkBotID($msg) && strpos($msg, Nebucord_IActionTable::SHUTDOWN) !== false) {
+        if($this->authControlUser() && $this->checkBotID($msg)) {
+            if (str_contains($msg, Nebucord_IActionTable::SHUTDOWN)) {
                 \Nebucord\Logging\Nebucord_Logger::warn("Shutdown command received: " . $msg);
                 $this->_outevent = $this->_acttbl->doShutdown($msg);
-            } else if ($this->checkBotID($msg) && strpos($msg, Nebucord_IActionTable::SETSTATUS) !== false) {
+            } else if (str_contains($msg, Nebucord_IActionTable::SETSTATUS)) {
                 \Nebucord\Logging\Nebucord_Logger::info("Setstatus command received: " . $msg);
                 $this->_outevent = $this->_acttbl->setStatus($msg);
-            } else if ($this->checkBotID($msg) && strpos($msg, Nebucord_IActionTable::GETHELP) !== false) {
+            } else if (str_contains($msg, Nebucord_IActionTable::GETHELP)) {
                 \Nebucord\Logging\Nebucord_Logger::info("Help command received: " . $msg);
                 $this->_outevent = $this->_acttbl->getHelp($msg);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-            } else if ($this->checkBotID($msg) && strpos($msg, Nebucord_IActionTable::DOECHO) !== false) {
+            } else if (str_contains($msg, Nebucord_IActionTable::DOECHO)) {
                 \Nebucord\Logging\Nebucord_Logger::info("Echo test command received: " . $msg);
                 $this->_outevent = $this->_acttbl->doEcho($msg);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-            } else if ($this->checkBotID($msg) && strpos($msg, Nebucord_IActionTable::DOSAY) !== false) {
+            } else if (str_contains($msg, Nebucord_IActionTable::DOSAY)) {
                 \Nebucord\Logging\Nebucord_Logger::info("Do say command received: " . $msg);
                 $this->_outevent = $this->_acttbl->doSay($msg);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-            } else if ($this->checkBotID($msg) && strpos($msg, Nebucord_IActionTable::DOSTATUS) !== false) {
+            } else if (str_contains($msg, Nebucord_IActionTable::DOSTATUS)) {
                 \Nebucord\Logging\Nebucord_Logger::info("Get status command received: " . $msg);
                 $this->_outevent = $this->_acttbl->doStatus($msg);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-            } else if ($this->checkBotID($msg) && strpos($msg, Nebucord_IActionTable::DOREBOOT) !== false) {
+            } else if (str_contains($msg, Nebucord_IActionTable::DOREBOOT)) {
                 \Nebucord\Logging\Nebucord_Logger::warn("Reboot command received: " . $msg);
                 \Nebucord\Logging\Nebucord_Logger::warn("Rebooting and reconnecting Nebucord to Discord...");
                 $this->_outevent = $this->_acttbl->doRestart($msg);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id, 'reboot' => true]);
-            } else if ($this->checkBotID($msg) && strpos($msg, Nebucord_IActionTable::DOLISTAPPCOMMANDS) !== false) {
+            } else if (str_contains($msg, Nebucord_IActionTable::DOLISTAPPCOMMANDS)) {
                 \Nebucord\Logging\Nebucord_Logger::info("List application command received: " . $msg);
                 $this->_outevent = $this->_acttbl->doListAppCommands($msg, $this->_botuserid, $this->_token, $this->_inevent->guild_id);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
             }
         }
-        if (strpos($msg, Nebucord_IActionTable::DOVERSION) !== false) {
+        if (str_contains($msg, Nebucord_IActionTable::DOVERSION)) {
             \Nebucord\Logging\Nebucord_Logger::info("Do version command received: " . $msg);
             $this->_outevent = $this->_acttbl->doVersion($msg);
             $this->_outevent->channelid = $this->_inevent->channel_id;
