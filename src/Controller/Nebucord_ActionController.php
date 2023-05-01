@@ -294,7 +294,7 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
         if (str_contains($msg, Nebucord_IActionTable::DOVERSION)) {
             \Nebucord\Logging\Nebucord_Logger::info("Do version command received: " . $msg);
             $this->_outevent = $this->_acttbl->doVersion($msg);
-            $this->_outevent->channelid = $this->_inevent->channel_id;
+            $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
         }
     }
 

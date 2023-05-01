@@ -345,7 +345,11 @@ class Nebucord_RuntimeController extends Nebucord_Controller_Abstract {
     private function botMessage(\Nebucord\Models\Nebucord_Model $evt) {
         $oRESTRequestModel = Nebucord_Model_Factory::createREST(Nebucord_RESTStatus::REST_CREATE_MESSAGE);
         $oRESTRequestModel->populate($evt->toArray());
-        $this->_rest->createRESTExecutor()->execute(Nebucord_RESTStatus::REST_CREATE_MESSAGE, $oRESTRequestModel);
+        $res = $this->_rest->createRESTExecutor()->execute(Nebucord_RESTStatus::REST_CREATE_MESSAGE, $oRESTRequestModel);
+        if($res->getHttpStatusCode() != "200 OK") {
+            \Nebucord\Logging\Nebucord_Logger::warn("Last bot message could not be delivered, gateway responed with:");
+            \Nebucord\Logging\Nebucord_Logger::warn("Code: ".$res->code." | Message: ".$res->message);
+        }
     }
 
     /**

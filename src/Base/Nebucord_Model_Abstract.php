@@ -186,4 +186,17 @@ abstract class Nebucord_Model_Abstract {
 
         return $retar;
     }
+
+    /**
+     * Returns the last HTTP status code
+     *
+     * If the last request was REST, it returns the last HTTP status code.
+     * Otherwise it returns null.
+     *
+     * @return string|null The last known HTTP status code
+     */
+    public function getHttpStatusCode()
+    {
+        return $this->_http_status_code;
+    }
 }
