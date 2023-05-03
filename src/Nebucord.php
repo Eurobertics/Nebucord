@@ -24,10 +24,10 @@
 
 namespace Nebucord;
 
-use Nebucord\Base\Nebucord_Configloader;
-use Nebucord\Base\Nebucord_Status;
-use Nebucord\Http\Nebucord_WebSocket;
-use Nebucord\Controller\Nebucord_RuntimeController;
+use Nebucord\Base\Configloader;
+use Nebucord\Base\StatusList;
+use Nebucord\Http\WebSocketClient;
+use Nebucord\Controller\RuntimeController;
 
 /**
  * Class Nebucord (WebSocket part)
@@ -40,16 +40,16 @@ class Nebucord {
     /** @var null $_config Configuration parameter. */
     private $_config = null;
 
-    /** @var Nebucord_WebSocket $_wscon The websocket object for transfering data. */
+    /** @var WebSocketClient $_wscon The websocket object for transfering data. */
     private $_wscon = null;
 
-    /** @var Nebucord_RuntimeController $_runtimecontroller The craeted runtime controller wich does the hard work. */
+    /** @var RuntimeController $_runtimecontroller The craeted runtime controller wich does the hard work. */
     private $_runtimecontroller = null;
 
-    /** @var \Nebucord\Events\Nebucord_EventTable $_evttbl An event table object given by external or created internal. */
+    /** @var \Nebucord\Events\EventTable $_evttbl An event table object given by external or created internal. */
     private $_evttbl = null;
 
-    /** @var \Nebucord\Events\Nebucord_ActionTable $_acttbl An action table object given by external or created interanal. */
+    /** @var \Nebucord\Events\ActionTable $_acttbl An action table object given by external or created interanal. */
     private $_acttbl = null;
 
     /** @var array $_params User given params by the constructor. */
@@ -66,7 +66,7 @@ class Nebucord {
      * @param array $params User given parameter such as controll user or bot token.
      */
     public function __construct(array $params = array()) {
-        Logging\Nebucord_Logger::infoImportant("Starting Nebucord v. ".Base\Nebucord_Status::VERSION." on ".Base\Nebucord_Status::CLIENTHOST);
+        Logging\MainLogger::infoImportant("Starting Nebucord v. ".Base\StatusList::VERSION." on ".Base\StatusList::CLIENTHOST);
         $this->_params = $params;
     }
 
@@ -82,7 +82,7 @@ class Nebucord {
         $this->_evttbl = null;
         $this->_acttbl = null;
         $this->_params = array();
-        Logging\Nebucord_Logger::infoImportant("Nebucord successfuly exited.");
+        Logging\MainLogger::infoImportant("Nebucord successfuly exited.");
     }
 
     /**
@@ -97,19 +97,19 @@ class Nebucord {
      */
     public function bootstrap(string $configfile = 'nebucord.ini', string $configpath = './') {
         if(count($this->_params) == 0) {
-            $this->_config = new Nebucord_Configloader($configfile, $configpath);
+            $this->_config = new Configloader($configfile, $configpath);
             $this->_params = $this->_config->returnParams();
         }
         if(empty($this->_params['intents'])) {
-            $this->_params['intents'] = Nebucord_Status::INTENTS_DEFAULT_BITMASK;
+            $this->_params['intents'] = StatusList::INTENTS_DEFAULT_BITMASK;
         }
         if(empty($this->_params['wsretries'])) {
-            $this->_params['wsretries'] = Nebucord_Status::MAX_RECONNECT_TRIES;
+            $this->_params['wsretries'] = StatusList::MAX_RECONNECT_TRIES;
         }
         if(empty($this->_params['dmonfailures'])) {
-            $this->_params['dmonfailures'] = Nebucord_Status::DMONFAILURES_DEFAULT;
+            $this->_params['dmonfailures'] = StatusList::DMONFAILURES_DEFAULT;
         }
-        $this->_wscon = Nebucord_WebSocket::getInstance();
+        $this->_wscon = WebSocketClient::getInstance();
         $this->_bootstrappingdone = true;
         return $this;
     }
@@ -133,12 +133,12 @@ class Nebucord {
      * As designed for external callbacks callings to get event from the gateway, this method accepts an
      * event table with the stacked used callbacks to be fired on events.
      *
-     * @param Events\Nebucord_EventTable $eventtable The event table object.
+     * @param Events\EventTable $eventtable The event table object.
      * @return Nebucord Returns itself (Nebucord).
      */
-    public function setEventTable(Events\Nebucord_EventTable $eventtable) {
+    public function setEventTable(Events\EventTable $eventtable) {
         $this->_evttbl = $eventtable;
-        Logging\Nebucord_Logger::info("Eventtable set...");
+        Logging\MainLogger::info("Eventtable set...");
         return $this;
     }
 
@@ -148,14 +148,14 @@ class Nebucord {
      * As for an event table, external user are able to provide actions on internal events if needed, this method
      * sets such an action table object.
      *
-     * @param Events\Nebucord_ActionTable $actiontable The action table object.
+     * @param Events\ActionTable $actiontable The action table object.
      * @return Nebucord Returns itself (Nebucord).
      */
     public function setActionTable($actiontable) {
-        if($actiontable instanceof Interfaces\Nebucord_IActionTable) {
+        if($actiontable instanceof Interfaces\iActionTable) {
             $this->_acttbl = $actiontable;
         }
-        Logging\Nebucord_Logger::info("Actiontable set...");
+        Logging\MainLogger::info("Actiontable set...");
         return $this;
     }
 
@@ -168,7 +168,7 @@ class Nebucord {
      */
     public function run() {
         if(!$this->_bootstrappingdone) {
-            Logging\Nebucord_Logger::error("Bootstrapping not done, aborting! (did you forget to call Nebucord::bootstrap()?)");
+            Logging\MainLogger::error("Bootstrapping not done, aborting! (did you forget to call Nebucord::bootstrap()?)");
             return;
         }
         $this->prepare();
@@ -183,14 +183,14 @@ class Nebucord {
      */
     private function prepare() {
         if($this->_evttbl == null) {
-            $this->_evttbl = Events\Nebucord_EventTable::create();
-            Logging\Nebucord_Logger::info("No eventable set, using default one...");
+            $this->_evttbl = Events\EventTable::create();
+            Logging\MainLogger::info("No eventable set, using default one...");
         }
         if($this->_acttbl == null) {
-            $this->_acttbl = new Events\Nebucord_ActionTable();
-            Logging\Nebucord_Logger::info("No actiontable set, using default one...");
+            $this->_acttbl = new Events\ActionTable();
+            Logging\MainLogger::info("No actiontable set, using default one...");
         }
-        $this->_runtimecontroller = new Nebucord_RuntimeController($this->_wscon, $this->_evttbl, $this->_acttbl, $this->_params);
+        $this->_runtimecontroller = new RuntimeController($this->_wscon, $this->_evttbl, $this->_acttbl, $this->_params);
     }
 
     /**
@@ -199,10 +199,10 @@ class Nebucord {
      * After the conditions are set to exit, before leaving the process, here are some basic clean ups.
      */
     private function cleanup() {
-        Nebucord_WebSocket::destroyInstance($this->_wscon);
-        Events\Nebucord_EventTable::delete($this->_evttbl);
+        WebSocketClient::destroyInstance($this->_wscon);
+        Events\EventTable::delete($this->_evttbl);
         unset($this->_runtimecontroller);
-        Logging\Nebucord_Logger::info("Everything cleaned up...");
+        Logging\MainLogger::info("Everything cleaned up...");
     }
 
     /**
@@ -221,7 +221,7 @@ class Nebucord {
      *
      * Returns the current runtimestate used by the runtime controller.
      *
-     * @return Base\Nebucord_Status The current runtime state.
+     * @return Base\StatusList The current runtime state.
      */
     public function getRuntimeState() {
         return $this->_runtimecontroller->getRuntimeState();

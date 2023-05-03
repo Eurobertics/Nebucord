@@ -24,16 +24,16 @@
 
 namespace Nebucord\Interfaces;
 
-use Nebucord\Models\Nebucord_Model;
+use Nebucord\Models\Model;
 
 /**
- * Interface Nebucord_IActionTable
+ * Interface iActionTable
  *
- * This sets the needed methods to be implemented by an Nebucord_ActionTable class if it needs to be overwritten.
+ * This sets the needed methods to be implemented by an ActionTable class if it needs to be overwritten.
  *
  * @package Nebucord\Interfaces
  */
-interface Nebucord_IActionTable {
+interface iActionTable {
     /** @const string The const for shutting down Nebucord. */
     const SHUTDOWN = "!shutdown";
 
@@ -67,7 +67,7 @@ interface Nebucord_IActionTable {
      * Can be overwritten. This does everything wich is needed to shut down the webclient properly.
      *
      * @param string $command The command on wich this action shoud fire (default: !shutdown).
-     * @return Nebucord_Model|null The model returned to the runtime controller to execute the action by the ActionController.
+     * @return Model|null The model returned to the runtime controller to execute the action by the ActionController.
      */
     public function doShutdown($command);
 
@@ -77,7 +77,7 @@ interface Nebucord_IActionTable {
      * Can be overwritten. This sets a new status for the Nebucord driven bot.
      *
      * @param string $command The command on wich this action shoud fire (default: !setstatus).
-     * @return Nebucord_Model|null The model returned to the runtime controller to execute the action by the ActionController.
+     * @return Model|null The model returned to the runtime controller to execute the action by the ActionController.
      */
     public function setStatus($command);
 
@@ -87,7 +87,7 @@ interface Nebucord_IActionTable {
      * Sends a message to the channel where it received the command and returns a list of available internal commands.
      *
      * @param string $command The command on wich this action shoud fire (default: !commands).
-     * @return Nebucord_Model|null The model returned to the runtime controller to execute the action by the ActionController.
+     * @return Model|null The model returned to the runtime controller to execute the action by the ActionController.
      */
     public function getHelp($command);
 
@@ -97,7 +97,7 @@ interface Nebucord_IActionTable {
      * Sends an echo with the same text wich was entered on the command to the channel where it was posted.
      *
      * @param string $command The command on wich this action shoud fire (default: !echotest).
-     * @return Nebucord_Model|null The model returned to the runtime controller to execute the action by the ActionController.
+     * @return Model|null The model returned to the runtime controller to execute the action by the ActionController.
      */
     public function doEcho($command);
 
@@ -107,7 +107,7 @@ interface Nebucord_IActionTable {
      * Repeats exactly what a user typed.
      *
      * @param string $command The command on wich this action shoud fire (default: !say).
-     * @return Nebucord_Model|null The model returned to the runtime controller to execute the action by the ActionController.
+     * @return Model|null The model returned to the runtime controller to execute the action by the ActionController.
      */
     public function doSay($command);
 
@@ -117,7 +117,7 @@ interface Nebucord_IActionTable {
      * Returns simply if bot is available.
      *
      * @param string $command The command on wich this action shoud fire (default: !status).
-     * @return Nebucord_Model|null The model returned to the runtime controller to execute the action by the ActionController.
+     * @return Model|null The model returned to the runtime controller to execute the action by the ActionController.
      */
     public function doStatus($command);
 
@@ -128,7 +128,7 @@ interface Nebucord_IActionTable {
      * This command is public.
      *
      * @param string $command The command on wich this action shoud fire (default: !status).
-     * @return Nebucord_Model|null The model returned to the runtime controller to execute the action by the ActionController.
+     * @return Model|null The model returned to the runtime controller to execute the action by the ActionController.
      */
     public function doVersion($command);
 
@@ -138,7 +138,7 @@ interface Nebucord_IActionTable {
      * Restarts Nebucord and reconnects to the Websocket Gateway.
      *
      * @param string $command The command on which this action should fire (default: !reboot).
-     * @return Nebucord_Model|null The model return to the runtime controller to execute the action by the ActionController.
+     * @return Model|null The model return to the runtime controller to execute the action by the ActionController.
      */
     public function doRestart($command);
 
@@ -152,7 +152,7 @@ interface Nebucord_IActionTable {
      * @param integer $botuserid The bot user id which owns the app commands (application id).
      * @param string $bottoken The bot token to authenticate when receiving the app commands.
      * @param integer $guild_id The guild id for listing the guild app commands (mostly the guild where the command originates from).
-     * @return Nebucord_Model|null The model return to the runtime controller to execute the action by the ActionController.
+     * @return Model|null The model return to the runtime controller to execute the action by the ActionController.
      */
     public function doListAppCommands($command, $botuserid, $bottoken, $guild_id);
 }

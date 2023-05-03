@@ -24,11 +24,11 @@
 
 namespace Nebucord\Http;
 
-use Nebucord\Base\Nebucord_Status;
-use Nebucord\Base\Nebucord_Timer;
+use Nebucord\Base\StatusList;
+use Nebucord\Base\Timer;
 
 /**
- * Class Nebucord_WebSocket
+ * Class WebSocketClient
  *
  * The websocket client after the initial HTTP connection and a successful connection upgrade.
  * This class reads and writes all the data given by Nebucord and does all the framing and extraction based
@@ -36,7 +36,7 @@ use Nebucord\Base\Nebucord_Timer;
  *
  * @package Nebucord\Http
  */
-class Nebucord_WebSocket extends Nebucord_Http_Client {
+class WebSocketClient extends HttpClient {
 
     /** @var object $_instance The websocket instance. */
     private static $_instance;
@@ -44,7 +44,7 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
     /** @var int $requestcount The amount of request within the RATELIMIT_TIMEFRAME (resets after RATELIMIT_TIMEFRAME timed out). */
     private $requestcount = 0;
 
-    /** @var Nebucord_Timer $ratelimit_timer The timer wich is used to determine rate limit. */
+    /** @var Timer $ratelimit_timer The timer wich is used to determine rate limit. */
     private $ratelimit_timer;
 
     /**
@@ -52,10 +52,10 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
      *
      * The connection should only be once per Nebucord instance. So this is the creation of a singleton websocket.
      *
-     * @return Nebucord_WebSocket|object The created websocket instance.
+     * @return WebSocketClient|object The created websocket instance.
      */
     public static function getInstance() {
-        \Nebucord\Logging\Nebucord_Logger::info("Starting HTTP client...");
+        \Nebucord\Logging\MainLogger::info("Starting HTTP client...");
         if(self::$_instance === null) {
             self::$_instance = new self;
         }
@@ -67,27 +67,27 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
      *
      * On exit it is necessary to delete the websocket instance. This is done here.
      *
-     * @param Nebucord_WebSocket $instance The instance to delete.
+     * @param WebSocketClient $instance The instance to delete.
      */
     public static function destroyInstance($instance) {
-        if($instance instanceof Nebucord_WebSocket) {
+        if($instance instanceof WebSocketClient) {
             unset($instance);
         }
     }
 
     /**
-     * Nebucord_WebSocket constructor.
+     * WebSocketClient constructor.
      *
      * Sets everything up.
      */
     protected function __construct() {
         parent::__construct();
-        $this->ratelimit_timer = new Nebucord_Timer();
+        $this->ratelimit_timer = new Timer();
         $this->ratelimit_timer->startTimer();
     }
 
     /**
-     * Nebucord_WebSocket destructor.
+     * WebSocketClient destructor.
      *
      * Cleans everything up.
      */
@@ -288,12 +288,12 @@ class Nebucord_WebSocket extends Nebucord_Http_Client {
      * @return integer The length which was send or -1 on error.
      */
     public function soWriteAll($data, $type = 'text', $masked = true) {
-        if($this->ratelimit_timer->getTime() > Nebucord_Status::RATELIMIT_TIMEFRAME) {
+        if($this->ratelimit_timer->getTime() > StatusList::RATELIMIT_TIMEFRAME) {
             $this->ratelimit_timer->reStartTimer();
             $this->requestcount = 0;
         }
-        if($this->requestcount >= Nebucord_Status::RATELIMIT_MAXREQUEST) {
-            \Nebucord\Logging\Nebucord_Logger::warn("Request dropped due to rate limit!");
+        if($this->requestcount >= StatusList::RATELIMIT_MAXREQUEST) {
+            \Nebucord\Logging\MainLogger::warn("Request dropped due to rate limit!");
             return 0;
         }
         $encdata = $this->wsEncode($data, $type, $masked);

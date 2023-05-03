@@ -24,14 +24,14 @@
 
 namespace Nebucord\Controller;
 
-use Nebucord\Base\Nebucord_Controller_Abstract;
-use Nebucord\Base\Nebucord_Status;
-use Nebucord\Events\Nebucord_EventTable;
-use Nebucord\Factories\Nebucord_Model_Factory;
-use Nebucord\Models\Nebucord_Model;
+use Nebucord\Base\AbstractController;
+use Nebucord\Base\StatusList;
+use Nebucord\Events\EventTable;
+use Nebucord\Factories\ModelFactory;
+use Nebucord\Models\Model;
 
 /**
- * Class Nebucord_EventController
+ * Class EventController
  *
  * The event controller receives the events coming from the Discord gateway after the websocket/http client reads it.
  * Then this controller decides wich model is used for the incoming event and packs into it. Then it dispatches the event
@@ -40,12 +40,12 @@ use Nebucord\Models\Nebucord_Model;
  *
  * @package Nebucord\Controller
  */
-class Nebucord_EventController extends Nebucord_Controller_Abstract {
+class EventController extends AbstractController {
 
     /** @var array $_eventmessage JSON decoded array of the last message from the gateway. */
     private $_eventmessage;
 
-    /** @var Nebucord_EventTable The event table wich holds the callbacks wich should fired on an event. */
+    /** @var EventTable The event table wich holds the callbacks wich should fired on an event. */
     private $_evttbl;
 
     /** @var integer $_lastopcode The last sended OP code from the gateway. */
@@ -60,23 +60,23 @@ class Nebucord_EventController extends Nebucord_Controller_Abstract {
     /** @var array $_lastmessage JSON decoded ['d'] message payload without event/op-code data. */
     private $_lastmessage;
 
-    /** @var Nebucord_Model The model wich represents the event for returing back to the callback caller. */
+    /** @var Model The model wich represents the event for returing back to the callback caller. */
     private $_model;
 
     /**
-     * Nebucord_EventController constructor.
+     * EventController constructor.
      *
      * Starts the event controller and stores a given event table to it.
      *
-     * @param Nebucord_EventTable $evttbl
+     * @param EventTable $evttbl
      */
-    public function __construct(Nebucord_EventTable &$evttbl) {
+    public function __construct(EventTable &$evttbl) {
         parent::__construct();
         $this->_evttbl = $evttbl;
     }
 
     /**
-     * Nebucord_EventController destructor.
+     * EventController destructor.
      *
      * Ends the EventController by deleting the eventmessage and cleans itself up.
      */
@@ -97,7 +97,7 @@ class Nebucord_EventController extends Nebucord_Controller_Abstract {
     public function readEvent($eventmessage) {
         $this->_eventmessage = $this->parseJSON($eventmessage);
         if(is_null($this->_eventmessage)) {
-            $this->_model = Nebucord_Model_Factory::create();
+            $this->_model = ModelFactory::create();
             return false;
         }
         $this->buildEventData();
@@ -115,13 +115,13 @@ class Nebucord_EventController extends Nebucord_Controller_Abstract {
         $this->_lastsequence = null;
         $this->_lastevent = null;
         $this->_lastmessage = (isset($this->_eventmessage['d'])) ? $this->_eventmessage['d'] : null;
-        if($this->_lastopcode == Nebucord_Status::OP_DISPATCH) {
+        if($this->_lastopcode == StatusList::OP_DISPATCH) {
             $this->_lastevent = $this->_eventmessage['t'];
             $this->_lastsequence = $this->_eventmessage['s'];
-            \Nebucord\Logging\Nebucord_Logger::info("Event received: ".$this->_lastevent." - Sequence: ".$this->_lastsequence);
+            \Nebucord\Logging\MainLogger::info("Event received: ".$this->_lastevent." - Sequence: ".$this->_lastsequence);
         }
 
-        $this->_model = Nebucord_Model_Factory::create($this->_lastopcode, $this->_lastevent);
+        $this->_model = ModelFactory::create($this->_lastopcode, $this->_lastevent);
         $this->_model->populate(['op' => $this->_lastopcode, 's' => $this->_lastsequence, 't' => $this->_lastevent, 'd' => $this->_lastmessage]);
 
         $this->dispatchEventRemote();
@@ -153,7 +153,7 @@ class Nebucord_EventController extends Nebucord_Controller_Abstract {
      * Some events need to be processed locally. This method dispatches the last event to the method invoker wich in
      * turn can react to the event-model wich is returned.
      *
-     * @return Nebucord_Model
+     * @return Model
      */
     public function dispatchEventLocal() {
     	return $this->_model;

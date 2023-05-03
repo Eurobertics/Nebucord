@@ -27,7 +27,7 @@ namespace Nebucord\Base;
 use Connfetti\INI\Config\Config;
 
 /**
- * Class Nebucord_Configloader
+ * Class Configloader
  *
  * It utilizes the Connfetti-INI library wich parses an INI file and
  * stores it contents in a stdClass.
@@ -36,13 +36,13 @@ use Connfetti\INI\Config\Config;
  * @package Connfetti\INI\Config\Config
  * @package Nebucord\Base
  */
-class Nebucord_Configloader {
+class Configloader {
 
     /** @var Config $cfg Connfetti-INI config object */
     private $cfg;
 
     /**
-     * Nebucord_Configloader constructor.
+     * Configloader constructor.
      *
      * Sets up the Config object.
      */
@@ -51,7 +51,7 @@ class Nebucord_Configloader {
     }
 
     /**
-     * Nebucord_Configloader destructor.
+     * Configloader destructor.
      *
      * Nullifies the Config object.
      */
@@ -93,7 +93,7 @@ class Nebucord_Configloader {
         $bitmask = 0;
         foreach($oIntents as $intent => $state) {
             if($state === 'true') {
-                $bitmask += constant('Nebucord\Base\Nebucord_Status::INTENT_' . $intent);
+                $bitmask += constant('Nebucord\Base\StatusList::INTENT_' . $intent);
             }
         }
         return $bitmask;

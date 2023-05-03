@@ -25,13 +25,13 @@
 namespace Nebucord\Base;
 
 /**
- * Class Nebucord_Timer
+ * Class Timer
  *
  * Timer class to measure time in millisecons. This is used to calculate time or timeouts for events.
  *
  * @package Nebucord\Base
  */
-class Nebucord_Timer {
+class Timer {
 
     /** @var array $_timers Holds all active timers. */
     private $_timers = array();
@@ -40,7 +40,7 @@ class Nebucord_Timer {
     private $_time_modifier = 1;
 
     /**
-     * Nebucord_Timer constructor.
+     * Timer constructor.
      *
      * Creates ressources for the timer and resets old timers.
      *
@@ -52,7 +52,7 @@ class Nebucord_Timer {
     }
 
     /**
-     * Nebucord_Timer destructor.
+     * Timer destructor.
      *
      * Cleans up the timer array on end.
      */

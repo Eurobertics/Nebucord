@@ -25,24 +25,24 @@
 namespace Nebucord\Models;
 
 use \Exception;
-use Nebucord\Base\Nebucord_Model_Abstract;
-use Nebucord\Base\Nebucord_Status;
-use Nebucord\Interfaces\Nebucord_IModelREST;
-use Nebucord\REST\Base\Nebucord_RESTBase_Abstract;
-use Nebucord\REST\Base\Nebucord_RESTHTTPClient;
-use Nebucord\REST\Base\Nebucord_RESTBuildAPIEndpoints;
+use Nebucord\Base\AbstractModel;
+use Nebucord\Base\StatusList;
+use Nebucord\Interfaces\iModelREST;
+use Nebucord\REST\Base\AbstractBase;
+use Nebucord\REST\Base\HttpClient;
+use Nebucord\REST\Base\BuildApiEndpoints;
 
 /**
- * Class Nebucord_Model_REST
+ * Class ModelREST
  *
  * A base model for REST calls.
  *
  * @package Nebucord\Models
  */
-class Nebucord_Model_REST extends Nebucord_Model implements Nebucord_IModelREST
+class ModelREST extends Model implements iModelREST
 {
 
-    /** @var string $_status_type Holds the status type of the model (example: Nebucord_RESTStatus::REST_CREATE_MESSAGE).  */
+    /** @var string $_status_type Holds the status type of the model (example: RestStatusList::REST_CREATE_MESSAGE).  */
     private $_status_type;
 
     /** @var string $_api_endpoint stores the current REST endpoint. */
@@ -52,7 +52,7 @@ class Nebucord_Model_REST extends Nebucord_Model implements Nebucord_IModelREST
     private $_request_type;
 
     /**
-     * Nebucord_Model constructor.
+     * Model constructor.
      * Sets everything up and transfers the basic event data to the abstract class for storing.
      *
      * Instead of the mother class, this class accepts no parameter, this is due to the nature
@@ -69,10 +69,10 @@ class Nebucord_Model_REST extends Nebucord_Model implements Nebucord_IModelREST
     /**
      * Gets current request status type
      *
-     * Returns the REST request type based on Nebucord_Status class.
+     * Returns the REST request type based on StatusList class.
      *
-     * @see Nebucord_Status
-     * @return string The Nebucord_Status of the current REST request.
+     * @return string The StatusList of the current REST request.
+     *@see StatusList
      */
     public function getStatusType()
     {
@@ -80,7 +80,7 @@ class Nebucord_Model_REST extends Nebucord_Model implements Nebucord_IModelREST
     }
 
     /**
-     * Nebucord_Model destructor.
+     * Model destructor.
      *
      * Cleas everything up on end.
      */
@@ -107,8 +107,8 @@ class Nebucord_Model_REST extends Nebucord_Model implements Nebucord_IModelREST
      * Gets the full current REST API endpoint. Mostly used for internal
      * https requests to the gateway.
      *
-     * @see Nebucord_RESTHTTPClient
      * @return string The full REST endpoint.
+     *@see HttpClient
      */
     public function getApiEndpoint()
     {
@@ -125,8 +125,8 @@ class Nebucord_Model_REST extends Nebucord_Model implements Nebucord_IModelREST
      */
     public function setRequestType(string $requesttype)
     {
-        if(!in_array($requesttype, Nebucord_RESTBase_Abstract::SENDREQUEST_TYPES)) {
-            throw new \Exception("Unsupported request type set: ".$requesttype.", class: Nebucord_Model_REST");
+        if(!in_array($requesttype, AbstractBase::SENDREQUEST_TYPES)) {
+            throw new \Exception("Unsupported request type set: ".$requesttype.", class: ModelREST");
         }
         $this->_request_type = $requesttype;
     }
@@ -149,14 +149,14 @@ class Nebucord_Model_REST extends Nebucord_Model implements Nebucord_IModelREST
      * Stores the given array into the model. This method is derived from the parent
      * to setup specifically the REST http request type and api endpoint.
      *
-     * @see Nebucord_Model_Abstract::populate()
      * @param array $data The Data to be stored in the model
      * @throws \Exception If the http request type (POST, PUT, etc.) is not known, the exception is thrown.
+     *@see AbstractModel::populate()
      */
     public function populate(array $data)
     {
         parent::populate($data);
-        $this->setRequestType(Nebucord_RESTBuildAPIEndpoints::setRequestType($this->_status_type));
-        $this->setApiEndpoint(Nebucord_RESTBuildAPIEndpoints::buildApiEndpoint($this->_status_type, $data));
+        $this->setRequestType(BuildApiEndpoints::setRequestType($this->_status_type));
+        $this->setApiEndpoint(BuildApiEndpoints::buildApiEndpoint($this->_status_type, $data));
     }
 }

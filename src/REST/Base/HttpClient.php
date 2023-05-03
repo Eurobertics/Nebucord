@@ -24,19 +24,19 @@
 
 namespace Nebucord\REST\Base;
 
-use Nebucord\Interfaces\Nebucord_IModelREST;
+use Nebucord\Interfaces\iModelREST;
 
 /**
- * Class Nebucord_RESTHTTPClient
+ * Class HttpClient
  *
  * The HTTP REST client, wich prepares, sends and read data from the Discord REST gateway.
  *
  * @package Nebucord\REST\Base
  */
-class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
+class HttpClient extends AbstractBase {
 
     /**
-     * Nebucord_RESTHTTPClient constructor.
+     * HttpClient constructor.
      *
      * Sets up the http client and sets user parameters.
      *
@@ -48,7 +48,7 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
     }
 
     /**
-     * Nebucord_RESTHTTPClient destructor.
+     * HttpClient destructor.
      *
      * Closes the connection on finish and cleas up the socket.
      */
@@ -72,11 +72,11 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
     /**
      * Sets REST request model for send.
      *
-     * @see Nebucord_RESTBase_Abstract::setParams()
+     * @param iModelREST $model
+     *@see AbstractBase::setParams()
      *
-     * @param Nebucord_IModelREST $model
      */
-    public function setParams(Nebucord_IModelREST $model) {
+    public function setParams(iModelREST $model) {
         $json_payload = '';
         if($model->getRequestType() != 'GET') {
             $json_payload = json_encode($model->toArray());
@@ -90,11 +90,11 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
     /**
      * Builds the request.
      *
-     * @see Nebucord_RESTBase_Abstract::buildRequest()
+     * @see AbstractBase::buildRequest()
      */
     protected function buildRequest() {
         $this->_header['Endpoint'] = "/api/v".$this->_apiver.$this->_param_endpoint;
-        if(in_array($this->_param_requesttype, Nebucord_RESTBase_Abstract::SENDREQUEST_TYPES)) {
+        if(in_array($this->_param_requesttype, AbstractBase::SENDREQUEST_TYPES)) {
             $this->_header['Headerparams'] += $this->_addition_header_post;
             $this->_header['Headerparams']['Content-Length:'] = $this->_param_contentlength;
             $this->_header['Payload'] = $this->_param_json_payload;
@@ -104,9 +104,9 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
     /**
      * HTTP header to string.
      *
-     * @see Nebucord_RESTBase_Abstract::requestToString()
-     *
      * @return string
+     *@see AbstractBase::requestToString()
+     *
      */
     protected function requestToString() {
         $header = $this->_param_requesttype." ".$this->_header['Endpoint']." ".$this->_httpproto."\r\n";
@@ -121,7 +121,7 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
     /**
      * Connects to the REST gateway.
      *
-     * @see Nebucord_RESTBase_Abstract::connect()
+     * @see AbstractBase::connect()
      */
     protected function connect() {
         $socket = fsockopen($this->_apiurl, 443, $errno, $errstr, 10);
@@ -131,8 +131,8 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
     /**
      * Sends the header request.
      *
-     * @see Nebucord_RESTBase_Abstract::send()
      * @return integer
+     *@see AbstractBase::send()
      */
     protected function send() {
         $this->buildRequest();
@@ -144,9 +144,9 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
     /**
      * Receives data from the gateway.
      *
-     * @see Nebucord_RESTBase_Abstract::receive()
-     *
      * @return array Of the received header.
+     *@see AbstractBase::receive()
+     *
      */
     protected function receive() {
         $recdata = $buffer = fread($this->_socket, self::$BUFFERSIZE);
@@ -160,10 +160,10 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
     /**
      * Parses the response header.
      *
-     * @see Nebucord_RESTBase_Abstract::parseResponse()
-     *
      * @param string $response
      * @return array
+     *@see AbstractBase::parseResponse()
+     *
      */
     protected function parseResponse($response) {
         $res = [];
@@ -188,9 +188,9 @@ class Nebucord_RESTHTTPClient extends Nebucord_RESTBase_Abstract {
     /**
      * Executes the REST request.
      *
-     * @see Nebucord_RESTBase_Abstract::execute()
-     *
      * @return array
+     *@see AbstractBase::execute()
+     *
      */
     public function execute() {
         $this->connect();

@@ -24,11 +24,11 @@
 
 namespace Nebucord\REST\Base;
 
-use Nebucord\Base\Nebucord_Status;
-use Nebucord\Models\Nebucord_Model_REST;
+use Nebucord\Base\StatusList;
+use Nebucord\Models\ModelREST;
 
 /**
- * Class Nebucord_RESTBuildAPIEndpoints
+ * Class BuildApiEndpoints
  *
  * This class holds every REST request type and API endpoints for the factory class.
  *
@@ -36,7 +36,7 @@ use Nebucord\Models\Nebucord_Model_REST;
  *
  * @package Nebucord\REST\Base
  */
-abstract class Nebucord_RESTBuildAPIEndpoints
+abstract class BuildApiEndpoints
 {
 
     /**
@@ -45,15 +45,15 @@ abstract class Nebucord_RESTBuildAPIEndpoints
      * This method is responsible for loading the CSV file with all
      * REST API data and to build the API endpoint.
      *
-     * @see Nebucord_Status for $apiendpoint
-     * @see Nebucord_Model_REST::toArray() for $param the be used
-     * @param string $apiendpoint A Nebucord_Status REST request const which sets the API endpoint to be build
-     * @param array $param The data used to build the API endpoint such as channel ids, guild ids limits and such things (mostly generated from Nebucord_Model_REST::toArray()
+     * @param string $apiendpoint A StatusList REST request const which sets the API endpoint to be build
+     * @param array $param The data used to build the API endpoint such as channel ids, guild ids limits and such things (mostly generated from ModelREST::toArray()
      * @return string The finished API endpoint ready to use for the REST HTTP client
+     *@see ModelREST::toArray() for $param the be used
+     * @see StatusList for $apiendpoint
      */
     public static function buildApiEndpoint(string $apiendpoint, array $param = array())
     {
-        $oRestArrayLoader = new Nebucord_RESTAPIEndpointsLoader();
+        $oRestArrayLoader = new ApiEndpointListLoader();
         $restarray = $oRestArrayLoader->getRestArray();
         $endpoint = $restarray[$apiendpoint][1];
         foreach($param as $pkey => $pvalue) {
@@ -68,13 +68,13 @@ abstract class Nebucord_RESTBuildAPIEndpoints
      * After loading the CSV file for the API endpoints, the request type is from the given
      * $apiendpoint var extracted and returned.
      *
-     * @see Nebucord_Status for $apiendpoint
-     * @see Nebucord_RESTBase_Abstract for possible request types
-     * @param string $apiendpoint A Nebucord_Status REST request const which sets the API endpoint to be build
+     * @param string $apiendpoint A StatusList REST request const which sets the API endpoint to be build
      * @return string The given request type ready to use for the REST HTTP client (such as GET, POST, PUT, etc.)
+     *@see StatusList for $apiendpoint
+     * @see AbstractBase for possible request types
      */
     public static function setRequestType(string $apiendpoint) {
-        $oRestArrayLoader = new Nebucord_RESTAPIEndpointsLoader();
+        $oRestArrayLoader = new ApiEndpointListLoader();
         $restarray = $oRestArrayLoader->getRestArray();
         return $restarray[$apiendpoint][0];
     }

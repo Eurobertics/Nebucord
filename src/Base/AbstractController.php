@@ -25,16 +25,16 @@
 namespace Nebucord\Base;
 
 /**
- * Class Nebucord_Controller_Abstract
+ * Class AbstractController
  *
  * Abstract base controller class for the Nebucord controller classes.
  *
  * @package Nebucord\Base
  */
-abstract class Nebucord_Controller_Abstract {
+abstract class AbstractController {
 
     /**
-     * Nebucord_Controller_Abstract constructor.
+     * AbstractController constructor.
      *
      * Constructor to be used for inherited classes. Currently empty.
      */
@@ -42,7 +42,7 @@ abstract class Nebucord_Controller_Abstract {
     }
 
     /**
-     * Nebucord_Controller_Abstract constructor.
+     * AbstractController constructor.
      *
      * Constructor to be used for inherited classes. Currently empty.
      */

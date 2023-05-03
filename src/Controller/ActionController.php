@@ -24,14 +24,14 @@
 
 namespace Nebucord\Controller;
 
-use Nebucord\Base\Nebucord_Controller_Abstract;
-use Nebucord\Base\Nebucord_Status;
-use Nebucord\Interfaces\Nebucord_IActionTable;
-use Nebucord\Factories\Nebucord_Model_Factory;
-use Nebucord\Models\Nebucord_Model;
+use Nebucord\Base\AbstractController;
+use Nebucord\Base\StatusList;
+use Nebucord\Interfaces\iActionTable;
+use Nebucord\Factories\ModelFactory;
+use Nebucord\Models\Model;
 
 /**
- * Class Nebucord_ActionController
+ * Class ActionController
  *
  * Nebucord has build in actions, wich can be extended beside the event table, if needed. This class controls
  * the action and creates the models wich are needed to send to the server.
@@ -40,15 +40,15 @@ use Nebucord\Models\Nebucord_Model;
  *
  * @package Nebucord\Controller
  */
-class Nebucord_ActionController extends Nebucord_Controller_Abstract {
+class ActionController extends AbstractController {
 
-    /** @var object|Nebucord_Model $_inevent The incoming event model from the Discord gateway. */
+    /** @var object|Model $_inevent The incoming event model from the Discord gateway. */
     private $_inevent;
 
-    /** @var object|Nebucord_Model $_outevent The event model wich is in turn send to the gateway.  */
+    /** @var object|Model $_outevent The event model wich is in turn send to the gateway.  */
     private $_outevent;
 
-    /** @var object|Nebucord_IActionTable Internal events (maybe overwritten) to perfom actions. */
+    /** @var object|iActionTable Internal events (maybe overwritten) to perfom actions. */
     private $_acttbl;
 
     /** @var string The token parameter wich identifys the bot on OP_IDENTIFY. */
@@ -73,11 +73,11 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
     private $_sessionid;
 
     /**
-     * Nebucord_ActionController constructor.
+     * ActionController constructor.
      *
      * Creates and clears the basics of the controller.
      *
-     * @param object|Nebucord_IActionTable $acttbl The action table to perfom actions.
+     * @param object|iActionTable $acttbl The action table to perfom actions.
      * @param array $params The parameter wich are given on Nebucord initialising (token, user, etc.).
      */
     public function __construct(&$acttbl, array $params = array()) {
@@ -89,7 +89,7 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
         $this->_botuserid = 0;
         $this->_ctrlusr = array();
         $this->_intents = null;
-        $this->_state = Nebucord_Status::NC_RUN;
+        $this->_state = StatusList::NC_RUN;
         $this->_sequence = 0;
         $this->_sessionid = null;
 
@@ -104,7 +104,7 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
     }
 
     /**
-     * Nebucord_ActionController constructor.
+     * ActionController constructor.
      *
      * Cleans up all actions after disconnecting and ending.
      */
@@ -117,7 +117,7 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
         $this->_botuserid = 0;
         $this->_ctrlusr = array();
         $this->_intents = null;
-        $this->_state = Nebucord_Status::NC_EXIT;
+        $this->_state = StatusList::NC_EXIT;
         $this->_sequence = 0;
         $this->_sessionid = null;
     }
@@ -162,10 +162,10 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
      * Sets the action wich should be fired based on the incoming event from the gateway.
      * After that, it executes the selection of an action.
      *
-     * @param object|Nebucord_Model $event The event model to determine the actions.
+     * @param object|Model $event The event model to determine the actions.
      * @param integer $state The current state in wich the API is currently.
      */
-    public function setInternalAction(Nebucord_Model $event, $state = 1) {
+    public function setInternalAction(Model $event, $state = 1) {
         $this->_inevent = $event;
         $this->_state = $state;
         $this->selectInternalAction();
@@ -177,7 +177,7 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
      * Based on the action table and the incoming gateway event, this method returns the calcualted model
      * with the answer action to be fired to the gateway.
      *
-     * @return Nebucord_Model The model to send to the gateway wich the action to be performed.
+     * @return Model The model to send to the gateway wich the action to be performed.
      */
     public function getInternalActionEvent() {
         return $this->_outevent;
@@ -191,10 +191,10 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
      */
     private function selectInternalAction() {
         switch($this->_inevent->op) {
-            case Nebucord_Status::OP_DISPATCH: $this->doDispatch(); break;
-            case Nebucord_Status::OP_HELLO: $this->doIdentify(); break;
-            case Nebucord_Status::OP_RECONNECT: $this->doReconnect(); break;
-            case Nebucord_Status::OP_HEARTBEAT_ACK: $this->doHeartbeatACK(); break;
+            case StatusList::OP_DISPATCH: $this->doDispatch(); break;
+            case StatusList::OP_HELLO: $this->doIdentify(); break;
+            case StatusList::OP_RECONNECT: $this->doReconnect(); break;
+            case StatusList::OP_HEARTBEAT_ACK: $this->doHeartbeatACK(); break;
             default: $this->_inevent = null; $this->_outevent = null; break;
         }
     }
@@ -206,8 +206,8 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
      */
     private function doDispatch() {
         switch($this->_inevent->t) {
-            case Nebucord_Status::GWEVT_RESUMED: $this->onResume(); break;
-            case Nebucord_Status::GWEVT_MESSAGE_CREATE: $this->onCreateMessageCommand(); break;
+            case StatusList::GWEVT_RESUMED: $this->onResume(); break;
+            case StatusList::GWEVT_MESSAGE_CREATE: $this->onCreateMessageCommand(); break;
             default: $this->_inevent = null; $this->_outevent = null; break;
         }
     }
@@ -218,12 +218,12 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
      * This internal action authenticates and identifies a bot to the Discord Gateway.
      */
     private function doIdentify() {
-        if($this->_state == Nebucord_Status::NC_RECONNECT) {
-            $this->_outevent = Nebucord_Model_Factory::create(Nebucord_Status::OP_RESUME);
-            $this->_outevent->populate(['op' => Nebucord_Status::OP_RESUME, 'd' => ['token' => $this->_token, 'session_id' => $this->_sessionid, 'seq' => $this->_sequence]]);
+        if($this->_state == StatusList::NC_RECONNECT) {
+            $this->_outevent = ModelFactory::create(StatusList::OP_RESUME);
+            $this->_outevent->populate(['op' => StatusList::OP_RESUME, 'd' => ['token' => $this->_token, 'session_id' => $this->_sessionid, 'seq' => $this->_sequence]]);
         } else {
-            $this->_outevent = Nebucord_Model_Factory::create(Nebucord_Status::OP_IDENTIFY);
-            $this->_outevent->populate(['op' => Nebucord_Status::OP_IDENTIFY, 'd' => ['token' => $this->_token, 'properties' => ['$os' => Nebucord_Status::getOS(), '$browser' => Nebucord_Status::getBrowser(), '$device' => Nebucord_Status::getDevice()], 'compress' => false, 'presence' => ['since' => null, 'game' => null, 'status' => 'online', 'afk' => false], 'intents' => $this->_intents]]);
+            $this->_outevent = ModelFactory::create(StatusList::OP_IDENTIFY);
+            $this->_outevent->populate(['op' => StatusList::OP_IDENTIFY, 'd' => ['token' => $this->_token, 'properties' => ['$os' => StatusList::getOS(), '$browser' => StatusList::getBrowser(), '$device' => StatusList::getDevice()], 'compress' => false, 'presence' => ['since' => null, 'game' => null, 'status' => 'online', 'afk' => false], 'intents' => $this->_intents]]);
         }
     }
 
@@ -234,7 +234,7 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
 
     private function onResume() {
         $this->_outevent = $this->_inevent;
-        \Nebucord\Logging\Nebucord_Logger::infoImportant("All missing events received, reconnect completed.");
+        \Nebucord\Logging\MainLogger::infoImportant("All missing events received, reconnect completed.");
     }
 
     /**
@@ -244,55 +244,55 @@ class Nebucord_ActionController extends Nebucord_Controller_Abstract {
      * not in use.
      */
     private function doHeartbeatACK() {
-        \Nebucord\Logging\Nebucord_Logger::info("Receiving heartbeat ACK.");
-        $this->_outevent = Nebucord_Model_Factory::create(Nebucord_Status::OP_HEARTBEAT_ACK);
-        $this->_outevent->populate(['op' => Nebucord_Status::OP_HEARTBEAT_ACK]);
+        \Nebucord\Logging\MainLogger::info("Receiving heartbeat ACK.");
+        $this->_outevent = ModelFactory::create(StatusList::OP_HEARTBEAT_ACK);
+        $this->_outevent->populate(['op' => StatusList::OP_HEARTBEAT_ACK]);
     }
 
     /**
      * Select action table action on getting a message.
      *
      * On a MESSAGE_CREATE event from the gateway, the action how it should respond is dertermined here.
-     * The methods are described in the Nebucord_ActionTable class and can be overwritten.
+     * The methods are described in the ActionTable class and can be overwritten.
      */
     private function onCreateMessageCommand() {
         $msg = $this->_inevent->content;
         if($this->authControlUser() && $this->checkBotID($msg)) {
-            if (str_contains($msg, Nebucord_IActionTable::SHUTDOWN)) {
-                \Nebucord\Logging\Nebucord_Logger::warn("Shutdown command received: " . $msg);
+            if (str_contains($msg, iActionTable::SHUTDOWN)) {
+                \Nebucord\Logging\MainLogger::warn("Shutdown command received: " . $msg);
                 $this->_outevent = $this->_acttbl->doShutdown($msg);
-            } else if (str_contains($msg, Nebucord_IActionTable::SETSTATUS)) {
-                \Nebucord\Logging\Nebucord_Logger::info("Setstatus command received: " . $msg);
+            } else if (str_contains($msg, iActionTable::SETSTATUS)) {
+                \Nebucord\Logging\MainLogger::info("Setstatus command received: " . $msg);
                 $this->_outevent = $this->_acttbl->setStatus($msg);
-            } else if (str_contains($msg, Nebucord_IActionTable::GETHELP)) {
-                \Nebucord\Logging\Nebucord_Logger::info("Help command received: " . $msg);
+            } else if (str_contains($msg, iActionTable::GETHELP)) {
+                \Nebucord\Logging\MainLogger::info("Help command received: " . $msg);
                 $this->_outevent = $this->_acttbl->getHelp($msg);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-            } else if (str_contains($msg, Nebucord_IActionTable::DOECHO)) {
-                \Nebucord\Logging\Nebucord_Logger::info("Echo test command received: " . $msg);
+            } else if (str_contains($msg, iActionTable::DOECHO)) {
+                \Nebucord\Logging\MainLogger::info("Echo test command received: " . $msg);
                 $this->_outevent = $this->_acttbl->doEcho($msg);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-            } else if (str_contains($msg, Nebucord_IActionTable::DOSAY)) {
-                \Nebucord\Logging\Nebucord_Logger::info("Do say command received: " . $msg);
+            } else if (str_contains($msg, iActionTable::DOSAY)) {
+                \Nebucord\Logging\MainLogger::info("Do say command received: " . $msg);
                 $this->_outevent = $this->_acttbl->doSay($msg);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-            } else if (str_contains($msg, Nebucord_IActionTable::DOSTATUS)) {
-                \Nebucord\Logging\Nebucord_Logger::info("Get status command received: " . $msg);
+            } else if (str_contains($msg, iActionTable::DOSTATUS)) {
+                \Nebucord\Logging\MainLogger::info("Get status command received: " . $msg);
                 $this->_outevent = $this->_acttbl->doStatus($msg);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-            } else if (str_contains($msg, Nebucord_IActionTable::DOREBOOT)) {
-                \Nebucord\Logging\Nebucord_Logger::warn("Reboot command received: " . $msg);
-                \Nebucord\Logging\Nebucord_Logger::warn("Rebooting and reconnecting Nebucord to Discord...");
+            } else if (str_contains($msg, iActionTable::DOREBOOT)) {
+                \Nebucord\Logging\MainLogger::warn("Reboot command received: " . $msg);
+                \Nebucord\Logging\MainLogger::warn("Rebooting and reconnecting Nebucord to Discord...");
                 $this->_outevent = $this->_acttbl->doRestart($msg);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id, 'reboot' => true]);
-            } else if (str_contains($msg, Nebucord_IActionTable::DOLISTAPPCOMMANDS)) {
-                \Nebucord\Logging\Nebucord_Logger::info("List application command received: " . $msg);
+            } else if (str_contains($msg, iActionTable::DOLISTAPPCOMMANDS)) {
+                \Nebucord\Logging\MainLogger::info("List application command received: " . $msg);
                 $this->_outevent = $this->_acttbl->doListAppCommands($msg, $this->_botuserid, $this->_token, $this->_inevent->guild_id);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
             }
         }
-        if (str_contains($msg, Nebucord_IActionTable::DOVERSION)) {
-            \Nebucord\Logging\Nebucord_Logger::info("Do version command received: " . $msg);
+        if (str_contains($msg, iActionTable::DOVERSION)) {
+            \Nebucord\Logging\MainLogger::info("Do version command received: " . $msg);
             $this->_outevent = $this->_acttbl->doVersion($msg);
             $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
         }

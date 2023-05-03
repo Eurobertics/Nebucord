@@ -24,20 +24,20 @@
 
 namespace Nebucord\Base;
 
-use Nebucord\Events\Nebucord_EventTable;
+use Nebucord\Events\EventTable;
 
 /**
- * Class Nebucord_EventTable_Base_Abstract
+ * Class AbstractEventTable
  *
  * This is the abstract base class for an event table, wich holds the callbacks to be fired on
  * various gateway events.
  *
  * @package Nebucord\Base
  */
-abstract class Nebucord_EventTable_Base_Abstract {
+abstract class AbstractEventTable {
 
     /**
-     * Nebucord_EventTable_Base_Abstract constructor.
+     * AbstractEventTable constructor.
      *
      * Constructor for the event table.
      */
@@ -45,7 +45,7 @@ abstract class Nebucord_EventTable_Base_Abstract {
     }
 
     /**
-     * Nebucord_EventTable_Base_Abstract constructor.
+     * AbstractEventTable constructor.
      *
      * Destructor for the event table.
      */
@@ -63,8 +63,8 @@ abstract class Nebucord_EventTable_Base_Abstract {
      *
      * @param mixed $class The class of the method wich should be executed.
      * @param string $method The method of the given class wich should be fired.
-     * @param object Nebucord_Status $gwevent The gatway event on wich the callback will be executed (as of Nebucord::<GWEVT_*>).
-     * @param integer Nebucord_Status $opcode The opcode from the gateway on wich the callback will be executed (as of Nebucord::<OP_*>).
+     * @param object StatusList $gwevent The gatway event on wich the callback will be executed (as of Nebucord::<GWEVT_*>).
+     * @param integer StatusList $opcode The opcode from the gateway on wich the callback will be executed (as of Nebucord::<OP_*>).
      * @return null
      */
     abstract public function addEvent($class, $method, $gwevent, $opcode);
@@ -74,7 +74,7 @@ abstract class Nebucord_EventTable_Base_Abstract {
      *
      * Abstract delcaration.
      *
-     * @see Nebucord_EventTable::getEvents()
+     * @see EventTable::getEvents()
      */
     /**
      * Returns an array of stored callbacks.
@@ -84,7 +84,7 @@ abstract class Nebucord_EventTable_Base_Abstract {
      *
      * Callbacks are stored on stacks separeted by OP code.
      *
-     * @param object Nebucord_Status|integer $opcode The opcode to determine the callback stack.
+     * @param object StatusList|integer $opcode The opcode to determine the callback stack.
      * @return array|mixed The callback array stored on the give OP stack.
      */
     abstract public function getEvents($opcode);

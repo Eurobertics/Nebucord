@@ -164,8 +164,8 @@ class MessageInterceptorClass {
     }
 }
 
-$nebucordEventTable = \Nebucord\Events\Nebucord_EventTable::create();
-$nebucordEventTable->addEvent(new MessageInterceptorClass, "onMessageReceive", \Nebucord\Base\Nebucord_Status::GWEVT_MESSAGE_CREATE);
+$nebucordEventTable = \Nebucord\Events\EventTable::create();
+$nebucordEventTable->addEvent(new MessageInterceptorClass, "onMessageReceive", \Nebucord\Base\StatusList::GWEVT_MESSAGE_CREATE);
 
 $nebucord = new Nebucord(['token' => 'your_bot_token', 'ctrlusr' => ['controluser-snowflake1', 'controluser-snowflake2']]);
 $nebucord->bootstrap()
@@ -187,7 +187,7 @@ user@linux:~# php -f <your_php_file>.php
  ---------------------------
  
 Basic usage for sending a message:
- 
+
  ```php
 <?php
 include "vendor/autoload.php"; // Composer autloader
@@ -196,7 +196,7 @@ use Nebucord\NebucordREST;
 
 $nebucordREST = new NebucordREST(['token' => 'your_bot_token']);
 $message_model = $nebucordREST->createRESTExecutor()->createRESTActionFromArray(
-    \Nebucord\REST\Base\Nebucord_RESTStatus::REST_CREATE_MESSAGE,
+    \Nebucord\REST\Base\RestStatusList::REST_CREATE_MESSAGE,
     [
         'channel_id' => 123123123123,
         'content' => "message"
@@ -207,7 +207,7 @@ $message_model = $nebucordREST->createRESTExecutor()->createRESTActionFromArray(
 "$message_model" is an object with the answer from the REST gateway.
 
 Basic usage for receiving guild channels:
- 
+
  ```php
 <?php
 include "vendor/autoload.php";
@@ -216,7 +216,7 @@ use Nebucord\NebucordREST;
 
 $nebucordREST = new NebucordREST(['token' => 'your_bot_token']);
 $channels = $nebucordREST->createRESTExecutor()->createRESTActionFromArray(
-    \Nebucord\REST\Base\Nebucord_RESTStatus::REST_GET_GUILD_CHANNELS,
+    \Nebucord\REST\Base\RestStatusList::REST_GET_GUILD_CHANNELS,
     [
         'guild_id' => 123123123123123,
     ]
@@ -226,8 +226,8 @@ $channels = $nebucordREST->createRESTExecutor()->createRESTActionFromArray(
 "$channels" is an array of channel models for processing.
 
 `createRESTExecutor()` returns an object which can be re-used for creating REST request.  
-It is also possible to create a REST request with `createRESTAction(string Nebucord_RESTStatus::REST_*, Nebucord_Model_REST $restmodel)`
-instead of `createRESTActionFromArray(string Nebucord_RESTStatus::REST_*, array $restparams)` and pass a predefined `Nebucord_Model_REST` object with all params for the REST gateway.
+It is also possible to create a REST request with `createRESTAction(string Nebucord_RESTStatus::REST_*, ModelREST $restmodel)`
+instead of `createRESTActionFromArray(string Nebucord_RESTStatus::REST_*, array $restparams)` and pass a predefined `ModelREST` object with all params for the REST gateway.
 
 More info
 ---------

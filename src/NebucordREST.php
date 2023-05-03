@@ -24,9 +24,9 @@
 
 namespace Nebucord;
 
-use Nebucord\Base\Nebucord_Configloader;
-use Nebucord\REST\Action\Nebucord_RESTExecutor;
-use Nebucord\REST\Base\Nebucord_RESTHTTPClient;
+use Nebucord\Base\Configloader;
+use Nebucord\REST\Action\Executor;
+use Nebucord\REST\Base\HttpClient;
 
 /**
  * Class NebucordREST (REST part)
@@ -77,7 +77,7 @@ class NebucordREST {
      */
     public function bootstrap(string $configfile = 'nebucord.ini', string $configpath = './') {
         if(count($this->_params) == 0) {
-            $this->_config = new Nebucord_Configloader($configfile, $configpath);
+            $this->_config = new Configloader($configfile, $configpath);
             $this->_params = $this->_config->returnParams();
         }
         return $this;
@@ -90,12 +90,12 @@ class NebucordREST {
      * REST request to the Discord REST gateway.
      * This includes also the base preparing of the http client for REST.
      *
-     * @return Nebucord_RESTExecutor The REST executor for performing the REST request.
+     * @return Executor The REST executor for performing the REST request.
      */
     public function createRESTExecutor()
     {
-        $httpclient = new Nebucord_RESTHTTPClient($this->_params);
+        $httpclient = new HttpClient($this->_params);
         $httpclient->setupBaseHeader();
-        return new Nebucord_RESTExecutor($httpclient);
+        return new Executor($httpclient);
     }
 }

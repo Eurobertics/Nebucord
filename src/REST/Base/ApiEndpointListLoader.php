@@ -27,7 +27,7 @@ namespace Nebucord\REST\Base;
 use Connfetti\IO\Reader\CSVReader;
 
 /**
- * Class Nebucord_RESTAPIEndpointsLoader
+ * Class ApiEndpointListLoader
  *
  * This class is responsible for loading the CSV file containing the API endpoints and request methods for the
  * REST gateway.
@@ -36,7 +36,7 @@ use Connfetti\IO\Reader\CSVReader;
  *
  * @package Nebucord\REST\Base
  */
-class Nebucord_RESTAPIEndpointsLoader
+class ApiEndpointListLoader
 {
     /** @var CSVReader $fileloader The Confetti-IO file reader. */
     private $fileloader;
@@ -45,7 +45,7 @@ class Nebucord_RESTAPIEndpointsLoader
     private $restdata = array();
 
     /**
-     * Nebucord_RESTAPIEndpointsLoader constructor
+     * ApiEndpointListLoader constructor
      *
      * loads needed ressources and sets everything up for this class.
      */
@@ -57,7 +57,7 @@ class Nebucord_RESTAPIEndpointsLoader
     }
 
     /**
-     * Nebucord_RESTAPIEndpointsLoader destructor
+     * ApiEndpointListLoader destructor
      *
      * releases ressource after finishing everything.
      */

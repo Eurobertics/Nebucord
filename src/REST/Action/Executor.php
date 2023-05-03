@@ -24,35 +24,35 @@
 
 namespace Nebucord\REST\Action;
 
-use Nebucord\Base\Nebucord_Status;
-use Nebucord\Factories\Nebucord_Model_Factory;
-use Nebucord\Models\Nebucord_Model;
-use Nebucord\Models\Nebucord_Model_REST;
-use Nebucord\REST\Base\Nebucord_RESTAction;
-use Nebucord\REST\Base\Nebucord_RESTHTTPClient;
+use Nebucord\Base\StatusList;
+use Nebucord\Factories\ModelFactory;
+use Nebucord\Models\Model;
+use Nebucord\Models\ModelREST;
+use Nebucord\REST\Base\Action;
+use Nebucord\REST\Base\HttpClient;
 
 /**
- * Class Nebucord_RESTExecutor
+ * Class Executor
  *
  * Creates and executes all kinds of REST requests to the API gateway.
- * It just needs a REST type (from type Nebucord_Status) and a prepared model
- * (from type Nebucord_Model).
+ * It just needs a REST type (from type StatusList) and a prepared model
+ * (from type Model).
  *
- * @see Nebucord_Status
- * @see Nebucord_Model
+ * @see StatusList
+ * @see Model
  * @package Nebucord\REST\Action
  */
-class Nebucord_RESTExecutor extends Nebucord_RESTAction
+class Executor extends Action
 {
-    /** @var Nebucord_Model|array|null $returnmodel Holds the model data on REST request return (maybe as a array of data) or null if empty/error. */
+    /** @var Model|array|null $returnmodel Holds the model data on REST request return (maybe as a array of data) or null if empty/error. */
     private $returnmodel = null;
 
     /**
-     * Nebucord_RESTExecutor constructor
+     * Executor constructor
      *
      * Sets up the HTTP client for the request and gather ressource associated with it.
      *
-     * @param $httpclient Nebucord_RESTHTTPClient HTTP client to perform the REST request.
+     * @param $httpclient HttpClient HTTP client to perform the REST request.
      */
     public function __construct(&$httpclient) {
         parent::__construct();
@@ -60,7 +60,7 @@ class Nebucord_RESTExecutor extends Nebucord_RESTAction
     }
 
     /**
-     * Nebucord_RESTExecutor destructor
+     * Executor destructor
      *
      * Frees the executor and the needed models after end.
      */
@@ -76,14 +76,14 @@ class Nebucord_RESTExecutor extends Nebucord_RESTAction
      * This function compbines the single request steps into one an returns
      * the data directly through the proxy class (NebucordREST::createRESTexecutor() if used).
      *
-     * @see Nebucord_Model_REST
-     * @see Nebucord_Status
-     * @param string $requesttype The request type based on Nebucord_Status.
-     * @param Nebucord_Model_REST $requestmodel The prepared model with data to be send to the rest gateway.
-     * @return Nebucord_Model|array|null The data returned from the request (maybe as an array of data) or null if nothing is available.
-     * @throws \Exception Throws an exception if the Nebucord_Model_REST is wrong.
+     * @param string $requesttype The request type based on StatusList.
+     * @param ModelREST $requestmodel The prepared model with data to be send to the rest gateway.
+     * @return Model|array|null The data returned from the request (maybe as an array of data) or null if nothing is available.
+     * @throws \Exception Throws an exception if the ModelREST is wrong.
+     *@see  ModelREST
+     * @see StatusList
      */
-    public function execute(string $requesttype, Nebucord_Model_REST $requestmodel)
+    public function execute(string $requesttype, ModelREST $requestmodel)
     {
         $this->createRESTAction($requesttype, $requestmodel);
         $this->executeREST();
@@ -95,15 +95,15 @@ class Nebucord_RESTExecutor extends Nebucord_RESTAction
      *
      * This function compbines the single request steps into one an returns
      * the data directly through the proxy class (NebucordREST::createRESTexecutor() if used).
-     * This method is an alternative to the Nebucord_RESTExecutor::execute() method, where
+     * This method is an alternative to the Executor::execute() method, where
      * payload can be passed as array instead of a model.
      *
-     * @see Nebucord_Model_REST
-     * @see Nebucord_Status
-     * @param string $requesttype The request type based on Nebucord_Status.
+     * @param string $requesttype The request type based on StatusList.
      * @param array $param The payload for the request to be send to the gatewqy.
-     * @return Nebucord_Model|array|null The data returned from the request (maybe as an array of data) or null if nothing is available.
-     * @throws \Exception Throws an exception if the Nebucord_Model_REST is wrong.
+     * @return Model|array|null The data returned from the request (maybe as an array of data) or null if nothing is available.
+     * @throws \Exception Throws an exception if the ModelREST is wrong.
+     *@see  ModelREST
+     * @see StatusList
      */
     public function executeFromArray(string $requesttype, array $params)
     {
@@ -115,18 +115,18 @@ class Nebucord_RESTExecutor extends Nebucord_RESTAction
     /**
      * Creates the REST request
      *
-     * Sets up the HTTP client for the rest request based on the given Nebucord_Model_REST and
-     * Nebucord_Status.
+     * Sets up the HTTP client for the rest request based on the given ModelREST and
+     * StatusList.
      *
-     * @see Nebucord_Model_REST
-     * @see Nebucord_Status
-     * @param string $requesttype The request type based on Nebucord_Status.
-     * @param Nebucord_Model_REST $requestmodel The prepared model with data to be send to the rest gateway.
-     * @throws \Exception Throws an exception if the Nebucord_Model_REST is wrong.
+     * @param string $requesttype The request type based on StatusList.
+     * @param ModelREST $requestmodel The prepared model with data to be send to the rest gateway.
+     * @throws \Exception Throws an exception if the ModelREST is wrong.
+     *@see StatusList
+     * @see ModelREST
      */
-    public function createRESTAction(string $requesttype, Nebucord_Model_REST $requestmodel)
+    public function createRESTAction(string $requesttype, ModelREST $requestmodel)
     {
-        $oRequestModel = Nebucord_Model_Factory::createREST($requesttype);
+        $oRequestModel = ModelFactory::createREST($requesttype);
         $oRequestModel->populate($requestmodel->toArray());
         $this->_httpclient->setParams($requestmodel);
     }
@@ -135,17 +135,17 @@ class Nebucord_RESTExecutor extends Nebucord_RESTAction
      * Creates the REST request (array version)
      *
      * Sets up the HTTP client for the rest request based on the given array and
-     * Nebucord_Status.
+     * StatusList.
      * This method is an alternative to the Nebucord::createRestAction method within this class.
      *
-     * @see Nebucord_Status
-     * @param string $requesttype The request type based on Nebucord_Status.
+     * @param string $requesttype The request type based on StatusList.
      * @param array $param The payload for the request to be send to the gatewqy.
-     * @throws \Exception Throws an exception if the Nebucord_Model_REST is wrong.
+     * @throws \Exception Throws an exception if the ModelREST is wrong.
+     *@see StatusList
      */
     public function createRESTActionFromArray(string $requesttype, array $param)
     {
-        $oRequestModel = Nebucord_Model_Factory::createREST($requesttype);
+        $oRequestModel = ModelFactory::createREST($requesttype);
         $oRequestModel->populate($param);
         $this->_httpclient->setParams($oRequestModel);
     }
@@ -161,13 +161,13 @@ class Nebucord_RESTExecutor extends Nebucord_RESTAction
         $res = $this->_httpclient->execute();
         if(!is_null($res[1])) {
             if (count($res[1]) > 0 && self::checkReturnArrayType($res[1])) {
-                $this->returnmodel = Nebucord_Model_Factory::create();
+                $this->returnmodel = ModelFactory::create();
                 $this->returnmodel->populate($res[1]);
                 $this->returnmodel->http_status_code = $res[0];
                 return;
             } else {
                 for ($i = 0; $i < count($res[1]); $i++) {
-                    $tmpmodel = Nebucord_Model_Factory::create();
+                    $tmpmodel = ModelFactory::create();
                     $tmpmodel->populate($res[1][$i]);
                     $tmpmodel->http_status_code = $res[0];
                     $this->returnmodel[] = $tmpmodel;
@@ -176,7 +176,7 @@ class Nebucord_RESTExecutor extends Nebucord_RESTAction
                 return;
             }
         }
-        $this->returnmodel = Nebucord_Model_Factory::create();
+        $this->returnmodel = ModelFactory::create();
         $this->returnmodel->http_status_code = $res[0];
     }
 
@@ -186,7 +186,7 @@ class Nebucord_RESTExecutor extends Nebucord_RESTAction
      * After sending the request and the data is stored, this method returns the private model with
      * the data if any data available. If no data is available, the model should be null.
      *
-     * @return Nebucord_Model|array|null The data returned from the request (maybe as an array of data) or null if nothing is available.
+     * @return Model|array|null The data returned from the request (maybe as an array of data) or null if nothing is available.
      */
     public function getRESTResponse()
     {

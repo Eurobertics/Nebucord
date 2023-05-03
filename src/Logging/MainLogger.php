@@ -24,16 +24,16 @@
 
 namespace Nebucord\Logging;
 
-use Nebucord\Base\Nebucord_Status;
+use Nebucord\Base\StatusList;
 
 /**
- * Class Nebucord_Logger
+ * Class MainLogger
  *
  * Simple logger class with some fancy color settings for CLI. Supports log file size for log splitting as well.
  *
  * @package Nebucord\Log
  */
-class Nebucord_Logger {
+class MainLogger {
 
     /** @var string|null $_logfilename The logfilename for logging further than CLI only.*/
     private $_logfilename;
@@ -85,13 +85,13 @@ class Nebucord_Logger {
      * Logs an info as static method.
      *
      * For convenient usage of logging.
-     * @see Nebucord_Logger::logInfo()
-     *
      * @param string $message
      * @param string|null $logfilename
+     *@see MainLogger::logInfo()
+     *
      */
     public static function info($message, $logfilename = null) {
-        $instance = new Nebucord_Logger($logfilename);
+        $instance = new MainLogger($logfilename);
         $instance->logInfo($message);
         unset($instance);
     }
@@ -100,13 +100,13 @@ class Nebucord_Logger {
      * Logs an important info as static method.
      *
      * For convenient usage of logging.
-     * @see Nebucord_Logger::logInfoImportant()
-     *
      * @param string $message
      * @param string|null $logfilename
+     *@see MainLogger::logInfoImportant()
+     *
      */
     public static function infoImportant($message, $logfilename = null) {
-        $instance = new Nebucord_Logger($logfilename);
+        $instance = new MainLogger($logfilename);
         $instance->logInfoImportant($message);
         unset($instance);
     }
@@ -115,13 +115,13 @@ class Nebucord_Logger {
      * Logs a warn message as static method.
      *
      * For convenient usage of logging.
-     * @see Nebucord_Logger::logWarn()
-     *
      * @param string $message
      * @param string|null $logfilename
+     *@see MainLogger::logWarn()
+     *
      */
     public static function warn($message, $logfilename = null) {
-        $instance = new Nebucord_Logger($logfilename);
+        $instance = new MainLogger($logfilename);
         $instance->logWarn($message);
         unset($instance);
     }
@@ -130,19 +130,19 @@ class Nebucord_Logger {
      * Logs an error message as static method.
      *
      * For convenient usage of logging.
-     * @see Nebucord_Logger::logError()
-     *
      * @param string $message
      * @param string|null $logfilename
+     *@see MainLogger::logError()
+     *
      */
     public static function error($message, $logfilename = null) {
-        $instance = new Nebucord_Logger($logfilename);
+        $instance = new MainLogger($logfilename);
         $instance->logError($message);
         unset($instance);
     }
 
     /**
-     * Nebucord_Logger constructor.
+     * MainLogger constructor.
      *
      * Starts the logger and opens a logfile if given.
      *
@@ -151,12 +151,12 @@ class Nebucord_Logger {
     public function __construct($logfilename = null) {
         if(!is_null($logfilename)) {
             $this->_logfilename = $logfilename;
-            $this->_fd = fopen(Nebucord_Logger::LOGFILE_PATH.$this->_logfilename, "a+");
+            $this->_fd = fopen(MainLogger::LOGFILE_PATH.$this->_logfilename, "a+");
         }
     }
 
     /**
-     * Nebucord_Logger destructor.
+     * MainLogger destructor.
      *
      * Cleans everything up after ending and closes the logfile if there was one.
      */
@@ -176,7 +176,7 @@ class Nebucord_Logger {
      * @param bool $logtofile If true, $message will be written into logfile, otherweise only visible on CLI.
      */
     public function logInfo($message, $logtofile = false) {
-        $msg = $this->logMsgPrepend($message, Nebucord_Logger::LOG_INFO);
+        $msg = $this->logMsgPrepend($message, MainLogger::LOG_INFO);
 
         echo $msg."\n";
 
@@ -197,11 +197,11 @@ class Nebucord_Logger {
      * @param bool $logtofile If true, $message will be written into logfile, otherweise only visible on CLI.
      */
     public function logInfoImportant($message, $logtofile = false) {
-        $msg = $this->logMsgPrepend($message, Nebucord_Logger::LOG_INFO);
+        $msg = $this->logMsgPrepend($message, MainLogger::LOG_INFO);
 
-        echo Nebucord_Logger::CLI_COLOR_PREPEND.Nebucord_Logger::CLI_BLACK.Nebucord_Logger::CLI_COLOR_STRDELI.Nebucord_Logger::CLI_COLOR_PREPEND.Nebucord_Logger::CLI_BG_GREEN.Nebucord_Logger::CLI_COLOR_STRDELI;
+        echo MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_BLACK.MainLogger::CLI_COLOR_STRDELI.MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_BG_GREEN.MainLogger::CLI_COLOR_STRDELI;
         echo $msg;
-        echo Nebucord_Logger::CLI_COLOR_APPEND;
+        echo MainLogger::CLI_COLOR_APPEND;
         echo "\n";
 
         if($logtofile && is_resource($this->_fd)) {
@@ -221,11 +221,11 @@ class Nebucord_Logger {
      * @param bool $logtofile If true, $message will be written into logfile, otherweise only visible on CLI.
      */
     public function logWarn($message, $logtofile = false) {
-        $msg = $this->logMsgPrepend($message, Nebucord_Logger::LOG_WARN);
+        $msg = $this->logMsgPrepend($message, MainLogger::LOG_WARN);
 
-        echo Nebucord_Logger::CLI_COLOR_PREPEND.Nebucord_Logger::CLI_RED.Nebucord_Logger::CLI_COLOR_STRDELI.Nebucord_Logger::CLI_COLOR_PREPEND.Nebucord_Logger::CLI_BG_YELLOW.Nebucord_Logger::CLI_COLOR_STRDELI;
+        echo MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_RED.MainLogger::CLI_COLOR_STRDELI.MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_BG_YELLOW.MainLogger::CLI_COLOR_STRDELI;
         echo $msg;
-        echo Nebucord_Logger::CLI_COLOR_APPEND;
+        echo MainLogger::CLI_COLOR_APPEND;
         echo "\n";
 
         if($logtofile && is_resource($this->_fd)) {
@@ -245,11 +245,11 @@ class Nebucord_Logger {
      * @param bool $logtofile If true, $message will be written into logfile, otherweise only visible on CLI.
      */
     public function logError($message, $logtofile = false) {
-        $msg = $this->logMsgPrepend($message, Nebucord_Logger::LOG_ERROR);
+        $msg = $this->logMsgPrepend($message, MainLogger::LOG_ERROR);
 
-        echo Nebucord_Logger::CLI_COLOR_PREPEND.Nebucord_Logger::CLI_YELLOW.Nebucord_Logger::CLI_COLOR_STRDELI.Nebucord_Logger::CLI_COLOR_PREPEND.Nebucord_Logger::CLI_BG_RED.Nebucord_Logger::CLI_COLOR_STRDELI;
+        echo MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_YELLOW.MainLogger::CLI_COLOR_STRDELI.MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_BG_RED.MainLogger::CLI_COLOR_STRDELI;
         echo $msg;
-        echo Nebucord_Logger::CLI_COLOR_APPEND;
+        echo MainLogger::CLI_COLOR_APPEND;
         echo "\n";
 
         if($logtofile && is_resource($this->_fd)) {
@@ -269,7 +269,7 @@ class Nebucord_Logger {
      * @return string The message with the info prepended.
      */
     private function logMsgPrepend($message, $loglevel) {
-        return date("d-m-Y H:i:s")." - ".Nebucord_Status::CLIENTHOST." - ".$loglevel." | ".$message;
+        return date("d-m-Y H:i:s")." - ".StatusList::CLIENTHOST." - ".$loglevel." | ".$message;
     }
 
     /**
@@ -283,9 +283,9 @@ class Nebucord_Logger {
      */
     private function setNewLogfile() {
         if(!is_resource($this->_fd)) { return; }
-        if(filesize(Nebucord_Logger::LOGFILE_PATH.$this->_logfilename) < Nebucord_Logger::LOGFILE_SIZE) { return; }
+        if(filesize(MainLogger::LOGFILE_PATH.$this->_logfilename) < MainLogger::LOGFILE_SIZE) { return; }
 
-        $dir = opendir(Nebucord_Logger::LOGFILE_PATH);
+        $dir = opendir(MainLogger::LOGFILE_PATH);
         $i = 0;
         while(false !== ($dirfile = readdir($dir))) {
             if(strpos($dirfile, $this->_logfilename) !== false) { $i++; }
@@ -293,7 +293,7 @@ class Nebucord_Logger {
         closedir($dir);
 
         fclose($this->_fd);
-        rename(Nebucord_Logger::LOGFILE_PATH.$this->_logfilename, Nebucord_Logger::LOGFILE_PATH.$this->_logfilename.".".$i);
-        $this->_fd = fopen(Nebucord_Logger::LOGFILE_PATH.$this->_logfilename, "a+");
+        rename(MainLogger::LOGFILE_PATH.$this->_logfilename, MainLogger::LOGFILE_PATH.$this->_logfilename.".".$i);
+        $this->_fd = fopen(MainLogger::LOGFILE_PATH.$this->_logfilename, "a+");
     }
 }

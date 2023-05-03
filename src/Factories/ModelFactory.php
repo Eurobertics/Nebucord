@@ -25,20 +25,20 @@
 namespace Nebucord\Factories;
 
 
-use Nebucord\Base\Nebucord_Status;
-use Nebucord\Interfaces\Nebucord_IModelREST;
-use Nebucord\Models\Nebucord_Model;
-use Nebucord\Models\Nebucord_Model_REST;
+use Nebucord\Base\StatusList;
+use Nebucord\Interfaces\iModelREST;
+use Nebucord\Models\Model;
+use Nebucord\Models\ModelREST;
 
 /**
  * Creates models
  *
  * Creates models based on OP code, gatewayevent or request event. Also used by the REST API.
  *
- * Class Nebucord_Model_Factory
+ * Class ModelFactory
  * @package Nebucord\Factories
  */
-abstract class Nebucord_Model_Factory {
+abstract class ModelFactory {
 
     /**
      * Craetes a model for incoming data.
@@ -48,16 +48,16 @@ abstract class Nebucord_Model_Factory {
      *
      * If no OP code or gw-event is received, a standard empty model will be created.
      *
-     * @param Nebucord_Status $opcode The OP code for the model to be crated.
-     * @param Nebucord_Status $gwevent The gateway event for the model to be created.
-     * @return Nebucord_Model The newly instantiated model.
+     * @param StatusList $opcode The OP code for the model to be crated.
+     * @param StatusList $gwevent The gateway event for the model to be created.
+     * @return Model The newly instantiated model.
      */
     public static function create($opcode = null, $gwevent = null)
     {
         if ($opcode == 0 && $gwevent != null) {
-            return new Nebucord_Model($opcode, $gwevent);
+            return new Model($opcode, $gwevent);
         } else {
-            return new Nebucord_Model($opcode);
+            return new Model($opcode);
         }
     }
 
@@ -67,12 +67,12 @@ abstract class Nebucord_Model_Factory {
      * When sending back to the gateway, respectively the REST API of Discord, this method
      * creates the models which can be sent to the gateway by REST.
      *
-     * @param string $request The ID of the REST request (example: Nebucord_RESTStatus::REST_CREATE_MESSAGE).
-     * @return Nebucord_IModelREST The created and instantiated model for request.
+     * @param string $request The ID of the REST request (example: RestStatusList::REST_CREATE_MESSAGE).
+     * @return iModelREST The created and instantiated model for request.
      * @throws \Exception Throws an exception on unknown or wrong http request type.
      */
     public static function createREST(string $request)
     {
-        return new Nebucord_Model_REST($request);
+        return new ModelREST($request);
     }
 }

@@ -24,25 +24,25 @@
 
 namespace Nebucord\Events;
 
-use Nebucord\Interfaces\Nebucord_IActionTable;
-use Nebucord\Base\Nebucord_Status;
-use Nebucord\Factories\Nebucord_Model_Factory;
-use Nebucord\Models\Nebucord_Model;
+use Nebucord\Interfaces\iActionTable;
+use Nebucord\Base\StatusList;
+use Nebucord\Factories\ModelFactory;
+use Nebucord\Models\Model;
 use Nebucord\NebucordREST;
-use Nebucord\REST\Base\Nebucord_RESTStatus;
+use Nebucord\REST\Base\RestStatusList;
 
 /**
- * Class Nebucord_ActionTable
+ * Class ActionTable
  *
- * This class can be overritten with the Nebucord_IActionTable interface. It represents the default actions
+ * This class can be overritten with the iActionTable interface. It represents the default actions
  * wich are needed to run Nebucord even without external EventTable for callback operations.
  *
  * @package Nebucord\Events
  */
-class Nebucord_ActionTable implements Nebucord_IActionTable {
+class ActionTable implements iActionTable {
 
     /**
-     * Nebucord_ActionTable constructor.
+     * ActionTable constructor.
      *
      * Sets itself up.
      */
@@ -50,7 +50,7 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
     }
 
     /**
-     * Nebucord_ActionTable destructor.
+     * ActionTable destructor.
      *
      * Shutds itself down.
      */
@@ -60,16 +60,16 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
     /**
      * The shutdown method.
      *
-     * @see Nebucord_IActionTable::doShutdown()
-     *
      * @param string $command The command wich invokes this method.
-     * @return \Nebucord\Models\Nebucord_Model The model returned on this method.
+     * @return \Nebucord\Models\Model The model returned on this method.
+     *@see iActionTable::doShutdown()
+     *
      */
     public function doShutdown($command) {
         $command = strtolower($command);
         if($command == self::SHUTDOWN) {
-            $oStatusUpdateModel = Nebucord_Model_Factory::create(Nebucord_Status::OP_STATUS_UPDATE);
-            $oStatusUpdateModel->populate(['op' => Nebucord_Status::OP_STATUS_UPDATE, 'd' => ['since' => time() * 1000, 'game' => null, 'status' => 'offline', 'afk' => false]]);
+            $oStatusUpdateModel = ModelFactory::create(StatusList::OP_STATUS_UPDATE);
+            $oStatusUpdateModel->populate(['op' => StatusList::OP_STATUS_UPDATE, 'd' => ['since' => time() * 1000, 'game' => null, 'status' => 'offline', 'afk' => false]]);
             return $oStatusUpdateModel;
         }
         return null;
@@ -78,10 +78,10 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
     /**
      * The setStatus method.
      *
-     * @see Nebucord_IActionTable::setStatus()
-     *
      * @param string $command The command wich invokes this method.
-     * @return \Nebucord\Models\Nebucord_Model The model returned on this method.
+     * @return \Nebucord\Models\Model The model returned on this method.
+     *@see iActionTable::setStatus()
+     *
      */
     public function setStatus($command) {
         $command = strtolower($command);
@@ -90,7 +90,7 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
         $activity_ar = array("game" => 0, "streaming" => 1, "listening" => 2);
 
         if(substr($command, 0, strpos($command, " ")) == self::SETSTATUS) {
-            $oStatusUpdateModel = Nebucord_Model_Factory::create(Nebucord_Status::OP_STATUS_UPDATE);
+            $oStatusUpdateModel = ModelFactory::create(StatusList::OP_STATUS_UPDATE);
             $oStatusUpdateModel->since = (time() * 1000);
             $oStatusUpdateModel->activities = [];
             $oStatusUpdateModel->afk = false;
@@ -126,10 +126,10 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
     /**
      * The getHelp method.
      *
-     * @see Nebucord_IActionTable::getHelp()
-     *
      * @param string $command The command wich invokes this method.
-     * @return \Nebucord\Interfaces\Nebucord_IModelREST The model returned on this method.
+     * @return \Nebucord\Interfaces\iModelREST The model returned on this method.
+     *@see iActionTable::getHelp()
+     *
      */
     public function getHelp($command) {
         if($command == self::GETHELP) {
@@ -176,7 +176,7 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
                     )
                 )
             );
-            $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_RESTStatus::REST_CREATE_MESSAGE);
+            $oMessageCreate = ModelFactory::createREST(RestStatusList::REST_CREATE_MESSAGE);
             $oMessageCreate->populate(['content' => null, 'embed' => $message]);
             return $oMessageCreate;
         }
@@ -186,14 +186,14 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
     /**
      * The doEcho method.
      *
-     * @see Nebucord_IActionTable::doEcho()
-     *
      * @param string $command The command wich invokes this method.
-     * @return \Nebucord\Interfaces\Nebucord_IModelREST The model returned on this method.
+     * @return \Nebucord\Interfaces\iModelREST The model returned on this method.
+     *@see iActionTable::doEcho()
+     *
      */
     public function doEcho($command) {
         if(substr($command, 0, strpos($command, " ")) == self::DOECHO) {
-            $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_RESTStatus::REST_CREATE_MESSAGE);
+            $oMessageCreate = ModelFactory::createREST(RestStatusList::REST_CREATE_MESSAGE);
             $oMessageCreate->content = "Echo test:".substr($command, strpos($command, " "));
             return $oMessageCreate;
         }
@@ -203,14 +203,14 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
     /**
      * The doSay method.
      *
-     * @see Nebucord_IActionTable::doSay()
-     *
      * @param string $command The command wich invokes this method.
-     * @return \Nebucord\Interfaces\Nebucord_IModelREST The model returned on this method.
+     * @return \Nebucord\Interfaces\iModelREST The model returned on this method.
+     *@see iActionTable::doSay()
+     *
      */
     public function doSay($command) {
         if(substr($command, 0, strpos($command, " ")) == self::DOSAY) {
-            $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_RESTStatus::REST_CREATE_MESSAGE);
+            $oMessageCreate = ModelFactory::createREST(RestStatusList::REST_CREATE_MESSAGE);
             $oMessageCreate->content = substr($command, strpos($command, " "));
             return $oMessageCreate;
         }
@@ -220,14 +220,14 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
     /**
      * The doStatus method.
      *
-     * @see Nebucord_IActionTable::doStatus()
-     *
      * @param string $command The command wich invokes this method.
-     * @return \Nebucord\Interfaces\Nebucord_IModelREST The model returned on this method.
+     * @return \Nebucord\Interfaces\iModelREST The model returned on this method.
+     *@see iActionTable::doStatus()
+     *
      */
     public function doStatus($command) {
         if($command == self::DOSTATUS) {
-            $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_RESTStatus::REST_CREATE_MESSAGE);
+            $oMessageCreate = ModelFactory::createREST(RestStatusList::REST_CREATE_MESSAGE);
             $oMessageCreate->content = "Bot is up and running.";
             return $oMessageCreate;
         }
@@ -237,10 +237,10 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
     /**
      * The doVersion method.
      *
-     * @see Nebucord_IActionTable::doVersion()
-     *
      * @param string $command The command wich invokes this method.
-     * @return \Nebucord\Interfaces\Nebucord_IModelREST The model returned on this method.
+     * @return \Nebucord\Interfaces\iModelREST The model returned on this method.
+     *@see iActionTable::doVersion()
+     *
      */
     public function doVersion($command) {
         if($command == self::DOVERSION) {
@@ -249,32 +249,32 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
                 "fields" => array(
                     array(
                         "name" => "API",
-                        "value" => Nebucord_Status::CLIENTBROWSER,
+                        "value" => StatusList::CLIENTBROWSER,
                         "inline" => false
                     ),
                     array(
                         "name" => "Version",
-                        "value" => Nebucord_Status::VERSION,
+                        "value" => StatusList::VERSION,
                         "inline" => false
                     ),
                     array(
                         "name" => "Client host",
-                        "value" => Nebucord_Status::CLIENTHOST,
+                        "value" => StatusList::CLIENTHOST,
                         "inline" => false
                     ),
                     array(
                         "name" => "OS",
-                        "value" => Nebucord_Status::getOS(),
+                        "value" => StatusList::getOS(),
                         "inline" => false
                     ),
                     array(
                         "name" => "Device",
-                        "value" => Nebucord_Status::getDevice(),
+                        "value" => StatusList::getDevice(),
                         "inline" => false
                     )
                 )
             );
-            $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_RESTStatus::REST_CREATE_MESSAGE);
+            $oMessageCreate = ModelFactory::createREST(RestStatusList::REST_CREATE_MESSAGE);
             $oMessageCreate->populate(['content' => null, 'embed' => $message]);
             return $oMessageCreate;
         }
@@ -284,14 +284,14 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
     /**
      * Restarts Nebucord
      *
-     * @see Nebucord_IActionTable::doRestart()
-     *
      * @param string $command The command on which this action should fire (default: !reboot).
-     * @return Nebucord_Model|null The model return to the runtime controller to execute the action by the ActionController.
+     * @return Model|null The model return to the runtime controller to execute the action by the ActionController.
+     *@see iActionTable::doRestart()
+     *
      */
     public function doRestart($command)
     {
-        $oMessageCreateModel = Nebucord_Model_Factory::createREST(Nebucord_RESTStatus::REST_CREATE_MESSAGE);
+        $oMessageCreateModel = ModelFactory::createREST(RestStatusList::REST_CREATE_MESSAGE);
         $oMessageCreateModel->populate(['content' => "Reconnecting to the gateway!"]);
         return $oMessageCreateModel;
     }
@@ -299,25 +299,25 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
     /**
      * Restarts Nebucord
      *
-     * @see Nebucord_IActionTable::doListAppCommands()
-     *
      * @param string $command The command on which this action should fire (default: !listappcmds).
      * @param integer $botuserid The bot user id which owns the app commands (application id).
      * @param string $bottoken The bot token to authenticate when receiving the app commands.
      * @param integer $guild_id The guild id for listing the guild app commands (mostly the guild where the command originates from).
-     * @return Nebucord_Model|null The model return to the runtime controller to execute the action by the ActionController.
+     * @return Model|null The model return to the runtime controller to execute the action by the ActionController.
+     *@see iActionTable::doListAppCommands()
+     *
      */
     public function doListAppCommands($command, $botuserid, $bottoken, $guild_id)
     {
         $oNebucordREST = new NebucordREST(['token' => $bottoken]);
-        $cmdsglobal = $oNebucordREST->createRESTExecutor()->executeFromArray(Nebucord_RESTStatus::REST_GET_GLOBAL_APPLICATION_COMMANDS, [
+        $cmdsglobal = $oNebucordREST->createRESTExecutor()->executeFromArray(RestStatusList::REST_GET_GLOBAL_APPLICATION_COMMANDS, [
             'application_id' => $botuserid
         ]);
-        $cmdsguild = $oNebucordREST->createRESTExecutor()->executeFromArray(Nebucord_RESTStatus::REST_GET_GUILD_APPLICATION_COMMANDS, [
+        $cmdsguild = $oNebucordREST->createRESTExecutor()->executeFromArray(RestStatusList::REST_GET_GUILD_APPLICATION_COMMANDS, [
             'application_id' => $botuserid,
             'guild_id' => $guild_id
         ]);
-        $cmdtypes = [Nebucord_Status::APPLICATION_TYPE_CHAT_INPUT => "Slash command", Nebucord_Status::APPLICATION_TYPE_USER => "User interaction", Nebucord_Status::APPLICATION_TYPE_MESSAGE => "Message interaction"];
+        $cmdtypes = [StatusList::APPLICATION_TYPE_CHAT_INPUT => "Slash command", StatusList::APPLICATION_TYPE_USER => "User interaction", StatusList::APPLICATION_TYPE_MESSAGE => "Message interaction"];
         $cmdarray = array();
         if(is_array($cmdsguild)) {
             for($i = 0; $i < count($cmdsguild); $i++) {
@@ -350,7 +350,7 @@ class Nebucord_ActionTable implements Nebucord_IActionTable {
             "fields" => $cmdarray
         );
         unset($oNebucordREST);
-        $oMessageCreate = Nebucord_Model_Factory::createREST(Nebucord_RESTStatus::REST_CREATE_MESSAGE);
+        $oMessageCreate = ModelFactory::createREST(RestStatusList::REST_CREATE_MESSAGE);
         $oMessageCreate->populate(['content' => null, 'embed' => $message]);
         return $oMessageCreate;
     }

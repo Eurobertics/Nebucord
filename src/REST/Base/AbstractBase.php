@@ -24,16 +24,16 @@
 
 namespace Nebucord\REST\Base;
 
-use Nebucord\Base\Nebucord_Status;
+use Nebucord\Base\StatusList;
 
 /**
- * Class Nebucord_RESTBase_Abstract
+ * Class AbstractBase
  *
  * Abstract base class for the HTTP REST client. Sets up API endpoints and some other needed stuff.
  *
  * @package Nebucord\REST\Base
  */
-abstract class Nebucord_RESTBase_Abstract {
+abstract class AbstractBase {
 
     /** @const string[] SENDREQUEST_TYPES The possible request types. */
     const SENDREQUEST_TYPES = array('GET', 'POST', 'PUT', 'PATCH', 'DELETE');
@@ -78,7 +78,7 @@ abstract class Nebucord_RESTBase_Abstract {
     protected $_param_json_payload;
 
     /**
-     * Nebucord_RESTBase_Abstract constructor.
+     * AbstractBase constructor.
      *
      * Sets up the base data and clears all arrays for usage.
      */
@@ -87,7 +87,7 @@ abstract class Nebucord_RESTBase_Abstract {
     }
 
     /**
-     * Nebucord_RESTBase_Abstract destructor.
+     * AbstractBase destructor.
      *
      * Cleans up properties wich are not used any more on exit.
      */
@@ -119,7 +119,7 @@ abstract class Nebucord_RESTBase_Abstract {
             "Endpoint" => null,
             "Headerparams" => array(
                 "Host:" => $this->_discordhost,
-                "User-Agent:" => Nebucord_Status::CLIENTBROWSER." (".Nebucord_Status::CLIENTHOST.", ".Nebucord_Status::VERSION.")",
+                "User-Agent:" => StatusList::CLIENTBROWSER." (".StatusList::CLIENTHOST.", ".StatusList::VERSION.")",
                 "Authorization:" => "Bot ".$this->_params['token'],
                 "Connection:" => "close"
             ),
@@ -137,9 +137,9 @@ abstract class Nebucord_RESTBase_Abstract {
      * Sets the request REST model and sets it up for sending the request by storing the model properties in local
      * parameter properties.
      *
-     * @param \Nebucord\Interfaces\Nebucord_IModelREST $model The model from which the parameters should be get.
+     * @param \Nebucord\Interfaces\iModelREST $model The model from which the parameters should be get.
      */
-    abstract protected function setParams(\Nebucord\Interfaces\Nebucord_IModelREST $model);
+    abstract protected function setParams(\Nebucord\Interfaces\iModelREST $model);
 
     /**
      * Builds the request.

@@ -25,14 +25,14 @@
 namespace Nebucord\Base;
 
 /**
- * Class Nebucord_NetBase
+ * Class NetworkBase
  *
  * The base class for the HTTP client wich connects to the Discord websocket gateway.
  * Sets up some basic stuff like vars for later use and base API endpoints.
  *
  * @package Nebucord\Base
  */
-class Nebucord_NetBase {
+class NetworkBase {
 
     /** @var string $_httpapiuri HTTP URI to get Discords websocket url. */
     private $_httpapiuri = "https://discord.com/api/gateway";
@@ -65,7 +65,7 @@ class Nebucord_NetBase {
     protected static $BUFFERSIZE = 128;
 
     /**
-     * Nebucord_NetBase constructor.
+     * NetworkBase constructor.
      *
      * Prepares the connection and builds the API endpoint before connecting.
      *
@@ -86,7 +86,7 @@ class Nebucord_NetBase {
     }
 
     /**
-     * Nebucord_NetBase destructor.
+     * NetworkBase destructor.
      *
      * Cleans up the connection by closing the socket and frees the data of the socket.
      */

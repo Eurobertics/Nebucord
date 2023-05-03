@@ -24,17 +24,17 @@
 
 namespace Nebucord\Events;
 
-use Nebucord\Base\Nebucord_EventTable_Base_Abstract;
+use Nebucord\Base\AbstractEventTable;
 
 /**
- * Class Nebucord_EventTable
+ * Class EventTable
  *
  * This class represents a table of possible callbacks from the Discord websocket gateway. It is used
  * to map self created callback functions to a OP code.
  *
  * @package Nebucord\Events
  */
-class Nebucord_EventTable extends Nebucord_EventTable_Base_Abstract {
+class EventTable extends AbstractEventTable {
 
     /** @var object $_instance This var holds the singleton for the event table. */
     private static $_instance;
@@ -48,7 +48,7 @@ class Nebucord_EventTable extends Nebucord_EventTable_Base_Abstract {
      * The event table is a singleton, to avoid mixing interactions with event tables, only one instance may
      * exists.
      *
-     * @return Nebucord_EventTable|object
+     * @return EventTable|object
      */
     public static function create() {
         if(self::$_instance === null) {
@@ -62,16 +62,16 @@ class Nebucord_EventTable extends Nebucord_EventTable_Base_Abstract {
      *
      * Sometimes it may usefull to delete an existing instance. This method does what it says.
      *
-     * @param Nebucord_EventTable|object $instance The instance to delete.
+     * @param EventTable|object $instance The instance to delete.
      */
     public static function delete($instance) {
-        if($instance instanceof Nebucord_EventTable) {
+        if($instance instanceof EventTable) {
             unset($instance);
         }
     }
 
     /**
-     * Nebucord_EventTable constructor.
+     * EventTable constructor.
      *
      * Starts the event table by resetting possible existent event stacks.
      */
@@ -81,7 +81,7 @@ class Nebucord_EventTable extends Nebucord_EventTable_Base_Abstract {
     }
 
     /**
-     * Nebucord_EventTable destructor.
+     * EventTable destructor.
      *
      * Cleans up the event table and removes existent event stacks.
      */
@@ -95,12 +95,12 @@ class Nebucord_EventTable extends Nebucord_EventTable_Base_Abstract {
      *
      * Abstract declaration.
      *
-     * @see Nebucord_EventTable_Base_Abstract::addEvent()
-     *
      * @param mixed $class EventTabel class.
      * @param string $method Method of the class to be called.
      * @param string $gwevt Gatewayevent to catch.
      * @param integer $opcode OP code from the gateway to catch.
+     *@see AbstractEventTable::addEvent()
+     *
      */
     public function addEvent($class, $method, $gwevt = null, $opcode = 0) {
         if(!is_int($opcode) || $opcode < 0 || $opcode > 11) {
@@ -120,10 +120,10 @@ class Nebucord_EventTable extends Nebucord_EventTable_Base_Abstract {
      *
      * Abstract delcaration.
      *
-     * @see Nebucord_EventTable_Base_Abstract::getEvents()
-     *
      * @param integer $opcode OP code for selected stack.
      * @return array Stack of events from the given OP code.
+     *@see AbstractEventTable::getEvents()
+     *
      */
     public function getEvents($opcode) {
         if(!is_int($opcode) || $opcode < 0 || $opcode > 11) {

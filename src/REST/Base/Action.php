@@ -22,36 +22,36 @@
  *
  */
 
-namespace Nebucord\Models;
-
-use Nebucord\Base\Nebucord_Model_Abstract;
+namespace Nebucord\REST\Base;
 
 /**
- * Class Nebucord_Model
+ * Class Action
  *
- * An empty base model for events.
+ * The REST part of the API, this is the base class for request actions.
  *
- * @package Nebucord\Models
+ * @package Nebucord\REST\Base
  */
-class Nebucord_Model extends Nebucord_Model_Abstract {
+class Action {
+
+    /** @var HttpClient $_httpclient The http client instance to send data. */
+	protected $_httpclient;
+
+	/** @var \Nebucord\Models\Model $_sendmodel The model to be send to the REST gateway.*/
+	protected $_sendmodel;
 
     /**
-     * Nebucord_Model constructor.
-     * Sets everything up and transfers the basic event data to the abstract class for storing.
+     * Action constructor.
      *
-     * @param \Nebucord\Base\Nebucord_Status $op The OP code of an event.
-     * @param \Nebucord\Base\Nebucord_Status $event The event from the gateway (mostly with OP code 0).
+     * Sets itself up.
      */
-    public function __construct($op = null, $event = null) {
-        parent::__construct($op, $event);
-    }
+	public function __construct() {
+	}
 
     /**
-     * Nebucord_Model destructor.
+     * Action destructor.
      *
-     * Cleas everything up on end.
+     * End itselfs and cleans up.
      */
-    public function __destruct() {
-    	parent::__destruct();
-    }
+	public function __destruct() {
+	}
 }

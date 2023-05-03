@@ -25,7 +25,7 @@
 namespace Nebucord\Base;
 
 /**
- * Class Nebucord_Status
+ * Class StatusList
  *
  * This class holds any status given by the Discord gateway. This includes OP codes and gateway events as well.
  * Beside this, here are some constants stored wich represents the Nebucord API version or the client identifications.
@@ -34,7 +34,7 @@ namespace Nebucord\Base;
  *
  * @package Nebucord\Base
  */
-abstract class Nebucord_Status {
+abstract class StatusList {
     const OP_DISPATCH = 0;
     const OP_HEARTBEAT = 1;
     const OP_IDENTIFY = 2;

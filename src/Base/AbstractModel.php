@@ -24,25 +24,25 @@
 
 namespace Nebucord\Base;
 
-use Nebucord\Models\Nebucord_Model_REST;
-use Nebucord\REST\Base\Nebucord_RESTBuildAPIEndpoints;
+use Nebucord\Models\ModelREST;
+use Nebucord\REST\Base\BuildApiEndpoints;
 
 /**
- * Class Nebucord_Model_Abstract
+ * Class AbstractModel
  *
  * Abstract class for Nebucorc models. This class implements the basics wich every model must have.
  *
  * @package Nebucord\Base
  */
-abstract class Nebucord_Model_Abstract {
+abstract class AbstractModel {
 
-    /** @var Nebucord_Status $_op Holds the OP code for a model. */
+    /** @var StatusList $_op Holds the OP code for a model. */
     protected $_op = null;
 
-    /** @var Nebucord_Status $_s The current sequence from the Discord gateway. */
+    /** @var StatusList $_s The current sequence from the Discord gateway. */
     protected $_s = null;
 
-    /** @var Nebucord_Status $_t The current gateway event. */
+    /** @var StatusList $_t The current gateway event. */
     protected $_t = null;
 
     /** @var string $_http_status_code The last webserver response status code if it is a response from a REST request. */
@@ -52,12 +52,12 @@ abstract class Nebucord_Model_Abstract {
     private $_data = array();
 
     /**
-     * Nebucord_Model_Abstract constructor.
+     * AbstractModel constructor.
      *
      * Stores the basic data into the model (OP code and gw-event).
      *
-     * @param Nebucord_Status $op The OP code for an event.
-     * @param Nebucord_Status $event The gatewayevent.
+     * @param StatusList $op The OP code for an event.
+     * @param StatusList $event The gatewayevent.
      */
     public function __construct($op = null, $event = null) {
         $this->_op = $op;
@@ -65,7 +65,7 @@ abstract class Nebucord_Model_Abstract {
     }
 
     /**
-     * Nebucord_Model_Abstract Destructor
+     * AbstractModel Destructor
      *
      * Cleans everything up.
      */
@@ -174,7 +174,7 @@ abstract class Nebucord_Model_Abstract {
         foreach($this->_data as $prop => $value) {
             if($this->_op != null) {
                 $retar['op'] = $this->_op;
-                if($this->_op == Nebucord_Status::OP_HEARTBEAT) {
+                if($this->_op == StatusList::OP_HEARTBEAT) {
                     $retar['d'] = $this->_d;
                 } else {
                     $retar['d'][substr($prop, 1)] = $this->_data[$prop];
