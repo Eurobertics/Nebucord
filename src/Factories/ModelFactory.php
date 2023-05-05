@@ -26,7 +26,7 @@ namespace Nebucord\Factories;
 
 
 use Nebucord\Base\StatusList;
-use Nebucord\Interfaces\iModelREST;
+use Nebucord\Interfaces\IModelREST;
 use Nebucord\Models\Model;
 use Nebucord\Models\ModelREST;
 
@@ -68,7 +68,7 @@ abstract class ModelFactory {
      * creates the models which can be sent to the gateway by REST.
      *
      * @param string $request The ID of the REST request (example: RestStatusList::REST_CREATE_MESSAGE).
-     * @return iModelREST The created and instantiated model for request.
+     * @return IModelREST The created and instantiated model for request.
      * @throws \Exception Throws an exception on unknown or wrong http request type.
      */
     public static function createREST(string $request)

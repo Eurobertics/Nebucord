@@ -27,13 +27,13 @@ namespace Nebucord\Interfaces;
 use Nebucord\Models\Model;
 
 /**
- * Interface iActionTable
+ * Interface IActionTable
  *
  * This sets the needed methods to be implemented by an ActionTable class if it needs to be overwritten.
  *
  * @package Nebucord\Interfaces
  */
-interface iActionTable {
+interface IActionTable {
     /** @const string The const for shutting down Nebucord. */
     const SHUTDOWN = "!shutdown";
 

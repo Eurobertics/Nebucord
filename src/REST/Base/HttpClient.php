@@ -24,7 +24,7 @@
 
 namespace Nebucord\REST\Base;
 
-use Nebucord\Interfaces\iModelREST;
+use Nebucord\Interfaces\IModelREST;
 
 /**
  * Class HttpClient
@@ -72,11 +72,11 @@ class HttpClient extends AbstractBase {
     /**
      * Sets REST request model for send.
      *
-     * @param iModelREST $model
+     * @param IModelREST $model
      *@see AbstractBase::setParams()
      *
      */
-    public function setParams(iModelREST $model) {
+    public function setParams(IModelREST $model) {
         $json_payload = '';
         if($model->getRequestType() != 'GET') {
             $json_payload = json_encode($model->toArray());

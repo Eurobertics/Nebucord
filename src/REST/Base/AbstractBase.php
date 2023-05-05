@@ -137,9 +137,9 @@ abstract class AbstractBase {
      * Sets the request REST model and sets it up for sending the request by storing the model properties in local
      * parameter properties.
      *
-     * @param \Nebucord\Interfaces\iModelREST $model The model from which the parameters should be get.
+     * @param \Nebucord\Interfaces\IModelREST $model The model from which the parameters should be get.
      */
-    abstract protected function setParams(\Nebucord\Interfaces\iModelREST $model);
+    abstract protected function setParams(\Nebucord\Interfaces\IModelREST $model);
 
     /**
      * Builds the request.

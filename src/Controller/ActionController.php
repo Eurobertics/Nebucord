@@ -26,7 +26,7 @@ namespace Nebucord\Controller;
 
 use Nebucord\Base\AbstractController;
 use Nebucord\Base\StatusList;
-use Nebucord\Interfaces\iActionTable;
+use Nebucord\Interfaces\IActionTable;
 use Nebucord\Factories\ModelFactory;
 use Nebucord\Models\Model;
 
@@ -48,7 +48,7 @@ class ActionController extends AbstractController {
     /** @var object|Model $_outevent The event model wich is in turn send to the gateway.  */
     private $_outevent;
 
-    /** @var object|iActionTable Internal events (maybe overwritten) to perfom actions. */
+    /** @var object|IActionTable Internal events (maybe overwritten) to perfom actions. */
     private $_acttbl;
 
     /** @var string The token parameter wich identifys the bot on OP_IDENTIFY. */
@@ -77,7 +77,7 @@ class ActionController extends AbstractController {
      *
      * Creates and clears the basics of the controller.
      *
-     * @param object|iActionTable $acttbl The action table to perfom actions.
+     * @param object|IActionTable $acttbl The action table to perfom actions.
      * @param array $params The parameter wich are given on Nebucord initialising (token, user, etc.).
      */
     public function __construct(&$acttbl, array $params = array()) {
@@ -285,34 +285,34 @@ class ActionController extends AbstractController {
     private function onCreateMessageCommand() {
         $msg = $this->_inevent->content;
         if($this->authControlUser() && $this->checkBotID($msg)) {
-            if (str_contains($msg, iActionTable::SHUTDOWN)) {
+            if (str_contains($msg, IActionTable::SHUTDOWN)) {
                 \Nebucord\Logging\MainLogger::warn("Shutdown command received: " . $msg);
                 $this->_outevent = $this->_acttbl->doShutdown($msg);
-            } else if (str_contains($msg, iActionTable::SETSTATUS)) {
+            } else if (str_contains($msg, IActionTable::SETSTATUS)) {
                 \Nebucord\Logging\MainLogger::info("Setstatus command received: " . $msg);
                 $this->_outevent = $this->_acttbl->setStatus($msg);
-            } else if (str_contains($msg, iActionTable::GETHELP)) {
+            } else if (str_contains($msg, IActionTable::GETHELP)) {
                 \Nebucord\Logging\MainLogger::info("Help command received: " . $msg);
                 $this->_outevent = $this->_acttbl->getHelp($msg);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-            } else if (str_contains($msg, iActionTable::DOECHO)) {
+            } else if (str_contains($msg, IActionTable::DOECHO)) {
                 \Nebucord\Logging\MainLogger::info("Echo test command received: " . $msg);
                 $this->_outevent = $this->_acttbl->doEcho($msg);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-            } else if (str_contains($msg, iActionTable::DOSAY)) {
+            } else if (str_contains($msg, IActionTable::DOSAY)) {
                 \Nebucord\Logging\MainLogger::info("Do say command received: " . $msg);
                 $this->_outevent = $this->_acttbl->doSay($msg);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-            } else if (str_contains($msg, iActionTable::DOSTATUS)) {
+            } else if (str_contains($msg, IActionTable::DOSTATUS)) {
                 \Nebucord\Logging\MainLogger::info("Get status command received: " . $msg);
                 $this->_outevent = $this->_acttbl->doStatus($msg);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
-            } else if (str_contains($msg, iActionTable::DOREBOOT)) {
+            } else if (str_contains($msg, IActionTable::DOREBOOT)) {
                 \Nebucord\Logging\MainLogger::warn("Reboot command received: " . $msg);
                 \Nebucord\Logging\MainLogger::warn("Rebooting and reconnecting Nebucord to Discord...");
                 $this->_outevent = $this->_acttbl->doRestart($msg);
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id, 'reboot' => true]);
-            } else if (str_contains($msg, iActionTable::DOLISTAPPCOMMANDS)) {
+            } else if (str_contains($msg, IActionTable::DOLISTAPPCOMMANDS)) {
                 \Nebucord\Logging\MainLogger::info("List application command received: " . $msg);
                 $this->_outevent = $this->_acttbl->doListAppCommands(
                     $msg,
@@ -323,7 +323,7 @@ class ActionController extends AbstractController {
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
             }
         }
-        if (str_contains($msg, iActionTable::DOVERSION)) {
+        if (str_contains($msg, IActionTable::DOVERSION)) {
             \Nebucord\Logging\MainLogger::info("Do version command received: " . $msg);
             $this->_outevent = $this->_acttbl->doVersion($msg);
             $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);

@@ -24,7 +24,7 @@
 
 namespace Nebucord\Events;
 
-use Nebucord\Interfaces\iActionTable;
+use Nebucord\Interfaces\IActionTable;
 use Nebucord\Base\StatusList;
 use Nebucord\Factories\ModelFactory;
 use Nebucord\Models\Model;
@@ -34,12 +34,12 @@ use Nebucord\REST\Base\RestStatusList;
 /**
  * Class ActionTable
  *
- * This class can be overritten with the iActionTable interface. It represents the default actions
+ * This class can be overritten with the IActionTable interface. It represents the default actions
  * wich are needed to run Nebucord even without external EventTable for callback operations.
  *
  * @package Nebucord\Events
  */
-class ActionTable implements iActionTable {
+class ActionTable implements IActionTable {
 
     /**
      * ActionTable constructor.
@@ -62,7 +62,7 @@ class ActionTable implements iActionTable {
      *
      * @param string $command The command wich invokes this method.
      * @return \Nebucord\Models\Model The model returned on this method.
-     *@see iActionTable::doShutdown()
+     *@see IActionTable::doShutdown()
      *
      */
     public function doShutdown($command) {
@@ -90,7 +90,7 @@ class ActionTable implements iActionTable {
      *
      * @param string $command The command wich invokes this method.
      * @return \Nebucord\Models\Model The model returned on this method.
-     *@see iActionTable::setStatus()
+     *@see IActionTable::setStatus()
      *
      */
     public function setStatus($command) {
@@ -137,8 +137,8 @@ class ActionTable implements iActionTable {
      * The getHelp method.
      *
      * @param string $command The command wich invokes this method.
-     * @return \Nebucord\Interfaces\iModelREST The model returned on this method.
-     *@see iActionTable::getHelp()
+     * @return \Nebucord\Interfaces\IModelREST The model returned on this method.
+     *@see IActionTable::getHelp()
      *
      */
     public function getHelp($command) {
@@ -199,8 +199,8 @@ class ActionTable implements iActionTable {
      * The doEcho method.
      *
      * @param string $command The command wich invokes this method.
-     * @return \Nebucord\Interfaces\iModelREST The model returned on this method.
-     *@see iActionTable::doEcho()
+     * @return \Nebucord\Interfaces\IModelREST The model returned on this method.
+     *@see IActionTable::doEcho()
      *
      */
     public function doEcho($command) {
@@ -216,8 +216,8 @@ class ActionTable implements iActionTable {
      * The doSay method.
      *
      * @param string $command The command wich invokes this method.
-     * @return \Nebucord\Interfaces\iModelREST The model returned on this method.
-     *@see iActionTable::doSay()
+     * @return \Nebucord\Interfaces\IModelREST The model returned on this method.
+     *@see IActionTable::doSay()
      *
      */
     public function doSay($command) {
@@ -233,8 +233,8 @@ class ActionTable implements iActionTable {
      * The doStatus method.
      *
      * @param string $command The command wich invokes this method.
-     * @return \Nebucord\Interfaces\iModelREST The model returned on this method.
-     *@see iActionTable::doStatus()
+     * @return \Nebucord\Interfaces\IModelREST The model returned on this method.
+     *@see IActionTable::doStatus()
      *
      */
     public function doStatus($command) {
@@ -250,8 +250,8 @@ class ActionTable implements iActionTable {
      * The doVersion method.
      *
      * @param string $command The command wich invokes this method.
-     * @return \Nebucord\Interfaces\iModelREST The model returned on this method.
-     *@see iActionTable::doVersion()
+     * @return \Nebucord\Interfaces\IModelREST The model returned on this method.
+     *@see IActionTable::doVersion()
      *
      */
     public function doVersion($command) {
@@ -298,7 +298,7 @@ class ActionTable implements iActionTable {
      *
      * @param string $command The command on which this action should fire (default: !reboot).
      * @return Model|null The model return to the runtime controller to execute the action by the ActionController.
-     *@see iActionTable::doRestart()
+     *@see IActionTable::doRestart()
      *
      */
     public function doRestart($command)
@@ -317,7 +317,7 @@ class ActionTable implements iActionTable {
      * @param integer $guild_id The guild id for listing the guild app commands
      * (mostly the guild where the command originates from).
      * @return Model|null The model return to the runtime controller to execute the action by the ActionController.
-     *@see iActionTable::doListAppCommands()
+     *@see IActionTable::doListAppCommands()
      *
      */
     public function doListAppCommands($command, $botuserid, $bottoken, $guild_id)
@@ -358,7 +358,7 @@ class ActionTable implements iActionTable {
                 $cmdarray[] = $cmdline;
             }
         }
-        if(count($cmdarray) == 0) {
+        if(empty($cmdarray)) {
             $cmdline = array();
             $cmdline['name'] = "No commands found";
             $cmdline['value'] = "No global or guild commands found";

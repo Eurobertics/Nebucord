@@ -115,7 +115,7 @@ If you use the library without composer, you just can include
 the native autoloader:
 
 ```php
-include "src/nebucord_autoloader.php";
+include "src/nebucordAutoloader.php";
 ```
 **Note:**
 You have to include the native autoloader of the dependencie packages as well. See

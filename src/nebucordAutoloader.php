@@ -29,7 +29,7 @@
  *
  * @param string $class The class name to be loaded.
  */
-function nebucord_autoloader($class) {
+function nebucordAutoloader($class) {
     $basedir = __DIR__;
 
     $classname = $class;
@@ -44,4 +44,4 @@ function nebucord_autoloader($class) {
     }
 }
 
-spl_autoload_register('nebucord_autoloader');
+spl_autoload_register('nebucordAutoloader');

@@ -154,7 +154,7 @@ class Nebucord {
      * @return Nebucord Returns itself (Nebucord).
      */
     public function setActionTable($actiontable) {
-        if($actiontable instanceof Interfaces\iActionTable) {
+        if($actiontable instanceof Interfaces\IActionTable) {
             $this->_acttbl = $actiontable;
         }
         Logging\MainLogger::info("Actiontable set...");

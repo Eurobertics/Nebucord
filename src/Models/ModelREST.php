@@ -27,7 +27,7 @@ namespace Nebucord\Models;
 use \Exception;
 use Nebucord\Base\AbstractModel;
 use Nebucord\Base\StatusList;
-use Nebucord\Interfaces\iModelREST;
+use Nebucord\Interfaces\IModelREST;
 use Nebucord\REST\Base\AbstractBase;
 use Nebucord\REST\Base\HttpClient;
 use Nebucord\REST\Base\BuildApiEndpoints;
@@ -39,7 +39,7 @@ use Nebucord\REST\Base\BuildApiEndpoints;
  *
  * @package Nebucord\Models
  */
-class ModelREST extends Model implements iModelREST
+class ModelREST extends Model implements IModelREST
 {
 
     /** @var string $_status_type Holds the status type of the model (example: RestStatusList::REST_CREATE_MESSAGE).  */

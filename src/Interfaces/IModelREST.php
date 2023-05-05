@@ -25,14 +25,14 @@
 namespace Nebucord\Interfaces;
 
 /**
- * Interface iModelREST
+ * Interface IModelREST
  *
  * On creating data models for a REST request this interface sets the minimum requirements a model must implement.
  * Also this interface is used to set base class identification for some methods used for a inherited class.
  *
  * @package Nebucord\Interfaces
  */
-Interface iModelREST {
+Interface IModelREST {
 
     /**
      * Sets the API endpoint for REST
