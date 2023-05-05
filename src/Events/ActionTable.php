@@ -69,7 +69,17 @@ class ActionTable implements iActionTable {
         $command = strtolower($command);
         if($command == self::SHUTDOWN) {
             $oStatusUpdateModel = ModelFactory::create(StatusList::OP_STATUS_UPDATE);
-            $oStatusUpdateModel->populate(['op' => StatusList::OP_STATUS_UPDATE, 'd' => ['since' => time() * 1000, 'game' => null, 'status' => 'offline', 'afk' => false]]);
+            $oStatusUpdateModel->populate(
+                [
+                    'op' => StatusList::OP_STATUS_UPDATE,
+                    'd' => [
+                        'since' => time() * 1000,
+                        'game' => null,
+                        'status' => 'offline',
+                        'afk' => false
+                    ]
+                ]
+            );
             return $oStatusUpdateModel;
         }
         return null;
@@ -134,8 +144,10 @@ class ActionTable implements iActionTable {
     public function getHelp($command) {
         if($command == self::GETHELP) {
             $message = array("title" => "Available Bot commands",
-                "description" => "The following commands are currently available\n*needs the bot snowflake after command (!command botid parameters)*:
-    ",
+                "description" => "
+                The following commands are currently available\n*needs the bot snowflake after command
+                (!command botid parameters)*:
+                ",
                 "fields" => array(
                     array(
                         "name" => "!shutdown",
@@ -302,7 +314,8 @@ class ActionTable implements iActionTable {
      * @param string $command The command on which this action should fire (default: !listappcmds).
      * @param integer $botuserid The bot user id which owns the app commands (application id).
      * @param string $bottoken The bot token to authenticate when receiving the app commands.
-     * @param integer $guild_id The guild id for listing the guild app commands (mostly the guild where the command originates from).
+     * @param integer $guild_id The guild id for listing the guild app commands
+     * (mostly the guild where the command originates from).
      * @return Model|null The model return to the runtime controller to execute the action by the ActionController.
      *@see iActionTable::doListAppCommands()
      *
@@ -310,20 +323,27 @@ class ActionTable implements iActionTable {
     public function doListAppCommands($command, $botuserid, $bottoken, $guild_id)
     {
         $oNebucordREST = new NebucordREST(['token' => $bottoken]);
-        $cmdsglobal = $oNebucordREST->createRESTExecutor()->executeFromArray(RestStatusList::REST_GET_GLOBAL_APPLICATION_COMMANDS, [
+        $cmdsglobal = $oNebucordREST->createRESTExecutor()->executeFromArray(
+            RestStatusList::REST_GET_GLOBAL_APPLICATION_COMMANDS, [
             'application_id' => $botuserid
         ]);
-        $cmdsguild = $oNebucordREST->createRESTExecutor()->executeFromArray(RestStatusList::REST_GET_GUILD_APPLICATION_COMMANDS, [
+        $cmdsguild = $oNebucordREST->createRESTExecutor()->executeFromArray(
+            RestStatusList::REST_GET_GUILD_APPLICATION_COMMANDS, [
             'application_id' => $botuserid,
             'guild_id' => $guild_id
         ]);
-        $cmdtypes = [StatusList::APPLICATION_TYPE_CHAT_INPUT => "Slash command", StatusList::APPLICATION_TYPE_USER => "User interaction", StatusList::APPLICATION_TYPE_MESSAGE => "Message interaction"];
+        $cmdtypes = [
+            StatusList::APPLICATION_TYPE_CHAT_INPUT => "Slash command",
+            StatusList::APPLICATION_TYPE_USER => "User interaction",
+            StatusList::APPLICATION_TYPE_MESSAGE => "Message interaction"
+        ];
         $cmdarray = array();
         if(is_array($cmdsguild)) {
             for($i = 0; $i < count($cmdsguild); $i++) {
                 $cmdline = array();
                 $cmdline['name'] = $cmdsguild[$i]->name." (ID: ".$cmdsguild[$i]->id.")";
-                $cmdline['value'] = "Type: Guild command\nInteraction style: ".$cmdtypes[$cmdsguild[$i]->type]."\nDescription ```".$cmdtypes[$cmdsguild[$i]->type]."```";
+                $cmdline['value'] = "Type: Guild command\nInteraction style: ".$cmdtypes[$cmdsguild[$i]->type]."\n
+                Description ```".$cmdtypes[$cmdsguild[$i]->type]."```";
                 $cmdline['inline'] = false;
                 $cmdarray[] = $cmdline;
             }
@@ -332,7 +352,8 @@ class ActionTable implements iActionTable {
             for($i = 0; $i < count($cmdsglobal); $i++) {
                 $cmdline = array();
                 $cmdline['name'] = $cmdsglobal[$i]->name." (ID: ".$cmdsglobal[$i]->id.")";
-                $cmdline['value'] = "Type: Guild command\nInteraction style: ".$cmdsglobal[$cmdsglobal[$i]->type]."\nDescription ```".$cmdsglobal[$cmdsglobal[$i]->type]."```";
+                $cmdline['value'] = "Type: Guild command\nInteraction style: ".$cmdsglobal[$cmdsglobal[$i]->type]."\n
+                Description ```".$cmdsglobal[$cmdsglobal[$i]->type]."```";
                 $cmdline['inline'] = false;
                 $cmdarray[] = $cmdline;
             }
@@ -346,7 +367,8 @@ class ActionTable implements iActionTable {
         }
         $message = array(
             "title" => "Available Bot commands",
-            "description" => "Lists all application commands registered by this bot (application), this includes global commands, as well as guild commands",
+            "description" => "Lists all application commands registered by this bot (application),
+            this includes global commands, as well as guild commands",
             "fields" => $cmdarray
         );
         unset($oNebucordREST);

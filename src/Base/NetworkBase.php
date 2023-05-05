@@ -44,12 +44,14 @@ class NetworkBase {
     protected $_remoteapiversion = "10";
 
     /**
-     * @var bool $_transfercompression Are we shoud use transfer compression? (zlib compression on the webserver is needed for this).
+     * @var bool $_transfercompression Are we shoud use transfer compression?
+     * (zlib compression on the webserver is needed for this).
      */
     protected $_transfercompression;
 
     /**
-     * @var string $_fullgatewayhost After building the endpoint to Discord, this holds the full host incl. used protocol for connecting.
+     * @var string $_fullgatewayhost After building the endpoint to Discord,
+     * this holds the full host incl. used protocol for connecting.
      */
     protected $_fullgatewayhost;
 
@@ -69,7 +71,8 @@ class NetworkBase {
      *
      * Prepares the connection and builds the API endpoint before connecting.
      *
-     * @param bool $transfercompression Should we use transfer compression? (zlib compression on the webserver is needed for this).
+     * @param bool $transfercompression Should we use transfer compression?
+     * (zlib compression on the webserver is needed for this).
      */
     protected function __construct($transfercompression = false) {
         if(!is_bool($transfercompression)) { $this->_transfercompression = false; }
@@ -82,7 +85,8 @@ class NetworkBase {
         }
 
         $this->_fullgatewayhost = "ssl://".$this->_gatewayhost.":443";
-        $this->_gatewaypath = "/gateway/?v=".$this->_remoteapiversion."&encoding=json&compress=".$this->_transfercompression;
+        $this->_gatewaypath = "/gateway/?v=".$this->_remoteapiversion.
+            "&encoding=json&compress=".$this->_transfercompression;
     }
 
     /**

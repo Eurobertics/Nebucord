@@ -203,7 +203,9 @@ class HttpClient extends NetworkBase {
             }
         } else {
             if ($this->connect()) {
-                \Nebucord\Logging\MainLogger::info("Trying to get missing events, sending resume request after full reconnect...");
+                \Nebucord\Logging\MainLogger::info(
+                    "Trying to get missing events, sending resume request after full reconnect..."
+                );
                 return true;
             }
         }

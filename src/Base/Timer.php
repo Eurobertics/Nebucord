@@ -36,7 +36,9 @@ class Timer {
     /** @var array $_timers Holds all active timers. */
     private $_timers = array();
 
-    /** @var int $_time_modifier Sets the timemodifier (1x = seconds, 1000x = milliseconds i. E.). This is class global.*/
+    /**
+     * @var int $_time_modifier Sets the timemodifier (1x = seconds, 1000x = milliseconds i. E.).
+     */
     private $_time_modifier = 1;
 
     /**

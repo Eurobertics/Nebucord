@@ -151,7 +151,8 @@ interface iActionTable {
      * @param string $command The command on which this action should fire (default: !listappcmds).
      * @param integer $botuserid The bot user id which owns the app commands (application id).
      * @param string $bottoken The bot token to authenticate when receiving the app commands.
-     * @param integer $guild_id The guild id for listing the guild app commands (mostly the guild where the command originates from).
+     * @param integer $guild_id The guild id for listing the guild app commands (mostly the guild where the
+     * command originates from).
      * @return Model|null The model return to the runtime controller to execute the action by the ActionController.
      */
     public function doListAppCommands($command, $botuserid, $bottoken, $guild_id);

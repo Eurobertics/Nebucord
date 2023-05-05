@@ -34,9 +34,9 @@ use Nebucord\Models\Model;
  * Class EventController
  *
  * The event controller receives the events coming from the Discord gateway after the websocket/http client reads it.
- * Then this controller decides wich model is used for the incoming event and packs into it. Then it dispatches the event
- * model locally (for internal actions -> ActionController) and remote to the callback caller (if one is available,
- * EventTable).
+ * Then this controller decides wich model is used for the incoming event and packs into it.
+ * Then it dispatches the event model locally (for internal actions -> ActionController) and remote to the callback
+ * caller (if one is available, EventTable).
  *
  * @package Nebucord\Controller
  */
@@ -118,11 +118,20 @@ class EventController extends AbstractController {
         if($this->_lastopcode == StatusList::OP_DISPATCH) {
             $this->_lastevent = $this->_eventmessage['t'];
             $this->_lastsequence = $this->_eventmessage['s'];
-            \Nebucord\Logging\MainLogger::info("Event received: ".$this->_lastevent." - Sequence: ".$this->_lastsequence);
+            \Nebucord\Logging\MainLogger::info(
+                "Event received: ".$this->_lastevent." - Sequence: ".$this->_lastsequence
+            );
         }
 
         $this->_model = ModelFactory::create($this->_lastopcode, $this->_lastevent);
-        $this->_model->populate(['op' => $this->_lastopcode, 's' => $this->_lastsequence, 't' => $this->_lastevent, 'd' => $this->_lastmessage]);
+        $this->_model->populate(
+            [
+                'op' => $this->_lastopcode,
+                's' => $this->_lastsequence,
+                't' => $this->_lastevent,
+                'd' => $this->_lastmessage
+            ]
+        );
 
         $this->dispatchEventRemote();
     }
@@ -141,7 +150,13 @@ class EventController extends AbstractController {
                 call_user_func(array($evt_ar[$i]['class'], $evt_ar[$i]['method']), $this->_model);
             } else {
                 if(isset($evt_ar[$this->_lastevent][$i])) {
-                    call_user_func(array($evt_ar[$this->_lastevent][$i]['class'], $evt_ar[$this->_lastevent][$i]['method']), $this->_model);
+                    call_user_func(
+                        array(
+                            $evt_ar[$this->_lastevent][$i]['class'],
+                            $evt_ar[$this->_lastevent][$i]['method']
+                        ),
+                        $this->_model
+                    );
                 }
             }
         }

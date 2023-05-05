@@ -1,5 +1,8 @@
 <?php
-$docsrcdirectorylist = ['..\\..\\Discord_Docs_Ressource\\docs\\resources', '..\\..\\Discord_Docs_Ressource\\docs\\interactions'];
+$docsrcdirectorylist = [
+    '..\\..\\Discord_Docs_Ressource\\docs\\resources',
+    '..\\..\\Discord_Docs_Ressource\\docs\\interactions'
+];
 $targetcsvfile = './src/REST/Base/restrequestlist.csv';
 $targetclassfile = './src/REST/Base/RestStatusList.php';
 
@@ -59,7 +62,8 @@ for($dir_i = 0; $dir_i < count($docsrcdirectorylist); $dir_i++) {
         }
     }
 }
-$csvarray[] = "REST_INTERACTION_RESPONSE;POST;interactions/##INTERACTION_ID##/##INTERACTION_TOKEN/callback?"; // TODO Interactions to be automated in the future?
+// TODO Interactions to be automated in the future?
+$csvarray[] = "REST_INTERACTION_RESPONSE;POST;interactions/##INTERACTION_ID##/##INTERACTION_TOKEN/callback?";
 
 echo "Building done... writing to '".$targetcsvfile."'".lb();
 $fd = fopen($targetcsvfile, 'w');
@@ -114,7 +118,8 @@ echo "Building consts from Discord docs...".lb();
 for($i = 0; $i < count($constarray); $i++) {
     $classstring .= "\tconst ".$constarray[$i]." = '".$constarray[$i]."';\n";
 }
-$classstring .= "\tconst REST_INTERACTION_RESPONSE = 'REST_INTERACTION_RESPONSE';\n"; // TODO Interactions to be automated in the future?
+// TODO Interactions to be automated in the future?
+$classstring .= "\tconst REST_INTERACTION_RESPONSE = 'REST_INTERACTION_RESPONSE';\n";
 $classstring .= "}";
 fwrite($fd, $classstring);
 fclose($fd);

@@ -46,7 +46,8 @@ abstract class BuildApiEndpoints
      * REST API data and to build the API endpoint.
      *
      * @param string $apiendpoint A StatusList REST request const which sets the API endpoint to be build
-     * @param array $param The data used to build the API endpoint such as channel ids, guild ids limits and such things (mostly generated from ModelREST::toArray()
+     * @param array $param The data used to build the API endpoint such as channel ids, guild ids limits and such
+     * things (mostly generated from ModelREST::toArray()
      * @return string The finished API endpoint ready to use for the REST HTTP client
      *@see ModelREST::toArray() for $param the be used
      * @see StatusList for $apiendpoint
@@ -57,7 +58,12 @@ abstract class BuildApiEndpoints
         $restarray = $oRestArrayLoader->getRestArray();
         $endpoint = $restarray[$apiendpoint][1];
         foreach($param as $pkey => $pvalue) {
-            $endpoint = self::replaceParam($endpoint, $pkey, $pvalue, (($restarray[$apiendpoint][0] == 'GET') ? true : false));
+            $endpoint = self::replaceParam(
+                $endpoint,
+                $pkey,
+                $pvalue,
+                (($restarray[$apiendpoint][0] == 'GET') ? true : false)
+            );
         }
         return substr($endpoint, 0, -1);
     }

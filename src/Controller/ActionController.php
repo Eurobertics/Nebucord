@@ -220,10 +220,37 @@ class ActionController extends AbstractController {
     private function doIdentify() {
         if($this->_state == StatusList::NC_RECONNECT) {
             $this->_outevent = ModelFactory::create(StatusList::OP_RESUME);
-            $this->_outevent->populate(['op' => StatusList::OP_RESUME, 'd' => ['token' => $this->_token, 'session_id' => $this->_sessionid, 'seq' => $this->_sequence]]);
+            $this->_outevent->populate([
+                'op' => StatusList::OP_RESUME,
+                'd' => [
+                        'token' => $this->_token,
+                        'session_id' => $this->_sessionid,
+                        'seq' => $this->_sequence
+                    ]
+                ]);
         } else {
             $this->_outevent = ModelFactory::create(StatusList::OP_IDENTIFY);
-            $this->_outevent->populate(['op' => StatusList::OP_IDENTIFY, 'd' => ['token' => $this->_token, 'properties' => ['$os' => StatusList::getOS(), '$browser' => StatusList::getBrowser(), '$device' => StatusList::getDevice()], 'compress' => false, 'presence' => ['since' => null, 'game' => null, 'status' => 'online', 'afk' => false], 'intents' => $this->_intents]]);
+            $this->_outevent->populate([
+                'op' => StatusList::OP_IDENTIFY,
+                'd' =>
+                    [
+                        'token' => $this->_token,
+                        'properties' =>
+                            [
+                                '$os' => StatusList::getOS(),
+                                '$browser' => StatusList::getBrowser(),
+                                '$device' => StatusList::getDevice()],
+                                'compress' => false,
+                                'presence' =>
+                                    [
+                                        'since' => null,
+                                        'game' => null,
+                                        'status' => 'online',
+                                        'afk' => false
+                                    ],
+                        'intents' => $this->_intents
+                    ]
+            ]);
         }
     }
 
@@ -287,7 +314,12 @@ class ActionController extends AbstractController {
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id, 'reboot' => true]);
             } else if (str_contains($msg, iActionTable::DOLISTAPPCOMMANDS)) {
                 \Nebucord\Logging\MainLogger::info("List application command received: " . $msg);
-                $this->_outevent = $this->_acttbl->doListAppCommands($msg, $this->_botuserid, $this->_token, $this->_inevent->guild_id);
+                $this->_outevent = $this->_acttbl->doListAppCommands(
+                    $msg,
+                    $this->_botuserid,
+                    $this->_token,
+                    $this->_inevent->guild_id
+                );
                 $this->_outevent->populate(['channel_id' => $this->_inevent->channel_id]);
             }
         }

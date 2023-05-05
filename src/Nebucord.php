@@ -66,7 +66,9 @@ class Nebucord {
      * @param array $params User given parameter such as controll user or bot token.
      */
     public function __construct(array $params = array()) {
-        Logging\MainLogger::infoImportant("Starting Nebucord v. ".Base\StatusList::VERSION." on ".Base\StatusList::CLIENTHOST);
+        Logging\MainLogger::infoImportant(
+            "Starting Nebucord v. ".Base\StatusList::VERSION." on ".Base\StatusList::CLIENTHOST
+        );
         $this->_params = $params;
     }
 
@@ -168,7 +170,9 @@ class Nebucord {
      */
     public function run() {
         if(!$this->_bootstrappingdone) {
-            Logging\MainLogger::error("Bootstrapping not done, aborting! (did you forget to call Nebucord::bootstrap()?)");
+            Logging\MainLogger::error(
+                "Bootstrapping not done, aborting! (did you forget to call Nebucord::bootstrap()?)"
+            );
             return;
         }
         $this->prepare();
@@ -190,7 +194,12 @@ class Nebucord {
             $this->_acttbl = new Events\ActionTable();
             Logging\MainLogger::info("No actiontable set, using default one...");
         }
-        $this->_runtimecontroller = new RuntimeController($this->_wscon, $this->_evttbl, $this->_acttbl, $this->_params);
+        $this->_runtimecontroller = new RuntimeController(
+            $this->_wscon,
+            $this->_evttbl,
+            $this->_acttbl,
+            $this->_params
+        );
     }
 
     /**

@@ -45,7 +45,10 @@ abstract class AbstractModel {
     /** @var StatusList $_t The current gateway event. */
     protected $_t = null;
 
-    /** @var string $_http_status_code The last webserver response status code if it is a response from a REST request. */
+    /**
+     * @var string $_http_status_code The last webserver response
+     * status code if it is a response from a REST request.
+     */
     protected $_http_status_code = null;
 
     /** @var array $_data Storage for all model data. */

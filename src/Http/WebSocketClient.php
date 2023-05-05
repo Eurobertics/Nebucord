@@ -41,7 +41,10 @@ class WebSocketClient extends HttpClient {
     /** @var object $_instance The websocket instance. */
     private static $_instance;
 
-    /** @var int $requestcount The amount of request within the RATELIMIT_TIMEFRAME (resets after RATELIMIT_TIMEFRAME timed out). */
+    /**
+     * @var int $requestcount The amount of request within the RATELIMIT_TIMEFRAME
+     * (resets after RATELIMIT_TIMEFRAME timed out).
+     */
     private $requestcount = 0;
 
     /** @var Timer $ratelimit_timer The timer wich is used to determine rate limit. */
@@ -252,7 +255,8 @@ class WebSocketClient extends HttpClient {
      * After decoding the first buffer chunk, the payload length from the gateway is known though the frame header
      * of the message. So this method reads all the data for the given length of the payload.
      *
-     * @return array First key: the decoded byte string in JSON format, second key: 0 on no error, -1 on failure or -2 on gateway closes connection.
+     * @return array First key: the decoded byte string in JSON format, second key: 0 on no error, -1 on failure
+     * or -2 on gateway closes connection.
      */
     public function soReadAll() {
         $pl_len = 0;

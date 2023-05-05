@@ -63,8 +63,10 @@ abstract class AbstractEventTable {
      *
      * @param mixed $class The class of the method wich should be executed.
      * @param string $method The method of the given class wich should be fired.
-     * @param object StatusList $gwevent The gatway event on wich the callback will be executed (as of Nebucord::<GWEVT_*>).
-     * @param integer StatusList $opcode The opcode from the gateway on wich the callback will be executed (as of Nebucord::<OP_*>).
+     * @param object $gwevent StatusList $gwevent The gatway event on wich the
+     * callback will be executed (as of Nebucord::<GWEVT_*>).
+     * @param integer $opcode StatusList $opcode The opcode from the gateway on
+     * wich the callback will be executed (as of Nebucord::<OP_*>).
      * @return null
      */
     abstract public function addEvent($class, $method, $gwevent, $opcode);

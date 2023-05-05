@@ -137,8 +137,7 @@ class HttpClient extends AbstractBase {
     protected function send() {
         $this->buildRequest();
         $request = $this->requestToString();
-        $bytes = fwrite($this->_socket, $request, strlen($request));
-        return $bytes;
+        return fwrite($this->_socket, $request, strlen($request));
     }
 
     /**

@@ -44,7 +44,9 @@ use Nebucord\REST\Base\HttpClient;
  */
 class Executor extends Action
 {
-    /** @var Model|array|null $returnmodel Holds the model data on REST request return (maybe as a array of data) or null if empty/error. */
+    /** @var Model|array|null $returnmodel Holds the model data on REST request return (maybe as a array of data)
+     * or null if empty/error.
+     */
     private $returnmodel = null;
 
     /**
@@ -78,7 +80,8 @@ class Executor extends Action
      *
      * @param string $requesttype The request type based on StatusList.
      * @param ModelREST $requestmodel The prepared model with data to be send to the rest gateway.
-     * @return Model|array|null The data returned from the request (maybe as an array of data) or null if nothing is available.
+     * @return Model|array|null The data returned from the request (maybe as an array of data)
+     * or null if nothing is available.
      * @throws \Exception Throws an exception if the ModelREST is wrong.
      *@see  ModelREST
      * @see StatusList
@@ -100,7 +103,8 @@ class Executor extends Action
      *
      * @param string $requesttype The request type based on StatusList.
      * @param array $param The payload for the request to be send to the gatewqy.
-     * @return Model|array|null The data returned from the request (maybe as an array of data) or null if nothing is available.
+     * @return Model|array|null The data returned from the request (maybe as an array of data) or null if
+     * nothing is available.
      * @throws \Exception Throws an exception if the ModelREST is wrong.
      *@see  ModelREST
      * @see StatusList
@@ -186,7 +190,8 @@ class Executor extends Action
      * After sending the request and the data is stored, this method returns the private model with
      * the data if any data available. If no data is available, the model should be null.
      *
-     * @return Model|array|null The data returned from the request (maybe as an array of data) or null if nothing is available.
+     * @return Model|array|null The data returned from the request (maybe as an array of data)
+     * or null if nothing is available.
      */
     public function getRESTResponse()
     {

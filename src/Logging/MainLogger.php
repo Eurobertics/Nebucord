@@ -199,7 +199,8 @@ class MainLogger {
     public function logInfoImportant($message, $logtofile = false) {
         $msg = $this->logMsgPrepend($message, MainLogger::LOG_INFO);
 
-        echo MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_BLACK.MainLogger::CLI_COLOR_STRDELI.MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_BG_GREEN.MainLogger::CLI_COLOR_STRDELI;
+        echo MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_BLACK.MainLogger::CLI_COLOR_STRDELI.
+            MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_BG_GREEN.MainLogger::CLI_COLOR_STRDELI;
         echo $msg;
         echo MainLogger::CLI_COLOR_APPEND;
         echo "\n";
@@ -223,7 +224,8 @@ class MainLogger {
     public function logWarn($message, $logtofile = false) {
         $msg = $this->logMsgPrepend($message, MainLogger::LOG_WARN);
 
-        echo MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_RED.MainLogger::CLI_COLOR_STRDELI.MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_BG_YELLOW.MainLogger::CLI_COLOR_STRDELI;
+        echo MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_RED.MainLogger::CLI_COLOR_STRDELI.
+            MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_BG_YELLOW.MainLogger::CLI_COLOR_STRDELI;
         echo $msg;
         echo MainLogger::CLI_COLOR_APPEND;
         echo "\n";
@@ -247,7 +249,8 @@ class MainLogger {
     public function logError($message, $logtofile = false) {
         $msg = $this->logMsgPrepend($message, MainLogger::LOG_ERROR);
 
-        echo MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_YELLOW.MainLogger::CLI_COLOR_STRDELI.MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_BG_RED.MainLogger::CLI_COLOR_STRDELI;
+        echo MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_YELLOW.MainLogger::CLI_COLOR_STRDELI.
+            MainLogger::CLI_COLOR_PREPEND.MainLogger::CLI_BG_RED.MainLogger::CLI_COLOR_STRDELI;
         echo $msg;
         echo MainLogger::CLI_COLOR_APPEND;
         echo "\n";

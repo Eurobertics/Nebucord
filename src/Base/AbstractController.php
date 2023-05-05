@@ -60,8 +60,7 @@ abstract class AbstractController {
      */
     public function parseJSON($jsonmsg) {
         if(strlen($jsonmsg) > 0) {
-            $message = json_decode($jsonmsg, true);
-            return $message;
+            return json_decode($jsonmsg, true);
         } else {
             return null;
         }

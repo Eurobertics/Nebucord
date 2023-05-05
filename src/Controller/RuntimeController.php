@@ -61,7 +61,10 @@ class RuntimeController extends AbstractController {
     /** @var EventTable $_evttbl The event table wich keeps track on the callbacks to called on an event. */
     private $_evttbl;
 
-    /** @var ActionTable $_acttbl The action table wich keeps track on the action locally executed on arrival of a gateway event. */
+    /**
+     * @var ActionTable $_acttbl The action table wich keeps track on the action locally executed on arrival of a
+     * gateway event.
+     */
     private $_acttbl;
 
     /** @var ActionController $_actctrl Controls the actions to be executed locally. */
@@ -161,9 +164,13 @@ class RuntimeController extends AbstractController {
      * If a connection breaks, this method is called to reconnect and try initiate listen status for missed events.
      */
     private function resume() {
-        \Nebucord\Logging\MainLogger::warn("Reconnect with try ".$this->_reconnect_tries." of ".$this->_params['wsretries']."...");
+        \Nebucord\Logging\MainLogger::warn(
+            "Reconnect with try ".$this->_reconnect_tries." of ".$this->_params['wsretries']."..."
+        );
         if($this->_reconnect_tries >= $this->_params['wsretries']) {
-            \Nebucord\Logging\MainLogger::infoImportant("Max reconnection tries reached, giving up and exiting...");
+            \Nebucord\Logging\MainLogger::infoImportant(
+                "Max reconnection tries reached, giving up and exiting..."
+            );
             $this->setRuntimeState(StatusList::NC_EXIT);
             return;
         }
@@ -195,7 +202,9 @@ class RuntimeController extends AbstractController {
         while($this->_runstate > StatusList::NC_EXIT) {
             $message = $this->_wscon->soReadAll();
             if($message[0] == -1) {
-                \Nebucord\Logging\MainLogger::error("Error reading event from gateway, disconnect and try to reconnect...");
+                \Nebucord\Logging\MainLogger::error(
+                    "Error reading event from gateway, disconnect and try to reconnect..."
+                );
                 $this->botFailureMessage(serialize($message), StatusList::NC_RECONNECT);
                 $this->setRuntimeState(StatusList::NC_RECONNECT);
                 continue;
@@ -203,7 +212,16 @@ class RuntimeController extends AbstractController {
             if($message[0] == -2) {
                 \Nebucord\Logging\MainLogger::error("Gateway respond with error: ".$message[1]);
                 \Nebucord\Logging\MainLogger::error("Gateway closes connection, exiting...");
-                if(((int)substr($message[1], 0, 4) >= 1000 && (int)substr($message[1], 0, 4) <= 1015) || ((int)substr($message[1], 0, 4) >= 4000 && (int)substr($message[1], 0, 4) <= 4014)) {
+                if(
+                    (
+                        (int)substr($message[1], 0, 4) >= 1000 &&
+                        (int)substr($message[1], 0, 4) <= 1015
+                    ) ||
+                    (
+                        (int)substr($message[1], 0, 4) >= 4000 &&
+                        (int)substr($message[1], 0, 4) <= 4014
+                    )
+                ) {
                     $closecode = substr($message[1], 0, 4);
                     switch($closecode) {
                         case "4004":
@@ -215,11 +233,15 @@ class RuntimeController extends AbstractController {
                         default: $whichaction = StatusList::NC_RECONNECT; break;
                     }
                     $this->botFailureMessage("Websocket close code '".$closecode."' received.", $whichaction);
-                    \Nebucord\Logging\MainLogger::warn("Websocket close code received (".$closecode."). Nebucord state code: ".$whichaction);
+                    \Nebucord\Logging\MainLogger::warn(
+                        "Websocket close code received (".$closecode."). Nebucord state code: ".$whichaction
+                    );
                     $this->setRuntimeState($whichaction);
                 } else {
                     $this->botFailureMessage(serialize($message), StatusList::NC_EXIT);
-                    \Nebucord\Logging\MainLogger::error("Websocket code ".$message[1]." received, seems unnatural, exiting!");
+                    \Nebucord\Logging\MainLogger::error(
+                        "Websocket code ".$message[1]." received, seems unnatural, exiting!"
+                    );
                     $this->setRuntimeState(StatusList::NC_EXIT);
                 }
                 continue;
@@ -227,14 +249,21 @@ class RuntimeController extends AbstractController {
 
             if($message[0] == 0 && !empty($message[1])) {
                 if(!$this->_evtctrl->readEvent($message[1])) {
-                    \Nebucord\Logging\MainLogger::error("Could not decode message from gateway, API or connection may broken (received NULL). Ignoring message and reconnect for resume!");
+                    $errormsg = "Could not decode message from gateway, API or connection may broken (received NULL). ";
+                    $errormsg .= "Ignoring message and reconnect for resume!";
+                    \Nebucord\Logging\MainLogger::error($errormsg);
                     $this->botFailureMessage(serialize($message), StatusList::NC_RECONNECT);
                     $this->setRuntimeState(StatusList::NC_RECONNECT);
                     //continue;
                 }
                 $oInEvent = $this->_evtctrl->dispatchEventLocal();
                 if(isset($oInEvent->heartbeat_interval)) { $intervaltime = $oInEvent->heartbeat_interval; }
-                if(!is_null($oInEvent->s) && $this->_runstate == StatusList::NC_RUN) { $currentsequence = $oInEvent->s; $this->_actctrl->setSequence($oInEvent->s); }
+                if(
+                    !is_null($oInEvent->s) &&
+                    $this->_runstate == StatusList::NC_RUN
+                ) {
+                    $currentsequence = $oInEvent->s; $this->_actctrl->setSequence($oInEvent->s);
+                }
                 if($oInEvent->t == StatusList::GWEVT_READY) {
                     $this->_wscon->setNewWSConnectURL($oInEvent->resume_gateway_url);
                     $this->botStartup($oInEvent);
@@ -250,11 +279,18 @@ class RuntimeController extends AbstractController {
                             unset($oOutEvent->reboot);
                         }
                     } else {
-                        if($oOutEvent->t == StatusList::GWEVT_RESUMED) { $this->setRuntimeState(StatusList::NC_RUN); $timer->reStartTimer(); $timer->reStartTimer(1); $this->_reconnect_tries = 0; }
+                        if($oOutEvent->t == StatusList::GWEVT_RESUMED) {
+                            $this->setRuntimeState(StatusList::NC_RUN);
+                            $timer->reStartTimer();
+                            $timer->reStartTimer(1);
+                            $this->_reconnect_tries = 0;
+                        }
                         else { $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oOutEvent->toArray())); }
                         if($sendbytes == -1) {
                             \Nebucord\Logging\MainLogger::error("Can't write event to gateway, exiting...");
-                            $this->botFailureMessage("Can't write event to gateway, exiting...", StatusList::NC_FULLRECONNECT);
+                            $this->botFailureMessage(
+                                "Can't write event to gateway, exiting...", StatusList::NC_FULLRECONNECT
+                            );
                             $this->setRuntimeState(StatusList::NC_FULLRECONNECT);
                             continue;
                         }
@@ -270,8 +306,10 @@ class RuntimeController extends AbstractController {
             }
 
             if($timer->getTime(1) > ($intervaltime * 1.5) && $this->_runstate == StatusList::NC_RUN) {
-                \Nebucord\Logging\MainLogger::error("Did not receive any heartbeat response from gateway. Connection broken? Try to reconnect...");
-                $this->botFailureMessage("Did not receive any heartbeat response from gateway. Connection broken? Try to reconnect...", StatusList::NC_RECONNECT);
+                $errormsg = "Did not receive any heartbeat response from gateway.";
+                $errormsg .= "Connection broken? Try to reconnect...";
+                \Nebucord\Logging\MainLogger::error($errormsg);
+                $this->botFailureMessage($errormsg, StatusList::NC_RECONNECT);
                 $this->setRuntimeState(StatusList::NC_RECONNECT);
             }
 
@@ -282,8 +320,13 @@ class RuntimeController extends AbstractController {
                 \Nebucord\Logging\MainLogger::info("Sending heartbeat...");
                 $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oHeartbeat->toArray()));
                 if($sendbytes == -1) {
-                    \Nebucord\Logging\MainLogger::error("Can't write heartbeat message to gateway, exiting...");
-                    $this->botFailureMessage("Can't write heartbeat message to gateway, exiting...", StatusList::NC_RECONNECT);
+                    \Nebucord\Logging\MainLogger::error(
+                        "Can't write heartbeat message to gateway, exiting..."
+                    );
+                    $this->botFailureMessage(
+                        "Can't write heartbeat message to gateway, exiting...",
+                        StatusList::NC_RECONNECT
+                    );
                     $this->setRuntimeState(StatusList::NC_RECONNECT);
                 }
             }
@@ -303,9 +346,27 @@ class RuntimeController extends AbstractController {
         $this->_botusername = $evt->user['username'];
         $this->_actctrl->setBotId($this->_botuserid);
 
-        $readyconfirmmsg = array("title" => StatusList::CLIENTBROWSER." ".StatusList::VERSION, "description" => self::BOTDETAILLITERAL, "fields" => array(array("name" => self::BOTNAMELITERAL, "value" => $this->_botusername, "inline" => false), array("name" => "Bot Snowflake ID", "value" => $this->_botuserid, "inline" => false)));
+        $readyconfirmmsg = array(
+            "title" => StatusList::CLIENTBROWSER." ".StatusList::VERSION,
+            "description" => self::BOTDETAILLITERAL,
+            "fields" => array(
+                array(
+                    "name" => self::BOTNAMELITERAL,
+                    "value" => $this->_botusername,
+                    "inline" => false
+                ),
+                array(
+                    "name" => "Bot Snowflake ID",
+                    "value" => $this->_botuserid,
+                    "inline" => false
+                )
+            )
+        );
         for($i = 0; $i < count($this->_params['ctrlusr']); $i++) {
-            $dmch = $this->_rest->createRESTExecutor()->executeFromArray(RestStatusList::REST_CREATE_DM, ['recipient_id' => $this->_params['ctrlusr'][$i]]);
+            $dmch = $this->_rest->createRESTExecutor()->executeFromArray(
+                RestStatusList::REST_CREATE_DM,
+                ['recipient_id' => $this->_params['ctrlusr'][$i]]
+            );
             $this->_rest->createRESTExecutor()->executeFromArray(RestStatusList::REST_CREATE_MESSAGE, [
                 'channel_id' => $dmch->id,
                 'content' => "Bot is ready and online.",
@@ -322,9 +383,27 @@ class RuntimeController extends AbstractController {
      * Sends a shutdown notification to the bot admins.
      */
     private function botShutdown() {
-        $shutdownmsg = array("title" => StatusList::CLIENTBROWSER." ".StatusList::VERSION, "description" => self::BOTDETAILLITERAL, "fields" => array(array("name" => self::BOTNAMELITERAL, "value" => $this->_botusername, "inline" => false), array("name" => "Bot Snowflake ID", "value" => $this->_botuserid, "inline" => false)));
+        $shutdownmsg = array(
+            "title" => StatusList::CLIENTBROWSER." ".StatusList::VERSION,
+            "description" => self::BOTDETAILLITERAL,
+            "fields" => array(
+                array(
+                    "name" => self::BOTNAMELITERAL,
+                    "value" => $this->_botusername,
+                    "inline" => false
+                ),
+                array(
+                    "name" => "Bot Snowflake ID",
+                    "value" => $this->_botuserid,
+                    "inline" => false
+                )
+            )
+        );
         for($i = 0; $i < count($this->_params['ctrlusr']); $i++) {
-            $dmch = $this->_rest->createRESTExecutor()->executeFromArray(RestStatusList::REST_CREATE_DM, ['recipient_id' => $this->_params['ctrlusr'][$i]]);
+            $dmch = $this->_rest->createRESTExecutor()->executeFromArray(
+                RestStatusList::REST_CREATE_DM,
+                ['recipient_id' => $this->_params['ctrlusr'][$i]]
+            );
             $this->_rest->createRESTExecutor()->executeFromArray(RestStatusList::REST_CREATE_MESSAGE, [
                 'channel_id' => $dmch->id,
                 'content' => "Bot ending process and exits, shutdown scheduled.",
@@ -345,9 +424,14 @@ class RuntimeController extends AbstractController {
     private function botMessage(\Nebucord\Models\Model $evt) {
         $oRESTRequestModel = ModelFactory::createREST(RestStatusList::REST_CREATE_MESSAGE);
         $oRESTRequestModel->populate($evt->toArray());
-        $res = $this->_rest->createRESTExecutor()->execute(RestStatusList::REST_CREATE_MESSAGE, $oRESTRequestModel);
+        $res = $this->_rest->createRESTExecutor()->execute(
+            RestStatusList::REST_CREATE_MESSAGE,
+            $oRESTRequestModel
+        );
         if($res->getHttpStatusCode() != "200 OK") {
-            \Nebucord\Logging\MainLogger::warn("Last bot message could not be delivered, gateway responed with:");
+            \Nebucord\Logging\MainLogger::warn(
+                "Last bot message could not be delivered, gateway responed with:"
+            );
             \Nebucord\Logging\MainLogger::warn("Code: ".$res->code." | Message: ".$res->message);
         }
     }
@@ -384,7 +468,10 @@ class RuntimeController extends AbstractController {
             )
         );
         for($i = 0; $i < count($this->_params['ctrlusr']); $i++) {
-            $dmch = $this->_rest->createRESTExecutor()->executeFromArray(RestStatusList::REST_CREATE_DM, ['recipient_id' => $this->_params['ctrlusr'][$i]]);
+            $dmch = $this->_rest->createRESTExecutor()->executeFromArray(
+                RestStatusList::REST_CREATE_DM,
+                ['recipient_id' => $this->_params['ctrlusr'][$i]]
+            );
             $this->_rest->createRESTExecutor()->executeFromArray(RestStatusList::REST_CREATE_MESSAGE, [
                 'channel_id' => $dmch->id,
                 'content' => "Nebucord API encountered an error!",
