@@ -85,6 +85,9 @@ class RuntimeController extends AbstractController {
     /** @var NebucordREST $_rest Nebucord REST api object. */
     private $_rest;
 
+    /** @var array $_botsystemmessage Systemmessage on startup and shutdown */
+    private $_botsystemmessage;
+
     /**
      * RuntimeController constructor.
      *
@@ -103,6 +106,23 @@ class RuntimeController extends AbstractController {
         $this->_params = $params;
 
         $this->_reconnect_tries = 0;
+
+        $this->_botsystemmessage = array(
+            "title" => StatusList::CLIENTBROWSER." ".StatusList::VERSION,
+            "description" => self::BOTDETAILLITERAL,
+            "fields" => array(
+                array(
+                    "name" => self::BOTNAMELITERAL,
+                    "value" => "",
+                    "inline" => false
+                ),
+                array(
+                    "name" => "Bot Snowflake ID",
+                    "value" => "",
+                    "inline" => false
+                )
+            )
+        );
     }
 
     /**
@@ -254,7 +274,6 @@ class RuntimeController extends AbstractController {
                     \Nebucord\Logging\MainLogger::error($errormsg);
                     $this->botFailureMessage(serialize($message), StatusList::NC_RECONNECT);
                     $this->setRuntimeState(StatusList::NC_RECONNECT);
-                    //continue;
                 }
                 $oInEvent = $this->_evtctrl->dispatchEventLocal();
                 if(isset($oInEvent->heartbeat_interval)) { $intervaltime = $oInEvent->heartbeat_interval; }
@@ -287,10 +306,9 @@ class RuntimeController extends AbstractController {
                         }
                         else { $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oOutEvent->toArray())); }
                         if($sendbytes == -1) {
-                            \Nebucord\Logging\MainLogger::error("Can't write event to gateway, exiting...");
-                            $this->botFailureMessage(
-                                "Can't write event to gateway, exiting...", StatusList::NC_FULLRECONNECT
-                            );
+                            $errormsg = "Can't write event to gateway, exiting...";
+                            \Nebucord\Logging\MainLogger::error($errormsg);
+                            $this->botFailureMessage($errormsg, StatusList::NC_FULLRECONNECT);
                             $this->setRuntimeState(StatusList::NC_FULLRECONNECT);
                             continue;
                         }
@@ -320,13 +338,9 @@ class RuntimeController extends AbstractController {
                 \Nebucord\Logging\MainLogger::info("Sending heartbeat...");
                 $sendbytes = $this->_wscon->soWriteAll($this->prepareJSON($oHeartbeat->toArray()));
                 if($sendbytes == -1) {
-                    \Nebucord\Logging\MainLogger::error(
-                        "Can't write heartbeat message to gateway, exiting..."
-                    );
-                    $this->botFailureMessage(
-                        "Can't write heartbeat message to gateway, exiting...",
-                        StatusList::NC_RECONNECT
-                    );
+                    $errormsg = "Can't write heartbeat message to gateway, exiting...";
+                    \Nebucord\Logging\MainLogger::error($errormsg);
+                    $this->botFailureMessage($errormsg, StatusList::NC_RECONNECT);
                     $this->setRuntimeState(StatusList::NC_RECONNECT);
                 }
             }
@@ -345,23 +359,8 @@ class RuntimeController extends AbstractController {
         $this->_botuserid = $evt->user['id'];
         $this->_botusername = $evt->user['username'];
         $this->_actctrl->setBotId($this->_botuserid);
-
-        $readyconfirmmsg = array(
-            "title" => StatusList::CLIENTBROWSER." ".StatusList::VERSION,
-            "description" => self::BOTDETAILLITERAL,
-            "fields" => array(
-                array(
-                    "name" => self::BOTNAMELITERAL,
-                    "value" => $this->_botusername,
-                    "inline" => false
-                ),
-                array(
-                    "name" => "Bot Snowflake ID",
-                    "value" => $this->_botuserid,
-                    "inline" => false
-                )
-            )
-        );
+        $this->_botsystemmessage['fields'][0]['value'] = $this->_botusername;
+        $this->_botsystemmessage['fields'][1]['value'] = $this->_botuserid;
         for($i = 0; $i < count($this->_params['ctrlusr']); $i++) {
             $dmch = $this->_rest->createRESTExecutor()->executeFromArray(
                 RestStatusList::REST_CREATE_DM,
@@ -370,7 +369,7 @@ class RuntimeController extends AbstractController {
             $this->_rest->createRESTExecutor()->executeFromArray(RestStatusList::REST_CREATE_MESSAGE, [
                 'channel_id' => $dmch->id,
                 'content' => "Bot is ready and online.",
-                'embed' => $readyconfirmmsg
+                'embed' => $this->_botsystemmessage
             ]);
         }
         unset($dmch);
@@ -383,22 +382,6 @@ class RuntimeController extends AbstractController {
      * Sends a shutdown notification to the bot admins.
      */
     private function botShutdown() {
-        $shutdownmsg = array(
-            "title" => StatusList::CLIENTBROWSER." ".StatusList::VERSION,
-            "description" => self::BOTDETAILLITERAL,
-            "fields" => array(
-                array(
-                    "name" => self::BOTNAMELITERAL,
-                    "value" => $this->_botusername,
-                    "inline" => false
-                ),
-                array(
-                    "name" => "Bot Snowflake ID",
-                    "value" => $this->_botuserid,
-                    "inline" => false
-                )
-            )
-        );
         for($i = 0; $i < count($this->_params['ctrlusr']); $i++) {
             $dmch = $this->_rest->createRESTExecutor()->executeFromArray(
                 RestStatusList::REST_CREATE_DM,
@@ -407,7 +390,7 @@ class RuntimeController extends AbstractController {
             $this->_rest->createRESTExecutor()->executeFromArray(RestStatusList::REST_CREATE_MESSAGE, [
                 'channel_id' => $dmch->id,
                 'content' => "Bot ending process and exits, shutdown scheduled.",
-                'embed' => $shutdownmsg
+                'embed' => $this->_botsystemmessage
             ]);
         }
         unset($dmch);
