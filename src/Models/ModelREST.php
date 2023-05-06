@@ -87,6 +87,7 @@ class ModelREST extends Model implements IModelREST
     public function __destruct()
     {
         parent::__destruct();
+        $this->_status_type = "";
     }
 
     /**

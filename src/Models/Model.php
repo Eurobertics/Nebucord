@@ -53,5 +53,7 @@ class Model extends AbstractModel {
      */
     public function __destruct() {
     	parent::__destruct();
+    	$this->_op = null;
+    	$this->_t = null;
     }
 }
