@@ -47,6 +47,7 @@ class HttpClient extends NetworkBase {
      */
     protected function __construct() {
         parent::__construct();
+        $this->_socket = 0;
     }
 
     /**

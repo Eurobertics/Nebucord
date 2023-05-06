@@ -96,6 +96,7 @@ class WebSocketClient extends HttpClient {
      */
     public function __destruct() {
         parent::__destruct();
+        $this->ratelimit_timer = null;
     }
 
     /**
