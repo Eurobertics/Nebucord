@@ -24,6 +24,8 @@
 
 namespace Nebucord\Base;
 
+use Nebucord\Exceptions\NoDiscordApiUrlException;
+
 /**
  * Class NetworkBase
  *
@@ -81,7 +83,7 @@ class NetworkBase {
         $wsuri = json_decode(file_get_contents($this->_httpapiuri), true);
         $this->_gatewayhost = substr($wsuri['url'], 6);
         if($this->_gatewayhost == null || empty($this->_gatewayhost)) {
-            throw new \Exception("Error getting Discord websocket API URI!");
+            throw new NoDiscordApiUrlException("Error getting Discord websocket API URI!");
         }
 
         $this->_fullgatewayhost = "ssl://".$this->_gatewayhost.":443";

@@ -27,6 +27,7 @@ namespace Nebucord\Models;
 use \Exception;
 use Nebucord\Base\AbstractModel;
 use Nebucord\Base\StatusList;
+use Nebucord\Exceptions\UnsupportedRequestTypeException;
 use Nebucord\Interfaces\IModelREST;
 use Nebucord\REST\Base\AbstractBase;
 use Nebucord\REST\Base\HttpClient;
@@ -127,7 +128,7 @@ class ModelREST extends Model implements IModelREST
     public function setRequestType(string $requesttype)
     {
         if(!in_array($requesttype, AbstractBase::SENDREQUEST_TYPES)) {
-            throw new \Exception("Unsupported request type set: ".$requesttype.", class: ModelREST");
+            throw new UnsupportedRequestTypeException("Unsupported request type set: ".$requesttype.", class: ModelREST");
         }
         $this->_request_type = $requesttype;
     }
