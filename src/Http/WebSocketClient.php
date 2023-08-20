@@ -151,7 +151,6 @@ class WebSocketClient extends HttpClient {
             }
             // most significant bit MUST be 0 (close connection if frame too big)
             if ($frameheader[2]>127) {
-                //$this->close(1004);
                 return false;
             }
         } elseif ($length>125) {

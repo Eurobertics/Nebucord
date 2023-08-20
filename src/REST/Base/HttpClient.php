@@ -24,6 +24,7 @@
 
 namespace Nebucord\REST\Base;
 
+use Exceptions\RateLimitExceededException;
 use Nebucord\Interfaces\IModelREST;
 
 /**
@@ -65,7 +66,7 @@ class HttpClient extends AbstractBase {
             return;
         }
         if($httpheader['x-ratelimit-limit'] <= ($httpheader['x-ratelimit-remaining'] - 1)) {
-            throw new \Exception("ERROR: Ratelimit exceeded!");
+            throw new RateLimitExceededException("ERROR: Ratelimit exceeded!");
         }
     }
 

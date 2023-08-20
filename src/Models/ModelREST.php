@@ -128,7 +128,9 @@ class ModelREST extends Model implements IModelREST
     public function setRequestType(string $requesttype)
     {
         if(!in_array($requesttype, AbstractBase::SENDREQUEST_TYPES)) {
-            throw new UnsupportedRequestTypeException("Unsupported request type set: ".$requesttype.", class: ModelREST");
+            throw new UnsupportedRequestTypeException(
+                "Unsupported request type set: ".$requesttype.", class: ModelREST"
+            );
         }
         $this->_request_type = $requesttype;
     }

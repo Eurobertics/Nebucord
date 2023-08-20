@@ -1,8 +1,10 @@
 <?php
 
-namespace Nebucord\Exceptions;
+namespace Exceptions;
 
-class NoDiscordApiUrlException extends \Exception
+use Nebucord\Exceptions\Throwable;
+
+class RateLimitExceededException extends \Exception
 {
     public function __construct(string $message = "", int $code = 0, ?Throwable $previous = null)
     {
