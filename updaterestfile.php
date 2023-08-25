@@ -1,7 +1,7 @@
 <?php
 $docsrcdirectorylist = [
-    '..\\..\\Discord_Docs_Ressource\\docs\\resources',
-    '..\\..\\Discord_Docs_Ressource\\docs\\interactions'
+    '..\\..\\Github\\discord-api-docs\\docs\\resources',
+    '..\\..\\Github\\discord-api-docs\\docs\\interactions'
 ];
 $targetcsvfile = './src/REST/Base/restrequestlist.csv';
 $targetclassfile = './src/REST/Base/RestStatusList.php';

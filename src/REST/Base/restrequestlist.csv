@@ -1,3 +1,6 @@
+REST_GET_CURRENT_APPLICATION;GET;/applications/@me?
+REST_GET_APPLICATION_ROLE_CONNECTION_METADATA_RECORDS;GET;/applications/##APPLICATION_ID##/role-connections/metadata?
+REST_UPDATE_APPLICATION_ROLE_CONNECTION_METADATA_RECORDS;PUT;/applications/##APPLICATION_ID##/role-connections/metadata?
 REST_GET_GUILD_AUDIT_LOG;GET;/guilds/##GUILD_ID##/audit-logs?
 REST_LIST_AUTO_MODERATION_RULES_FOR_GUILD;GET;/guilds/##GUILD_ID##/auto-moderation/rules?
 REST_GET_AUTO_MODERATION_RULE;GET;/guilds/##GUILD_ID##/auto-moderation/rules/##AUTO##_moderation_rule.id?
@@ -33,7 +36,7 @@ REST_GROUP_DM_ADD_RECIPIENT;PUT;/channels/##CHANNEL_ID##/recipients/##USER_ID##?
 REST_GROUP_DM_REMOVE_RECIPIENT;DELETE;/channels/##CHANNEL_ID##/recipients/##USER_ID##?
 REST_START_THREAD_FROM_MESSAGE;POST;/channels/##CHANNEL_ID##/messages/##MESSAGE_ID##/threads?
 REST_START_THREAD_WITHOUT_MESSAGE;POST;/channels/##CHANNEL_ID##/threads?
-REST_START_THREAD_IN_FORUM_CHANNEL;POST;/channels/##CHANNEL_ID##/threads?
+REST_START_THREAD_IN_FORUM_OR_MEDIA_CHANNEL;POST;/channels/##CHANNEL_ID##/threads?
 REST_JOIN_THREAD;PUT;/channels/##CHANNEL_ID##/thread-members/@me?
 REST_ADD_THREAD_MEMBER;PUT;/channels/##CHANNEL_ID##/thread-members/##USER_ID##?
 REST_LEAVE_THREAD;DELETE;/channels/##CHANNEL_ID##/thread-members/@me?
@@ -90,6 +93,8 @@ REST_GET_GUILD_VANITY_URL;GET;/guilds/##GUILD_ID##/vanity-url?
 REST_GET_GUILD_WIDGET_IMAGE;GET;/guilds/##GUILD_ID##/widget.png?
 REST_GET_GUILD_WELCOME_SCREEN;GET;/guilds/##GUILD_ID##/welcome-screen?
 REST_MODIFY_GUILD_WELCOME_SCREEN;PATCH;/guilds/##GUILD_ID##/welcome-screen?
+REST_GET_GUILD_ONBOARDING;GET;/guilds/##GUILD_ID##/onboarding?
+REST_MODIFY_GUILD_ONBOARDING;PUT;/guilds/##GUILD_ID##/onboarding?
 REST_MODIFY_CURRENT_USER_VOICE_STATE;PATCH;/guilds/##GUILD_ID##/voice-states/@me?
 REST_MODIFY_USER_VOICE_STATE;PATCH;/guilds/##GUILD_ID##/voice-states/##USER_ID##?
 REST_LIST_SCHEDULED_EVENTS_FOR_GUILD;GET;/guilds/##GUILD_ID##/scheduled-events?
@@ -112,7 +117,7 @@ REST_GET_STAGE_INSTANCE;GET;/stage-instances/##CHANNEL_ID##?
 REST_MODIFY_STAGE_INSTANCE;PATCH;/stage-instances/##CHANNEL_ID##?
 REST_DELETE_STAGE_INSTANCE;DELETE;/stage-instances/##CHANNEL_ID##?
 REST_GET_STICKER;GET;/stickers/##STICKER_ID##?
-REST_LIST_NITRO_STICKER_PACKS;GET;/sticker-packs?
+REST_LIST_STICKER_PACKS;GET;/sticker-packs?
 REST_LIST_GUILD_STICKERS;GET;/guilds/##GUILD_ID##/stickers?
 REST_GET_GUILD_STICKER;GET;/guilds/##GUILD_ID##/stickers/##STICKER_ID##?
 REST_CREATE_GUILD_STICKER;POST;/guilds/##GUILD_ID##/stickers?
@@ -127,6 +132,8 @@ REST_LEAVE_GUILD;DELETE;/users/@me/guilds/##GUILD_ID##?
 REST_CREATE_DM;POST;/users/@me/channels?
 REST_CREATE_GROUP_DM;POST;/users/@me/channels?
 REST_GET_USER_CONNECTIONS;GET;/users/@me/connections?
+REST_GET_USER_APPLICATION_ROLE_CONNECTION;GET;/users/@me/applications/##APPLICATION_ID##/role-connection?
+REST_UPDATE_USER_APPLICATION_ROLE_CONNECTION;PUT;/users/@me/applications/##APPLICATION_ID##/role-connection?
 REST_LIST_VOICE_REGIONS;GET;/voice/regions?
 REST_CREATE_WEBHOOK;POST;/channels/##CHANNEL_ID##/webhooks?
 REST_GET_CHANNEL_WEBHOOKS;GET;/channels/##CHANNEL_ID##/webhooks?
