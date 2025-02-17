@@ -9,7 +9,7 @@
   },
   "autoload": {
     "psr-4" : {
-      "Nebucord\\" : "/src"
+      "Nebucord\\" : "./src"
     }
   },
   "license":      "GPL-3.0-or-later",

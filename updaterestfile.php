@@ -49,9 +49,20 @@ for($dir_i = 0; $dir_i < count($docsrcdirectorylist); $dir_i++) {
                 $curworkline = $expstr2[1];
                 for ($ii = 0; $ii < count($matches[1]); $ii++) {
                     $replacevar = '##' . strtoupper(str_replace('.', '_', $matches[1][$ii])) . '##';
-                    $curworkline = str_replace("{" . $matches[1][$ii], $replacevar, $curworkline);
+                    $replacebackslash = '';
+                    if(strpos($expstr2[1], '\{') !== false) {
+                        $replacebackslash = '\\';
+                    }
+
+                    $curworkline = str_replace($replacebackslash . "{" . $matches[1][$ii], $replacevar, $curworkline);
                 }
-                $curworkline = preg_replace("/#([a-zA-Z\/_-]*})/", '', $curworkline);
+
+                $regex = "/#([a-zA-Z\/_-]*})/";
+                if(strpos($curfilearray[$ii], '\}') === false) {
+                    $regex = "/#[^#}]*}/";
+                }
+                $curworkline = preg_replace($regex, '', $curworkline);
+
                 $csv_part3 = $curworkline;
                 unset($curworkline);
             } else {
