@@ -4,7 +4,7 @@ Nebucord - Discord WebSocket and REST API
 
 
 [![GitHub Release](https://img.shields.io/github/release/eurobertics/nebucord.svg?colorB=brightgreen&label=latest-stable)](https://github.com/eurobertics/nebucord)
-[![GitHub Development](https://img.shields.io/badge/dev--master-v1.2.1-red.svg)](https://github.com/eurobertics/nebucord)
+[![GitHub Development](https://img.shields.io/badge/dev--master-v1.2.2-red.svg)](https://github.com/eurobertics/nebucord)
 [![GitHub license](https://img.shields.io/github/license/eurobertics/nebucord.svg)](https://github.com/Eurobertics/Nebucord/blob/master/LICENSE)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Eurobertics_Nebucord&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Eurobertics_Nebucord)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Eurobertics_Nebucord&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Eurobertics_Nebucord)

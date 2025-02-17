@@ -1,11 +1,11 @@
-FROM php:8.1-cli
+FROM php:8.3-cli
 LABEL maintainer.name="Bernd Robertz"
 LABEL maintainer.email="brobertz.net@gmail.com"
-LABEL version="1.2.1"
+LABEL version="1.2.2"
 LABEL description="Nebucord, a Discord bot with REST and WebSocket."
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN groupadd -f nebucord && RUN useradd -M -g nebucord nebucord
+RUN groupadd -f nebucord && useradd -M -g nebucord nebucord
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
