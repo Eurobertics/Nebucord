@@ -1,3 +1,18 @@
+#### Important notice | March 25, 2026
+
+Hello,
+
+unfortunately I have some bad news.  
+I will sunset this project due to new projects. I'm also a bit discontent since a while about the way Discord
+is getting along currently. So this project remains here but in an archived state and is as of now discontinued. I will not further develop this project
+nor do fixes. There are a lot of other great Discord API frameworks out there. Maybe not in PHP but in other very good languages
+and flavors. Also the container images will still available but unmaintained (this includes both used registries GHCR and Docker Hub).
+
+Thank you for your support not only on Github.  
+Eurobertics
+
+----
+
 Nebucord - Discord WebSocket and REST API
 =========================================
 
